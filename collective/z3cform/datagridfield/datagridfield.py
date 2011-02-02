@@ -5,11 +5,9 @@
 
 import zope.interface
 import zope.schema.interfaces
-from zope.component import getMultiAdapter
 from zope.schema import getFieldsInOrder
 from zope.schema import Object
 from zope.schema.interfaces import IList
-from z3c.form import button
 from z3c.form.browser.object import ObjectWidget
 from z3c.form.object import SubformAdapter, ObjectSubForm
 
@@ -121,7 +119,6 @@ class DataGridField(MultiWidget):
         super(DataGridField, self).updateWidgets()
         if self.auto_append:
             # If we are doing 'auto-append', then a blank row needs to be added
-            idx = len(self.widgets)
             widget = self.getWidget('AA')
             widget.klass = 'datagridwidget-row auto-append'
             self.widgets.append(widget)
@@ -133,7 +130,6 @@ class DataGridField(MultiWidget):
 
         if self.auto_append or self.allow_insert:
             # If we can add rows, we need a template row
-            idx = len(self.widgets)
             template = self.getWidget('TT')
             template.klass = 'datagridwidget-row datagridwidget-empty-row'
             self.widgets.append(template)
