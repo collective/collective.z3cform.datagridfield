@@ -1,0 +1,76 @@
+/*
+  Attempted to keep the CSS similar to the Product.DataGridWidget definitioans.
+
+  IE Hacks from that version or left in on the grounds that they might do something,
+*/
+
+table.datagridwidget-table-view {
+	width: 100%;
+    border: 1px solid #666;
+    background: none repeat scroll 0 0 #EEE;
+}
+
+table.datagridwidget-table-view th {
+    font-weight: bold;
+    background: none repeat scroll 0 0 #DDD;
+    color: #666;
+    padding: 2px;
+    font-size: 1.1em;
+}
+
+tr.datagridwidget-row {
+	vertical-align: top;
+}
+
+.datagridwidget-cell input, .datagridwidget-cell select, .datagridwidget-cell textarea {
+    width: 100%;
+    border: 1px solid #CCC;
+	padding: 1px;
+}
+.datagridwidget-cell div.error {
+    color:red;
+    font-weight:bold;
+}
+
+tr.datagridwidget-empty-row {
+	/* Hidden row with default selection widget values */
+	display: none;
+}
+
+/* Error message is displayed above the field */
+td.datagridwidget-cell {
+	vertical-align: bottom;
+}
+
+td.datagridwidget-manipulator {
+	width: 16px;
+	text-align: center;
+	padding-bottom: 4px;
+	margin: 0;	
+	vertical-align: bottom;
+}
+
+td.datagridwidget-manipulator img {
+	cursor: pointer;	
+}
+
+td.datagridwidget-hidden-data {
+	display: none;	
+}
+
+/* You cannot delete the auto-append row */
+tr.auto-append  > td.datagridwidget-manipulator.delete-row {
+    display:none;
+}
+
+
+/*
+ 	Workaround for IE which cannot propeply handle
+ 	background images in cloned TR input fields.
+ 	Plone is shipped with default input background gradient image
+ */
+.datagridwidget-cell input {
+	background: white;
+	background-image: none;
+}
+

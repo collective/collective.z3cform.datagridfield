@@ -1,0 +1,47 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:grok="http://namespaces.zope.org/grok"
+    xmlns:z3c="http://namespaces.zope.org/z3c"
+    i18n_domain="collective.z3cform.datagridfield">
+
+    <!-- Include configuration for dependencies listed in setup.py -->
+    <includeDependencies package="." />
+    <!-- Grok the package to initialise schema interfaces and content classes -->
+    <grok:grok package="." />
+
+  <genericsetup:registerProfile
+      name="default"
+      title="Version of DataGridField for use with Dexterity / z3c.form"
+      directory="profiles/default"
+      description="Extension profile for Version of DataGridField for use with Dexterity / z3c.form"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
+  <!-- -*- extra stuff goes here -*- -->
+  <class class=".datagridfield.DataGridField">
+        <require 
+            permission="zope.Public"
+            interface=".datagridfield.IDataGridField"
+            />
+  </class> 
+              
+  <z3c:widgetTemplate
+        mode="input"
+        widget=".datagridfield.DataGridField"
+        layer="z3c.form.interfaces.IFormLayer"
+        template="datagridfield_input.pt"
+        />
+
+
+  <z3c:widgetTemplate
+      mode="input"
+      widget=".datagridfield.DataGridFieldObject"
+      layer="z3c.form.interfaces.IFormLayer"
+      template="datagridfieldobject_input.pt"
+      />
+
+
+</configure>
