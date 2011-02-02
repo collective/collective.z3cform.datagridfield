@@ -16,6 +16,7 @@ table.datagridwidget-table-view th {
     color: #666;
     padding: 2px;
     font-size: 1.1em;
+    text-align: left;
 }
 
 tr.datagridwidget-row {
