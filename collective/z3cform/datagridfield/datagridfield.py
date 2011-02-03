@@ -74,12 +74,6 @@ class DataGridField(MultiWidget):
 
     field = property(getField, setField)
 
-    def select(self, *names):
-        self.columns = [col for col in self.columns if col['name'] in names]
-
-    def omit(self, *names):
-        self.columns = [col for col in self.columns if col['name'] not in names]
-
 ##     def URL(self):
 ##         form_url = self.request.getURL()
 ## 
@@ -116,6 +110,7 @@ class DataGridField(MultiWidget):
         return self.prefix.replace('.', '-')
 
     def updateWidgets(self):
+        # if the field has configuration data set - copy it
         super(DataGridField, self).updateWidgets()
         if self.auto_append:
             # If we are doing 'auto-append', then a blank row needs to be added
@@ -150,7 +145,6 @@ class DataGridField(MultiWidget):
         return '<input type="hidden" name="%s" value="%d" />' % (
             self.counterName, counter)
 
-
 @grok.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
 @grok.implementer(interfaces.IFieldWidget)
 def DataGridFieldFactory(field, request):
@@ -172,21 +166,6 @@ class GridDataConverter(grok.MultiAdapter, BaseDataConverter):
 
 
 class DataGridFieldObject(ObjectWidget):
-
-    def update(self):
-        """I want to initialise widget data"""
-        #very-very-nasty: skip raising exceptions in extract while we're updating
-        self._updating = True
-        try:
-            super(ObjectWidget, self).update()
-
-            # Now the sub-form has fields that can be customised - call form function
-            # if one exists
-            if hasattr(self.form, 'datagridInitialise'):
-                self.form.datagridInitialise(self.subform, self.__parent__)
-            self.updateWidgets(setErrors=False)
-        finally:
-            self._updating = False
 
     def isInsertEnabled(self):
         return self.__parent__.allow_insert
@@ -214,6 +193,11 @@ class DataGridFieldObjectSubForm(ObjectSubForm):
             self.__parent__.form.datagridUpdateWidgets(self, self.widgets, self.__parent__.__parent__)
         return rv
 
+    def setupFields(self):
+        rv = super(DataGridFieldObjectSubForm, self).setupFields()
+        if hasattr(self.__parent__.form, 'datagridInitialise'):
+            self.__parent__.form.datagridInitialise(self, self.__parent__.__parent__)
+        return rv
 
 
 class DataGridFieldSubformAdapter(grok.MultiAdapter, SubformAdapter):
@@ -237,11 +221,11 @@ class DataGridValidator(grok.MultiAdapter, SimpleFieldValidator):
         type. For stronger typing replace both this and the converter
     """
     grok.adapts(
-                          zope.interface.Interface,
-                          zope.interface.Interface,
-                          zope.interface.Interface,  # Form
-                          IList,          # field
-                          DataGridField)             #widget
+              zope.interface.Interface,
+              zope.interface.Interface,
+              zope.interface.Interface,  # Form
+              IList,          # field
+              DataGridField)             #widget
     grok.provides(IValidator)
 
     def validate(self, value):

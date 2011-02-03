@@ -1,53 +1,36 @@
 import unittest
 
-#from zope.testing import doctestunit
-#from zope.component import testing
 from Testing import ZopeTestCase as ztc
 
 from Products.Five import fiveconfigure
 from Products.PloneTestCase import PloneTestCase as ptc
-from Products.PloneTestCase.layer import PloneSite
+
+from collective.testcaselayer.ptc import BasePTCLayer, ptc_layer
+
 ptc.setupPloneSite()
 
-import collective.z3cform.datagridfield
+
+class Layer(BasePTCLayer):
+
+    def afterSetUp(self):
+        # Install the example.conference product
+        fiveconfigure.debug_mode = True
+        self.addProfile('collective.z3cform.datagridfield:default')
+        fiveconfigure.debug_mode = False
+
+layer = Layer([ptc_layer])
 
 
 class TestCase(ptc.PloneTestCase):
-
-    class layer(PloneSite):
-
-        @classmethod
-        def setUp(cls):
-            fiveconfigure.debug_mode = True
-            ztc.installPackage(collective.z3cform.datagridfield)
-            fiveconfigure.debug_mode = False
-
-        @classmethod
-        def tearDown(cls):
-            pass
+    layer = layer
 
 
 def test_suite():
     return unittest.TestSuite([
 
-        # Unit tests
-        #doctestunit.DocFileSuite(
-        #    'README.txt', package='collective.z3cform.datagridfield',
-        #    setUp=testing.setUp, tearDown=testing.tearDown),
-
-        #doctestunit.DocTestSuite(
-        #    module='collective.z3cform.datagridfield.mymodule',
-        #    setUp=testing.setUp, tearDown=testing.tearDown),
-
-
-        # Integration tests that use PloneTestCase
-        #ztc.ZopeDocFileSuite(
-        #    'README.txt', package='collective.z3cform.datagridfield',
-        #    test_class=TestCase),
-
-        #ztc.FunctionalDocFileSuite(
-        #    'browser.txt', package='collective.z3cform.datagridfield',
-        #    test_class=TestCase),
+        ztc.FunctionalDocFileSuite(
+            'browser.txt', package='collective.z3cform.datagridfield',
+            test_class=TestCase),
 
         ])
 

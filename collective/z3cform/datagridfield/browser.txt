@@ -1,0 +1,61 @@
+Functional Tests
+
+    >>> from Products.Five.testbrowser import Browser
+    >>> browser = Browser()
+    >>> browser.handleErrors = False
+    >>> portal_url = self.portal.absolute_url()
+    >>> self.portal.error_log._ignored_exceptions = ()
+
+Open the demo simple edit form. This form  has a number of lines
+
+    >>> browser.open(portal_url+'/@@demo-simple-edit-form')
+
+Make sure that the first row of data is present
+
+    >>> browser.getControl(name='form.widgets.address.0.widgets.address_type:list').value
+    ['Work']
+    >>> browser.getControl(name='form.widgets.address.0.widgets.line1').value
+    'My Office'
+    >>> browser.getControl(name='form.widgets.address.0.widgets.line2').value
+    'Big Office Block'
+    >>> browser.getControl(name='form.widgets.address.0.widgets.city').value
+    'Mega City'
+    >>> browser.getControl(name='form.widgets.address.0.widgets.country').value
+    'The Old Sod'
+
+Make sure that the auto-insert row is present
+
+    >>> browser.getControl(name='form.widgets.address.AA.widgets.address_type:list').value
+    ['Work']
+    >>> browser.getControl(name='form.widgets.address.AA.widgets.line1').value
+    ''
+    >>> browser.getControl(name='form.widgets.address.AA.widgets.line2').value
+    ''
+    >>> browser.getControl(name='form.widgets.address.AA.widgets.city').value
+    ''
+    >>> browser.getControl(name='form.widgets.address.AA.widgets.country').value
+    ''
+
+Make sure that the template row is present
+
+    >>> browser.getControl(name='form.widgets.address.TT.widgets.address_type:list').value
+    ['Work']
+    >>> browser.getControl(name='form.widgets.address.TT.widgets.line1').value
+    ''
+    >>> browser.getControl(name='form.widgets.address.TT.widgets.line2').value
+    ''
+    >>> browser.getControl(name='form.widgets.address.TT.widgets.city').value
+    ''
+    >>> browser.getControl(name='form.widgets.address.TT.widgets.country').value
+    ''
+
+Make sure the add row button is present (x4)
+
+    >>> browser.contents.find('<td class="datagridwidget-manipulator insert-row">') != -1
+    True
+
+Make sure the delete row button is present (x4)
+
+    >>> browser.contents.find('<td class="datagridwidget-manipulator delete-row">') != -1
+    True
+
