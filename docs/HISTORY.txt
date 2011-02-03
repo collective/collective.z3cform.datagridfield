@@ -1,7 +1,8 @@
 Changelog
 =========
 
-0.1adev (unreleased)
---------------------
+0.3a (unreleased)
+-----------------
 
-- Initial release
+- The auto-append functionality did not bind correctly for popup forms.
+  I switched to using jQuery.live() instead of binding at document load time.
