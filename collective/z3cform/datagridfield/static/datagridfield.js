@@ -359,13 +359,8 @@ dataGridField2Functions = new Object();
         return parent;
     }
 
-
     /* Bind the handlers to the auto append rows */
-    $(document).find('table.datagridwidget-table-view').find('tr.auto-append').each(function() {
-        $(this).find('td.datagridwidget-cell').children().each(function(){
-            $(this).change(dataGridField2Functions.autoInsertRow);
-        });
-    });
+    $('tr.auto-append > td.datagridwidget-cell').live('change', dataGridField2Functions.autoInsertRow);
   });
 })(jQuery);
 
