@@ -6,3 +6,10 @@ Changelog
 
 - The auto-append functionality did not bind correctly for popup forms.
   I switched to using jQuery.live() instead of binding at document load time.
+
+- Added a menu to the demo pages
+
+- Added a display only form option.
+
+- Fixed the restructured text of the main README.txt so that it will show
+  more friendly in PyPI.
