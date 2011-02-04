@@ -17,7 +17,7 @@ from five import grok
 from z3c.form.browser.multi import MultiWidget
 from z3c.form import interfaces
 
-from z3c.form.interfaces import IMultiWidget, IValidator
+from z3c.form.interfaces import IMultiWidget, IValidator, INPUT_MODE
 from z3c.form.widget import FieldWidget
 from z3c.form.converter import BaseDataConverter
 from z3c.form.validator import SimpleFieldValidator
@@ -112,22 +112,18 @@ class DataGridField(MultiWidget):
     def updateWidgets(self):
         # if the field has configuration data set - copy it
         super(DataGridField, self).updateWidgets()
-        if self.auto_append:
-            # If we are doing 'auto-append', then a blank row needs to be added
-            widget = self.getWidget('AA')
-            widget.klass = 'datagridwidget-row auto-append'
-            self.widgets.append(widget)
-            self.setName(widget, 'autoappend')
+        if self.mode == INPUT_MODE:
+            if self.auto_append:
+                # If we are doing 'auto-append', then a blank row needs to be added
+                widget = self.getWidget('AA')
+                widget.klass = 'datagridwidget-row auto-append'
+                self.widgets.append(widget)
 
-            # Set the handler
-            #for w in widget.subform.widgets.values():
-            #    w.onchange = u"dataGridField2Functions.autoInsertRow(this)"
-
-        if self.auto_append or self.allow_insert:
-            # If we can add rows, we need a template row
-            template = self.getWidget('TT')
-            template.klass = 'datagridwidget-row datagridwidget-empty-row'
-            self.widgets.append(template)
+            if self.auto_append or self.allow_insert:
+                # If we can add rows, we need a template row
+                template = self.getWidget('TT')
+                template.klass = 'datagridwidget-row datagridwidget-empty-row'
+                self.widgets.append(template)
 
     def setName(self, widget, idx):
         """This version facilitates inserting non-numerics"""

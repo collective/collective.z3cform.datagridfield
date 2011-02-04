@@ -10,6 +10,7 @@ from zope import schema
 
 from z3c.form import field
 from z3c.form.widget import FieldWidget
+from z3c.form.interfaces import DISPLAY_MODE, HIDDEN_MODE
 
 from plone.directives import form
 
@@ -122,10 +123,32 @@ class EditForm6(EditForm):
 
     def datagridUpdateWidgets(self, subform, widgets, widget):
         # This one hides the widgets
-        widgets['city'].mode = 'hidden'
+        widgets['city'].mode = HIDDEN_MODE
 
     def updateWidgets(self):
         # This one hides the column title
         super(EditForm6, self).updateWidgets()
-        self.widgets['address'].columns[3]['mode']  = 'hidden'
+        self.widgets['address'].columns[3]['mode']  = HIDDEN_MODE
+
+class EditForm7(EditForm):
+    label = u'This form shows a read-only table'
+
+    grok.name('demo-edit-form-read-only')
+
+    def updateWidgets(self):
+        super(EditForm7, self).updateWidgets()
+        self.widgets['address'].mode = DISPLAY_MODE
+
+class EditForm8(EditForm):
+    label = u'Table is readonly and cells are also readonly'
+
+    grok.name('demo-edit-form-read-only2')
+
+    def updateWidgets(self):
+        super(EditForm8, self).updateWidgets()
+        self.widgets['address'].mode = DISPLAY_MODE
+        for row in self.widgets['address'].widgets:
+            for widget in row.subform.widgets.values():
+                widget.mode = DISPLAY_MODE
+
 

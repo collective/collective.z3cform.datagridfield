@@ -44,6 +44,12 @@
             <li>
                 <a href="@@demo-edit-form-hidden-column"> demo-edit-form-hidden-column </a>
             </li>
+            <li>
+                <a href="@@demo-edit-form-read-only"> table is read-only, cells editable </a>
+            </li>
+            <li>
+                <a href="@@demo-edit-form-read-only2"> table and cells are read-only </a>
+            </li>
         </ul>
 
         <div tal:replace="structure provider:plone.belowcontentbody" />

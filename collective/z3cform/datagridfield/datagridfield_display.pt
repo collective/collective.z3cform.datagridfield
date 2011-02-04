@@ -1,0 +1,34 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      tal:omit-tag="">
+
+<table class="datagridwidget-table-view">
+<thead>
+  <tr>
+    <tal:block repeat="column view/columns">
+      <th class="header"
+         tal:condition="python:column['mode'] != 'hidden'">
+            <span i18n:translate=""
+                tal:content="column/label">title</span>
+            <span class="required"
+                  tal:condition="column/required">*</span>
+      </th>
+    </tal:block>
+  </tr>
+</thead>
+<tbody id="datagridwidget-tbody" tal:attributes="data-name_prefix view/name_prefix; data-id_prefix view/id_prefix">
+  <tal:block repeat="widget view/widgets">
+    <tr class="row" id="datagridwidget-row" tal:attributes="class widget/klass"
+         tal:condition="python:widget.mode != 'hidden' and not widget.name.endswith('AA') and not widget.name.endswith('TT')">
+      <metal:block define-macro="widget-row">
+          <div tal:replace="structure widget/render"></div>
+      </metal:block>
+    </tr>
+  </tal:block>
+</tbody>
+</table>
+<input type="hidden" tal:replace="structure view/counterMarker" />
+</html>
+

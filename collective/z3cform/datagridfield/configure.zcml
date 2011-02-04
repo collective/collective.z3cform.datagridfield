@@ -35,12 +35,25 @@
         template="datagridfield_input.pt"
         />
 
-
   <z3c:widgetTemplate
       mode="input"
       widget=".datagridfield.DataGridFieldObject"
       layer="z3c.form.interfaces.IFormLayer"
       template="datagridfieldobject_input.pt"
+      />
+
+  <z3c:widgetTemplate
+        mode="display"
+        widget=".datagridfield.DataGridField"
+        layer="z3c.form.interfaces.IFormLayer"
+        template="datagridfield_display.pt"
+        />
+
+  <z3c:widgetTemplate
+      mode="display"
+      widget=".datagridfield.DataGridFieldObject"
+      layer="z3c.form.interfaces.IFormLayer"
+      template="datagridfieldobject_display.pt"
       />
 
 
