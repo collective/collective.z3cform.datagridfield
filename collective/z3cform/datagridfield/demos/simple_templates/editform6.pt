@@ -1,0 +1,56 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="example.conference">
+<body>
+
+<metal:main fill-slot="main">
+    <tal:main-macro metal:define-macro="main">
+
+        <div tal:replace="structure provider:plone.abovecontenttitle" />
+
+        <h1 class="documentFirstHeading" tal:content="view/label" />
+
+        <div tal:replace="structure provider:plone.belowcontenttitle" />
+
+        <p class="documentDescription" tal:content="context/description" />
+
+        <div tal:replace="structure provider:plone.abovecontentbody" />
+
+        <div id="content-core">
+            <metal:block use-macro="context/@@ploneform-macros/titlelessform" />
+        </div>
+
+        <h2>Links</h2>
+        <ul>
+            <li>
+                <a href="@@demo-simple-edit-form"> demo-simple-edit-form </a>
+            </li>
+            <li>
+                <a href="@@demo-edit-form-no-row-manipulators"> demo-edit-form-no-row-manipulators </a>
+            </li>
+            <li>
+                <a href="@@demo-edit-form-no-auto-append"> demo-edit-form-no-auto-append </a>
+            </li>
+            <li>
+                <a href="@@demo-edit-form-no-country"> demo-edit-form-no-country [not working]</a>
+            </li>
+            <li>
+                <a href="@@demo-edit-form-column-widths"> demo-edit-form-column-widths </a>
+            </li>
+            <li>
+                <a href="@@demo-edit-form-hidden-column"> demo-edit-form-hidden-column </a>
+            </li>
+        </ul>
+
+        <div tal:replace="structure provider:plone.belowcontentbody" />
+
+    </tal:main-macro>
+</metal:main>
+
+</body>
+</html>
+
