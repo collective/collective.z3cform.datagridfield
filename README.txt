@@ -1,4 +1,3 @@
-============
 Introduction
 ============
 
@@ -10,10 +9,10 @@ was developed for use with Plone4 and Dexterity.
 Requirements
 ------------
 
-Plone 4
-z3c.forms
-A browser with javascript support
-jquery 1.4.3 or later
+    * Plone 4
+    * z3c.forms
+    * A browser with javascript support
+    * jquery 1.4.3 or later
 
 Installation
 ------------
@@ -23,50 +22,53 @@ Add collective.z3cforms.datagridfield to your buildout eggs.
 Example usage
 -------------
 
-from zope import schema
-from zope import interface
-from plone.directives import form
+This piece of code demonstrates a schema which has a table within it.
+The layout of the table is defined by a second schema.::
 
-form collective.z3cforms.datagridfield import DataGridFieldFactory
-
-class ITableRowSchema(interface.Interface):
-    one = schema.TextLine(title=u"One")
-    two = schema.TextLine(title=u"Two")
-    three = schema.TextLine(title=u"Three")
-
-class IFormSchema(interface.Interface):
-    four = schema.TextLine(title=u"Four")
-    table = schema.List(title=u"Table"
-        value_type=schema.Object(title=u"tablerow", schema=ITableRowSchema))
-
-class EditForm(form.EditForm):
-    extends(form.EditForm)
-
-    grok.context(IFormSchema)
-    grok.require('zope2.View')
-    fields = field.Fields(IFormSchema)
-    label=u"Demo Usage of DataGridField"
-            
-    fields['table'].widgetFactory = DataGridFieldFactory
+    from zope import schema
+    from zope import interface
+    from plone.directives import form
+    
+    form collective.z3cforms.datagridfield import DataGridFieldFactory
+    
+    class ITableRowSchema(interface.Interface):
+        one = schema.TextLine(title=u"One")
+        two = schema.TextLine(title=u"Two")
+        three = schema.TextLine(title=u"Three")
+    
+    class IFormSchema(interface.Interface):
+        four = schema.TextLine(title=u"Four")
+        table = schema.List(title=u"Table"
+            value_type=schema.Object(title=u"tablerow", schema=ITableRowSchema))
+    
+    class EditForm(form.EditForm):
+        extends(form.EditForm)
+    
+        grok.context(IFormSchema)
+        grok.require('zope2.View')
+        fields = field.Fields(IFormSchema)
+        label=u"Demo Usage of DataGridField"
+                
+        fields['table'].widgetFactory = DataGridFieldFactory
 
 Configuration
 -------------
 
 Unfortunately, due to the way in which the widgets and sub-widgets are setup, it
 is difficult to configure the widget after it is created. Instead, you create
-a customised factory with the configuration that you need.
+a customised factory with the configuration that you need.::
 
 
-def CustomisedDataGridFieldFactory(field, request):
-    widget = DataGridField(request)
-    rv = FieldWidget(field, widget)
-    widget.allow_insert = False   # Enable the insert button on the right
-    widget.allow_delete = False   # Enable the delete button on the right
-    widget.auto_append = False    # Enable the auto-append feature
-    return rv
+    def CustomisedDataGridFieldFactory(field, request):
+        widget = DataGridField(request)
+        rv = FieldWidget(field, widget)
+        widget.allow_insert = False   # Enable the insert button on the right
+        widget.allow_delete = False   # Enable the delete button on the right
+        widget.auto_append = False    # Enable the auto-append feature
+        return rv
 
-...
-    fields['table'].widgetFactory = CustomDataGridFieldFactory
+    ...
+        fields['table'].widgetFactory = CustomDataGridFieldFactory
 
 Manipulating the Sub-form
 -------------------------
@@ -79,15 +81,15 @@ There are two callbacks to your main form:
 
     datagridInitialise(subform, widget)
     
-        This is called when the subform fields have been initialised, but before
+    *   This is called when the subform fields have been initialised, but before
         the widgets have been created. Field based configuration could occur here.
 
-        Note: omiting fields causes an error. If you want to omit fields, create
+    *   Note: omiting fields causes an error. If you want to omit fields, create
         a separate schema instead.
 
     datagridUpdateWidgets(subform, widgets, widget)
 
-        This is called when the subform widgets have been created. At this point,
+    *   This is called when the subform widgets have been created. At this point,
         you can configure the widgets, e.g. specify the size of a widget.
 
 Notes
