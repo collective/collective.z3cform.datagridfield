@@ -113,7 +113,7 @@ class EditForm5(EditForm):
         widgets['line1'].size = 40
         widgets['line2'].size = 40
         widgets['city'].size = 20
-        widgets['city'].size = 10
+        widgets['country'].size = 10
 
 
 class EditForm6(EditForm):
