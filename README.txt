@@ -126,6 +126,11 @@ TODO
 
     * Move rows up / down
 
+    * kss validation - highlight the incorrect row, rather than the entire widget.
+      Possibly show the error message in the field cell.
+
+    * Omit a column does not work.
+
 Demo
 ----
 
