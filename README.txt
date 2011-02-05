@@ -3,7 +3,7 @@ Introduction
 
 Licence: GNU General Public License
 
-I want to provide a z3c.form version of the Products.DataGridField. This product
+This module provides a z3c.form version of the Products.DataGridField. This product
 was developed for use with Plone4 and Dexterity.
 
 Requirements
@@ -17,7 +17,11 @@ Requirements
 Installation
 ------------
 
-Add collective.z3cforms.datagridfield to your buildout eggs.
+Add collective.z3cforms.datagridfield to your buildout eggs.::
+
+    eggs=\
+        ...
+        collective.z3cforms.datagridfield
 
 Example usage
 -------------
@@ -62,9 +66,9 @@ a customised factory with the configuration that you need.::
     def CustomisedDataGridFieldFactory(field, request):
         widget = DataGridField(request)
         rv = FieldWidget(field, widget)
-        widget.allow_insert = False   # Enable the insert button on the right
-        widget.allow_delete = False   # Enable the delete button on the right
-        widget.auto_append = False    # Enable the auto-append feature
+        widget.allow_insert = False   # Enable/Disable the insert button on the right
+        widget.allow_delete = False   # Enable/Disable the delete button on the right
+        widget.auto_append = False    # Enable/Disable the auto-append feature
         return rv
 
     ...
@@ -111,14 +115,28 @@ need to implement the dictionary interface on the object.
 TODO
 ----
 
-I convert the return value to a list of dictionaries. It should be a list of objects
-of the correct type. The data transformations need to be looked at again.
+    * I convert the return value to a list of dictionaries. It should be a list of objects
+      of the correct type. The data transformations need to be looked at again.
 
-    Testing
+    * Testing
+
+    * The mechanism to hide columns is cumbersome. This needs to be revisited.
+
+    * Better styling of table in read-only mode.
+
+    * Move rows up / down
+
+Demo
+----
+
+Examples of configurations are in the demo folder.
+Once you install this package, the demo views will be visible on your site. ::
+
+    * http://localhost:8080/Plone/@@demo-simple-edit-form
 
 References
 ----------
  
-http://pypi.python.org/pypi/Products.DataGridField
+    * http://pypi.python.org/pypi/Products.DataGridField
 
 
