@@ -15,7 +15,6 @@
       i18n:attributes="alt label_datagridwidget_manipulators_addrow"
       onclick="dataGridField2Functions.addRowAfter(this); return false"/>
 </td>
-<td tal:condition="not:view/isInsertEnabled"> </td>
 <td  class="datagridwidget-manipulator delete-row"
     tal:condition="view/isDeleteEnabled">
   <img src="/++resource++collective.z3cform.datagridfield/delete_row_icon.gif"
@@ -23,5 +22,4 @@
       i18n:attributes="alt label_datagridwidget_manipulators_deleterow"
       onclick="dataGridField2Functions.removeFieldRow(this);return false"/>
 </td>
-<td tal:condition="not:view/isDeleteEnabled"> </td>
 

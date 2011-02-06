@@ -16,8 +16,8 @@
                   tal:condition="column/required">*</span>
       </th>
     </tal:block>
-    <th id="" class="header"> </th>
-    <th id="" class="header"> </th>
+    <th id="" class="header" tal:condition="view/allow_insert"> </th>
+    <th id="" class="header" tal:condition="view/allow_delete"> </th>
   </tr>
 </thead>
 <tbody id="datagridwidget-tbody" tal:attributes="data-name_prefix view/name_prefix; data-id_prefix view/id_prefix">
