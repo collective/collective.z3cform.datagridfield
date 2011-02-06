@@ -29,6 +29,10 @@ class IAddress(Interface):
     country = schema.TextLine(
         title = u'Country', required=True)
 
+# Note: when using a dict, it is still an object - A schema.Dict would be
+#       expected to contain some schemas. We are using an object implemented
+#       as a dict
+
 class IPerson(Interface):
     name = schema.TextLine(title=u'Name', required=True)
     address = schema.List(title=u'Addresses',
@@ -36,18 +40,18 @@ class IPerson(Interface):
         required=True)
 
 TESTDATA = {
-            'name': 'MY NAME',
-            'address': [
-                   {'address_type': 'Work',
-                    'line1': 'My Office',
-                    'line2': 'Big Office Block',
-                    'city': 'Mega City',
-                    'country': 'The Old Sod'},
-                   {'address_type': 'Home',
-                    'line1': 'Home Sweet Home',
-                    'line2': 'Easy Street',
-                    'city': 'Burbs',
-                    'country': 'The Old Sod'}
+    'name': 'MY NAME',
+    'address': [
+           {'address_type': 'Work',
+            'line1': 'My Office',
+            'line2': 'Big Office Block',
+            'city': 'Mega City',
+            'country': 'The Old Sod'},
+           {'address_type': 'Home',
+            'line1': 'Home Sweet Home',
+            'line2': 'Easy Street',
+            'city': 'Burbs',
+            'country': 'The Old Sod'}
     ]}
 
 class EditForm(form.EditForm):
@@ -101,11 +105,8 @@ class EditForm3(EditForm):
         super(EditForm3, self).updateWidgets()
         self.widgets['address'].auto_append = False
 
-#### THIS ONE ONE NOT WORKING
-#### Widgets already initialised when this code is called
-
 class EditForm4(EditForm):
-    label = u'This form has the country column removed - NOT WORKING'
+    label = u'This form has the country column removed'
 
     grok.name('demo-collective.z3cform.datagrid-no-country')
     fields = field.Fields(IPerson)
@@ -124,7 +125,6 @@ class EditForm5(EditForm):
         widgets['line2'].size = 40
         widgets['city'].size = 20
         widgets['country'].size = 10
-
 
 class EditForm6(EditForm):
     label = u'This form has hidden the city column'

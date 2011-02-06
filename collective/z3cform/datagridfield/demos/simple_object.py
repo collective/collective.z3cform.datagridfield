@@ -164,11 +164,8 @@ class EditForm3(EditForm):
         super(EditForm3, self).updateWidgets()
         self.widgets['address'].auto_append = False
 
-#### THIS ONE ONE NOT WORKING
-#### Widgets already initialised when this code is called
-
 class EditForm4(EditForm):
-    label = u'This form has the country column removed - NOT WORKING - using Objects'
+    label = u'This form has the country column removed - using Objects'
 
     grok.name('demo-collective.z3cform.datagrid-object-no-country')
     fields = field.Fields(IPerson)
