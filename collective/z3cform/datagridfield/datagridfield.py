@@ -62,12 +62,9 @@ class DataGridField(MultiWidget):
         for name, field in getFieldsInOrder(self._field.value_type.schema):
             col = {
                 'name': name,
-                'field': field,
                 'label': field.title,
                 'required': field.required,
                 'mode': None,
-                'callback': None, 
-                'widgetFactory': None,
             }
             self.columns.append(col)
 

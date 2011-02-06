@@ -11,7 +11,7 @@ from zope.schema.fieldproperty import FieldProperty
 from zope.schema import getFieldsInOrder
 
 from z3c.form import field, button
-from z3c.form.interfaces import DISPLAY_MODE, HIDDEN_MODE, IDataConverter
+from z3c.form.interfaces import DISPLAY_MODE, HIDDEN_MODE, IDataConverter, NO_VALUE
 from z3c.form.converter import BaseDataConverter
 
 from plone.directives import form
@@ -85,8 +85,39 @@ TESTDATA = Person(
             country = u'The Old Sod')
     ]))
 
+class GridDataConverter(grok.MultiAdapter, BaseDataConverter):
+    """Convert between the AddressList object and the widget. 
+       If you are using objects, you must provide a custom converter
+    """
+    
+    grok.adapts(AddressListField, IDataGridField)
+    grok.implements(IDataConverter)
+
+    def toWidgetValue(self, value):
+        """Simply pass the data through with no change"""
+        rv = list()
+        for row in value:
+            d = dict()
+            for name, field in getFieldsInOrder(IAddress):
+                d[name] = getattr(row, name)
+            rv.append(d)
+
+        return rv
+
+    def toFieldValue(self, value):
+        rv = AddressList()
+        for row in value:
+            d = dict()
+            for name, field in getFieldsInOrder(IAddress):
+                if row.get(name, NO_VALUE) != NO_VALUE:
+                    d[name] = row.get(name)
+            rv.append(Address(**d))
+        return rv
+
+#-------------[ Views Follow ]-------------------------------------------
+
 class EditForm(form.EditForm):
-    label = u'This is a simple, default layout - using Objects'
+    label = u'Simple Form (Objects)'
 
     grok.context(Interface)
     grok.name('demo-collective.z3cform.datagrid-object')
@@ -114,35 +145,8 @@ class EditForm(form.EditForm):
         super(form.EditForm, self).updateActions()
 
 
-class GridDataConverter(grok.MultiAdapter, BaseDataConverter):
-    """Convert between the AddressList object and the widget"""
-    
-    grok.adapts(AddressListField, IDataGridField)
-    grok.implements(IDataConverter)
-
-    def toWidgetValue(self, value):
-        """Simply pass the data through with no change"""
-        rv = list()
-        for row in value:
-            d = dict()
-            for name, field in getFieldsInOrder(IAddress):
-                d[name] = getattr(row, name)
-            rv.append(d)
-
-        return rv
-
-    def toFieldValue(self, value):
-        rv = AddressList()
-        for row in value:
-            d = dict()
-            for name, field in getFieldsInOrder(IAddress):
-                d[name] = row[name]
-            rv.append(Address(**d))
-        return rv
-
-
 class EditForm2(EditForm):
-    label = u'This form has the insert and delete row options removed - using Objects'
+    label = u'Hide the Row Manipulators (Objects)'
 
     grok.name('demo-collective.z3cform.datagrid-object-no-manipulators')
     fields = field.Fields(IPerson)
@@ -154,7 +158,7 @@ class EditForm2(EditForm):
         self.widgets['address'].allow_delete = False
 
 class EditForm3(EditForm):
-    label = u'This form has the auto-append row options removed - using Objects'
+    label = u'Disable Auto-append (Objects)'
 
     grok.name('demo-collective.z3cform.datagrid-object-no-auto-append')
     fields = field.Fields(IPerson)
@@ -165,17 +169,35 @@ class EditForm3(EditForm):
         self.widgets['address'].auto_append = False
 
 class EditForm4(EditForm):
-    label = u'This form has the country column removed - using Objects'
+    label = u'Omit a column - Column is Mandatory (Objects)'
 
     grok.name('demo-collective.z3cform.datagrid-object-no-country')
     fields = field.Fields(IPerson)
     fields['address'].widgetFactory = DataGridFieldFactory
 
+    def updateWidgets(self):
+        super(EditForm4, self).updateWidgets()
+        self.widgets['address'].columns = [c for c in self.widgets['address'].columns if c['name'] != 'country']
+
     def datagridInitialise(self, subform, widget):
         subform.fields = subform.fields.omit('country')
 
+class EditForm4b(EditForm):
+    label = u'Omit a column - Column is Optional (Objects)'
+
+    grok.name('demo-collective.z3cform.datagrid-object-no-line2')
+    fields = field.Fields(IPerson)
+    fields['address'].widgetFactory = DataGridFieldFactory
+
+    def updateWidgets(self):
+        super(EditForm4b, self).updateWidgets()
+        self.widgets['address'].columns = [c for c in self.widgets['address'].columns if c['name'] != 'line2']
+
+    def datagridInitialise(self, subform, widget):
+        subform.fields = subform.fields.omit('line2')
+
 class EditForm5(EditForm):
-    label = u'This form has column widths configured - using Objects'
+    label = u'Configure Subform Widgets (Objects)'
 
     grok.name('demo-collective.z3cform.datagrid-object-column-widths')
 
@@ -187,7 +209,7 @@ class EditForm5(EditForm):
 
 
 class EditForm6(EditForm):
-    label = u'This form has hidden the city column - using Objects'
+    label = u'Hide a Column (Objects)'
 
     grok.name('demo-collective.z3cform.datagrid-object-hidden-column')
 
@@ -201,7 +223,7 @@ class EditForm6(EditForm):
         self.widgets['address'].columns[3]['mode']  = HIDDEN_MODE
 
 class EditForm7(EditForm):
-    label = u'This form shows a read-only table - using Objects'
+    label = u'Table is read-only, cells editable (Objects)'
 
     grok.name('demo-collective.z3cform.datagrid-object-read-only')
 
@@ -210,7 +232,7 @@ class EditForm7(EditForm):
         self.widgets['address'].mode = DISPLAY_MODE
 
 class EditForm8(EditForm):
-    label = u'Table is readonly and cells are also readonly - using Objects'
+    label = u'Table and cells are read-only (Objects)'
 
     grok.name('demo-collective.z3cform.datagrid-object-read-only2')
 
