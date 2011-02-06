@@ -55,6 +55,16 @@ The layout of the table is defined by a second schema.::
                 
         fields['table'].widgetFactory = DataGridFieldFactory
 
+Storage
+-------
+
+The data can be stored as either a list of dicts or a list of objects.
+In both cases the schema content type is 'schema.Object'. 
+
+If you are providing an Object content type (as opposed to dicts) you
+must provide your own conversion class. The default conversion class
+returns a list of dicts, not of your object class. See the demos.
+
 Configuration
 -------------
 
@@ -65,6 +75,9 @@ The widget can be customised via the updateWidgets method.
         self.widgets['table'].allow_insert = False # Enable/Disable the insert button on the right
         self.widgets['table'].allow_delete = False # Enable/Disable the delete button on the right
         self.widgets['table'].auto_append = False  # Enable/Disable the auto-append feature
+
+The widget contains an attribute 'columns' which is manipulated to hide column
+titles.
 
 Manipulating the Sub-form
 -------------------------
@@ -80,9 +93,6 @@ There are two callbacks to your main form:
     *   This is called when the subform fields have been initialised, but before
         the widgets have been created. Field based configuration could occur here.
 
-    *   Note: omiting fields causes an error. If you want to omit fields, create
-        a separate schema instead.
-
     datagridUpdateWidgets(subform, widgets, widget)
 
     *   This is called when the subform widgets have been created. At this point,
@@ -94,34 +104,22 @@ Notes
 I have attempted to keep the markup close to Products.DataGridField, so that the
 styling approach is the same.
 
-If you are passing through a list of objects (as opposed to a list of dicts), you
-need to implement the dictionary interface on the object.
-
-    def get(self, name, default=None):
-        return getattr(self, name, default)
-    
-    def set(self, name, value):
-        return setattr(self, name, value)
-
-
 TODO
 ----
 
-    * I convert the return value to a list of dictionaries. It should be a list of objects
-      of the correct type. The data transformations need to be looked at again.
-
     * Testing
 
-    * The mechanism to hide columns is cumbersome. This needs to be revisited.
+    * The mechanism to hide/omit columns is cumbersome. This needs to be revisited.
 
     * Better styling of table in read-only mode.
+      Merge the display and input versions of the layout.
 
     * Move rows up / down
 
     * kss validation - highlight the incorrect row, rather than the entire widget.
       Possibly show the error message in the field cell.
 
-    * Omit a column does not work.
+    * hidden mode
 
 Demo
 ----

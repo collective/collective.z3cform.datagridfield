@@ -9,6 +9,9 @@ Changelog
     * The widget can now be configured via the updateWidgets method. It
       is no longer necessary to create a custom factory.
 
+    * The columns can now be omitted.
+
+    * Provide a set of demo views for Object access.
 
 0.3 (2011-02-04)
 ----------------
