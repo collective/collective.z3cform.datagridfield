@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.4 (Unreleased)
+----------------
+
+    * Renamed the demo pages. The starting point is now @@demo-collective.z3cform.datagrid .
+
 0.3 (2011-02-04)
 ----------------
 
@@ -13,3 +18,4 @@ Changelog
 
     * Fixed the restructured text of the main README.txt so that it will show
       more friendly in PyPI.
+
