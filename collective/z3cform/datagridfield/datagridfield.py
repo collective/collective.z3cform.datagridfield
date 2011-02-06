@@ -5,11 +5,13 @@
 
 import zope.interface
 import zope.schema.interfaces
-from zope.schema import getFieldsInOrder
-from zope.schema import Object
-from zope.schema.interfaces import IList
+from zope.schema import getFieldsInOrder, getFieldNames
+from zope.schema.interfaces import IObject, IList
+
 from z3c.form.browser.object import ObjectWidget
 from z3c.form.object import SubformAdapter, ObjectSubForm
+from z3c.form.error import MultipleErrors
+
 
 
 from five import grok
@@ -85,7 +87,7 @@ class DataGridField(MultiWidget):
     def getWidget(self, idx):
         """Create the object widget. This is used to avoid looking up the widget"""
         valueType = self.field.value_type
-        if type(valueType) == Object:
+        if IObject.providedBy(valueType):
             widget = DataGridFieldObjectFactory(valueType, self.request)
         else:
             widget = zope.component.getMultiAdapter((valueType, self.request),
@@ -171,7 +173,6 @@ class GridDataConverter(grok.MultiAdapter, BaseDataConverter):
     def toFieldValue(self, value):
         return value
 
-
 class DataGridFieldObject(ObjectWidget):
 
     def isInsertEnabled(self):
@@ -182,6 +183,38 @@ class DataGridFieldObject(ObjectWidget):
 
     def portal_url(self):
         return self.__parent__.context.portal_url()
+
+    @apply
+    def value():
+        """I have moved this code from z3c/form/object.py because I want to allow
+           a field to handle a sub-set of the schema. I filter on the subform.fields
+        """
+        def get(self):
+            #value (get) cannot raise an exception, then we return insane values
+            try:
+                self.setErrors=True
+                return self.extract()
+            except MultipleErrors:
+                value = {}
+                active_names = self.subform.fields.keys()
+                for name in getFieldNames(self.field.schema):
+                    if name in active_names:
+                        value[name] = self.subform.widgets[name].value
+                return value
+        def set(self, value):
+            self._value = value
+            self.updateWidgets()
+
+            # ensure that we apply our new values to the widgets
+            if value is not interfaces.NO_VALUE:
+                active_names = self.subform.fields.keys()
+                for name in getFieldNames(self.field.schema):
+                    if name in active_names:
+                        self.applyValue(self.subform.widgets[name],
+                                    value.get(name, interfaces.NO_VALUE))
+
+        return property(get, set)
+
 
 @grok.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
 @grok.implementer(interfaces.IFieldWidget)
