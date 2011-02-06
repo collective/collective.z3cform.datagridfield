@@ -58,21 +58,13 @@ The layout of the table is defined by a second schema.::
 Configuration
 -------------
 
-Unfortunately, due to the way in which the widgets and sub-widgets are setup, it
-is difficult to configure the widget after it is created. Instead, you create
-a customised factory with the configuration that you need.::
+The widget can be customised via the updateWidgets method.
 
-
-    def CustomisedDataGridFieldFactory(field, request):
-        widget = DataGridField(request)
-        rv = FieldWidget(field, widget)
-        widget.allow_insert = False   # Enable/Disable the insert button on the right
-        widget.allow_delete = False   # Enable/Disable the delete button on the right
-        widget.auto_append = False    # Enable/Disable the auto-append feature
-        return rv
-
-    ...
-        fields['table'].widgetFactory = CustomDataGridFieldFactory
+    def updateWidgets(self):
+        super(EditForm, self).updateWidgets()
+        self.widgets['table'].allow_insert = False # Enable/Disable the insert button on the right
+        self.widgets['table'].allow_delete = False # Enable/Disable the delete button on the right
+        self.widgets['table'].auto_append = False  # Enable/Disable the auto-append feature
 
 Manipulating the Sub-form
 -------------------------

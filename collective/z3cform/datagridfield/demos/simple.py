@@ -9,13 +9,11 @@ from zope.interface import Interface
 from zope import schema
 
 from z3c.form import field
-from z3c.form.widget import FieldWidget
 from z3c.form.interfaces import DISPLAY_MODE, HIDDEN_MODE
 
 from plone.directives import form
 
 from collective.z3cform.datagridfield import DataGridFieldFactory
-from collective.z3cform.datagridfield import DataGridField
 
 
 class IAddress(Interface):
@@ -63,33 +61,28 @@ class EditForm(form.EditForm):
         ]}
 
 
-def DataGridFieldFactory2(field, request):
-    """Define a factory which produces a version which does not allow insert / delete"""
-    dgf = DataGridField(request)
-    dgf.allow_insert = False
-    dgf.allow_delete = False
-    return FieldWidget(field, dgf)
-
 class EditForm2(EditForm):
     label = u'This form has the insert and delete row options removed'
 
     grok.name('demo-collective.z3cform.datagrid-no-manipulators')
     fields = field.Fields(IPerson)
-    fields['address'].widgetFactory = DataGridFieldFactory2
+    fields['address'].widgetFactory = DataGridFieldFactory
 
-def DataGridFieldFactory3(field, request):
-    """Define a factory which produces a version which does not allow insert / delete"""
-    dgf = DataGridField(request)
-    dgf.auto_append = False
-    return FieldWidget(field, dgf)
-
+    def updateWidgets(self):
+        super(EditForm2, self).updateWidgets()
+        self.widgets['address'].allow_insert = False
+        self.widgets['address'].allow_delete = False
 
 class EditForm3(EditForm):
     label = u'This form has the auto-append row options removed'
 
     grok.name('demo-collective.z3cform.datagrid-no-auto-append')
     fields = field.Fields(IPerson)
-    fields['address'].widgetFactory = DataGridFieldFactory3
+    fields['address'].widgetFactory = DataGridFieldFactory
+
+    def updateWidgets(self):
+        super(EditForm3, self).updateWidgets()
+        self.widgets['address'].auto_append = False
 
 #### THIS ONE ONE NOT WORKING
 #### Widgets already initialised when this code is called

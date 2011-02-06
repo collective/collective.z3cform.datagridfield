@@ -141,6 +141,17 @@ class DataGridField(MultiWidget):
         return '<input type="hidden" name="%s" value="%d" />' % (
             self.counterName, counter)
 
+    def _includeRow(self, name):
+        if self.mode == INPUT_MODE:
+            if not name.endswith('AA') and not name.endswith('TT'):
+                return True
+            if name.endswith('AA'):
+                return self.auto_append
+            if name.endswith('TT'):
+                return self.auto_append or self.allow_insert
+        else:
+            return not name.endswith('AA') and not name.endswith('TT')
+
 @grok.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
 @grok.implementer(interfaces.IFieldWidget)
 def DataGridFieldFactory(field, request):
