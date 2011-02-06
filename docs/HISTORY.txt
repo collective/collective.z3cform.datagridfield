@@ -6,6 +6,10 @@ Changelog
 
     * Renamed the demo pages. The starting point is now @@demo-collective.z3cform.datagrid .
 
+    * The widget can now be configured via the updateWidgets method. It
+      is no longer necessary to create a custom factory.
+
+
 0.3 (2011-02-04)
 ----------------
 
