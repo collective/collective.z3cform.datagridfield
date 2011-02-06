@@ -8,7 +8,7 @@ from five import grok
 from zope.interface import Interface
 from zope import schema
 
-from z3c.form import field
+from z3c.form import field, button
 from z3c.form.interfaces import DISPLAY_MODE, HIDDEN_MODE
 
 from plone.directives import form
@@ -35,6 +35,21 @@ class IPerson(Interface):
         value_type=schema.Object(title=u'Address', schema=IAddress),
         required=True)
 
+TESTDATA = {
+            'name': 'MY NAME',
+            'address': [
+                   {'address_type': 'Work',
+                    'line1': 'My Office',
+                    'line2': 'Big Office Block',
+                    'city': 'Mega City',
+                    'country': 'The Old Sod'},
+                   {'address_type': 'Home',
+                    'line1': 'Home Sweet Home',
+                    'line2': 'Easy Street',
+                    'city': 'Burbs',
+                    'country': 'The Old Sod'}
+    ]}
+
 class EditForm(form.EditForm):
     label = u'This is a simple, default layout'
 
@@ -45,21 +60,23 @@ class EditForm(form.EditForm):
     fields['address'].widgetFactory = DataGridFieldFactory
 
     def getContent(self):
-        return {
-                'name': 'MY NAME',
-                'address': [
-                       {'address_type': 'Work',
-                        'line1': 'My Office',
-                        'line2': 'Big Office Block',
-                        'city': 'Mega City',
-                        'country': 'The Old Sod'},
-                       {'address_type': 'Home',
-                        'line1': 'Home Sweet Home',
-                        'line2': 'Easy Street',
-                        'city': 'Burbs',
-                        'country': 'The Old Sod'}
-        ]}
+        return TESTDATA
 
+    @button.buttonAndHandler(u'Save', name='save')
+    def handleSave(self, action):
+
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+
+        context = self.getContent()
+        for k, v in data.items():
+            context[k] = v
+
+    def updateActions(self):
+        """Bypass the baseclass editform - it causes problems"""
+        super(form.EditForm, self).updateActions()
 
 class EditForm2(EditForm):
     label = u'This form has the insert and delete row options removed'

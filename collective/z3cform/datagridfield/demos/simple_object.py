@@ -10,7 +10,7 @@ from zope import schema
 from zope.schema.fieldproperty import FieldProperty
 from zope.schema import getFieldsInOrder
 
-from z3c.form import field
+from z3c.form import field, button
 from z3c.form.interfaces import DISPLAY_MODE, HIDDEN_MODE, IDataConverter
 from z3c.form.converter import BaseDataConverter
 
@@ -70,6 +70,21 @@ class Person(object):
         self.name = name
         self.address = address
 
+TESTDATA = Person(
+    name = u'MY NAME',
+    address = AddressList([
+        Address(address_type = u'Work',
+            line1 = u'My Office',
+            line2 = u'Big Office Block',
+            city = u'Mega City',
+            country = u'The Old Sod'),
+        Address(address_type = u'Home',
+            line1 = u'Home Sweet Home',
+            line2 = u'Easy Street',
+            city = u'Burbs',
+            country = u'The Old Sod')
+    ]))
+
 class EditForm(form.EditForm):
     label = u'This is a simple, default layout - using Objects'
 
@@ -80,20 +95,24 @@ class EditForm(form.EditForm):
     fields['address'].widgetFactory = DataGridFieldFactory
 
     def getContent(self):
-        return Person(
-                name = u'MY NAME',
-                address = AddressList([
-                    Address(address_type = u'Work',
-                        line1 = u'My Office',
-                        line2 = u'Big Office Block',
-                        city = u'Mega City',
-                        country = u'The Old Sod'),
-                    Address(address_type = u'Home',
-                        line1 = u'Home Sweet Home',
-                        line2 = u'Easy Street',
-                        city = u'Burbs',
-                        country = u'The Old Sod')
-                ]))
+        return TESTDATA
+
+    @button.buttonAndHandler(u'Save', name='save')
+    def handleSave(self, action):
+
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+
+        context = self.getContent()
+        for k, v in data.items():
+            setattr(context, k, v)
+
+    def updateActions(self):
+        """Bypass the baseclass editform - it causes problems"""
+        super(form.EditForm, self).updateActions()
+
 
 class GridDataConverter(grok.MultiAdapter, BaseDataConverter):
     """Convert between the AddressList object and the widget"""
