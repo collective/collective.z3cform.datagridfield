@@ -1,5 +1,7 @@
 
-        <h2>Links</h2>
+<table width="100%"><tr>
+    <td>
+        <h2>Dict based demo views</h2>
         <ul>
             <li>
                 <a href="@@demo-collective.z3cform.datagrid"> demo-simple-edit-form </a>
@@ -26,5 +28,36 @@
                 <a href="@@demo-collective.z3cform.datagrid-read-only2"> table and cells are read-only </a>
             </li>
         </ul>
+    </td>
+    <td>
+        <h2>Object based demo views</h2>
+        <ul>
+            <li>
+                <a href="@@demo-collective.z3cform.datagrid-object"> demo-simple-edit-form </a>
+            </li>
+            <li>
+                <a href="@@demo-collective.z3cform.datagrid-object-no-manipulators"> demo-edit-form-no-row-manipulators </a>
+            </li>
+            <li>
+                <a href="@@demo-collective.z3cform.datagrid-object-no-auto-append"> demo-edit-form-no-auto-append </a>
+            </li>
+            <li>
+                <a href="@@demo-collective.z3cform.datagrid-object-no-country"> demo-edit-form-no-country [not working]</a>
+            </li>
+            <li>
+                <a href="@@demo-collective.z3cform.datagrid-object-column-widths"> demo-edit-form-column-widths </a>
+            </li>
+            <li>
+                <a href="@@demo-collective.z3cform.datagrid-object-hidden-column"> demo-edit-form-hidden-column </a>
+            </li>
+            <li>
+                <a href="@@demo-collective.z3cform.datagrid-object-read-only"> table is read-only, cells editable </a>
+            </li>
+            <li>
+                <a href="@@demo-collective.z3cform.datagrid-object-read-only2"> table and cells are read-only </a>
+            </li>
+        </ul>
+    </td>
+</tr></table>
 
 
