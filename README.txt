@@ -137,7 +137,7 @@ Demo
 Examples of configurations are in the demo folder.
 Once you install this package, the demo views will be visible on your site. ::
 
-    * http://localhost:8080/Plone/@@demo-simple-edit-form
+    * http://localhost:8080/Plone/@@demo-collective.z3cform.datagrid
 
 References
 ----------

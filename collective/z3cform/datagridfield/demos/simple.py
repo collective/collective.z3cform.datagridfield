@@ -41,7 +41,7 @@ class EditForm(form.EditForm):
     label = u'This is a simple, default layout'
 
     grok.context(Interface)
-    grok.name('demo-simple-edit-form')
+    grok.name('demo-collective.z3cform.datagrid')
 
     fields = field.Fields(IPerson)
     fields['address'].widgetFactory = DataGridFieldFactory
@@ -73,7 +73,7 @@ def DataGridFieldFactory2(field, request):
 class EditForm2(EditForm):
     label = u'This form has the insert and delete row options removed'
 
-    grok.name('demo-edit-form-no-row-manipulators')
+    grok.name('demo-collective.z3cform.datagrid-no-manipulators')
     fields = field.Fields(IPerson)
     fields['address'].widgetFactory = DataGridFieldFactory2
 
@@ -87,7 +87,7 @@ def DataGridFieldFactory3(field, request):
 class EditForm3(EditForm):
     label = u'This form has the auto-append row options removed'
 
-    grok.name('demo-edit-form-no-auto-append')
+    grok.name('demo-collective.z3cform.datagrid-no-auto-append')
     fields = field.Fields(IPerson)
     fields['address'].widgetFactory = DataGridFieldFactory3
 
@@ -97,7 +97,7 @@ class EditForm3(EditForm):
 class EditForm4(EditForm):
     label = u'This form has the country column removed - NOT WORKING'
 
-    grok.name('demo-edit-form-no-country')
+    grok.name('demo-collective.z3cform.datagrid-no-country')
     fields = field.Fields(IPerson)
     fields['address'].widgetFactory = DataGridFieldFactory
 
@@ -107,7 +107,7 @@ class EditForm4(EditForm):
 class EditForm5(EditForm):
     label = u'This form has column widths configured'
 
-    grok.name('demo-edit-form-column-widths')
+    grok.name('demo-collective.z3cform.datagrid-column-widths')
 
     def datagridUpdateWidgets(self, subform, widgets, widget):
         widgets['line1'].size = 40
@@ -119,7 +119,7 @@ class EditForm5(EditForm):
 class EditForm6(EditForm):
     label = u'This form has hidden the city column'
 
-    grok.name('demo-edit-form-hidden-column')
+    grok.name('demo-collective.z3cform.datagrid-hidden-column')
 
     def datagridUpdateWidgets(self, subform, widgets, widget):
         # This one hides the widgets
@@ -133,7 +133,7 @@ class EditForm6(EditForm):
 class EditForm7(EditForm):
     label = u'This form shows a read-only table'
 
-    grok.name('demo-edit-form-read-only')
+    grok.name('demo-collective.z3cform.datagrid-read-only')
 
     def updateWidgets(self):
         super(EditForm7, self).updateWidgets()
@@ -142,7 +142,7 @@ class EditForm7(EditForm):
 class EditForm8(EditForm):
     label = u'Table is readonly and cells are also readonly'
 
-    grok.name('demo-edit-form-read-only2')
+    grok.name('demo-collective.z3cform.datagrid-read-only2')
 
     def updateWidgets(self):
         super(EditForm8, self).updateWidgets()

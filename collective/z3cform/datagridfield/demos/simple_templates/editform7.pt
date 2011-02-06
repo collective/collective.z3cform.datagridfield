@@ -31,33 +31,7 @@
             <metal:block use-macro="context/@@ploneform-macros/titlelessform" />
         </div>
 
-        <h2>Links</h2>
-        <ul>
-            <li>
-                <a href="@@demo-simple-edit-form"> demo-simple-edit-form </a>
-            </li>
-            <li>
-                <a href="@@demo-edit-form-no-row-manipulators"> demo-edit-form-no-row-manipulators </a>
-            </li>
-            <li>
-                <a href="@@demo-edit-form-no-auto-append"> demo-edit-form-no-auto-append </a>
-            </li>
-            <li>
-                <a href="@@demo-edit-form-no-country"> demo-edit-form-no-country [not working]</a>
-            </li>
-            <li>
-                <a href="@@demo-edit-form-column-widths"> demo-edit-form-column-widths </a>
-            </li>
-            <li>
-                <a href="@@demo-edit-form-hidden-column"> demo-edit-form-hidden-column </a>
-            </li>
-            <li>
-                <a href="@@demo-edit-form-read-only"> table is read-only, cells editable </a>
-            </li>
-            <li>
-                <a href="@@demo-edit-form-read-only2"> table and cells are read-only </a>
-            </li>
-        </ul>
+        <span tal:replace="structure context/@@demo-collective.z3cform.datagrid-menu" />
 
         <div tal:replace="structure provider:plone.belowcontentbody" />
 
