@@ -35,6 +35,4 @@ setup(name='collective.z3cform.datagridfield',
       [z3c.autoinclude.plugin]
       target = plone
       """,
-      setup_requires=["PasteScript"],
-      paster_plugins = ["ZopeSkel"],
       )

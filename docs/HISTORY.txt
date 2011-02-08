@@ -4,7 +4,14 @@ Changelog
 0.5 (Unreleased)
 ----------------
 
-    * Put in the DictRow class as recommended by Martin Aspeli
+    * Put in the DictRow class (tks Martin Aspeli)
+
+    * Moved the demo code out to a separate package collective.z3cform.datagridfield_demo
+      (tks Laurence Rowe).
+
+    * Removed superfluous lines from setup.py (tks Laurence Rowe).
+    
+    * Removed unnessary dependency on dexterity (tks Laurence Rowe).
 
 0.4 (2011-02-06)
 ----------------
