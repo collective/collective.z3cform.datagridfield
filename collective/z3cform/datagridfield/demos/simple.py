@@ -14,6 +14,7 @@ from z3c.form.interfaces import DISPLAY_MODE, HIDDEN_MODE
 from plone.directives import form
 
 from collective.z3cform.datagridfield import DataGridFieldFactory
+from collective.z3cform.datagridfield import DictRow
 
 
 class IAddress(Interface):
@@ -36,7 +37,7 @@ class IAddress(Interface):
 class IPerson(Interface):
     name = schema.TextLine(title=u'Name', required=True)
     address = schema.List(title=u'Addresses',
-        value_type=schema.Object(title=u'Address', schema=IAddress),
+        value_type=DictRow(title=u'Address', schema=IAddress),
         required=True)
 
 TESTDATA = {

@@ -19,27 +19,15 @@ from five import grok
 from z3c.form.browser.multi import MultiWidget
 from z3c.form import interfaces
 
-from z3c.form.interfaces import IMultiWidget, IValidator, INPUT_MODE
+from z3c.form.interfaces import IValidator, INPUT_MODE
 from z3c.form.widget import FieldWidget
 from z3c.form.converter import BaseDataConverter
 from z3c.form.validator import SimpleFieldValidator
 
 
-class IDataGridField(IMultiWidget):
-    """Grid widget."""
+from interfaces import IDataGridField
 
-class DataGridFieldHandler(grok.View):
-    """Handler for Ajax Calls on this widget
-        This is not used.
-    """
-    grok.context(IDataGridField)
-
-    def __call__(self):
-
-        print 'DataGridFieldHandler', self.request.form
-
-    def render(self):
-        pass
+#------------[ Main Widget ]-----------------------------------------------
 
 class DataGridField(MultiWidget):
     """This grid should be applied to an schema.List item which has
@@ -73,19 +61,15 @@ class DataGridField(MultiWidget):
 
     field = property(getField, setField)
 
-##     def URL(self):
-##         form_url = self.request.getURL()
-## 
-##         form_prefix = self.form.prefix + self.__parent__.prefix
-##         widget_name = self.name[len(form_prefix):]
-##         return "%s/++widget++%s/@@datagridfieldhandler" % (form_url, widget_name,)
-## 
-
     def getWidget(self, idx):
         """Create the object widget. This is used to avoid looking up the widget"""
         valueType = self.field.value_type
         if IObject.providedBy(valueType):
             widget = DataGridFieldObjectFactory(valueType, self.request)
+            if idx in ['TT', 'AA']:
+                widget.setErrors = False
+            else:
+                widget.setErrors = True
         else:
             widget = zope.component.getMultiAdapter((valueType, self.request),
                 interfaces.IFieldWidget)
@@ -170,6 +154,8 @@ class GridDataConverter(grok.MultiAdapter, BaseDataConverter):
     def toFieldValue(self, value):
         return value
 
+#------------[ Support for each line ]-----------------------------------------------
+
 class DataGridFieldObject(ObjectWidget):
 
     def isInsertEnabled(self):
@@ -181,6 +167,7 @@ class DataGridFieldObject(ObjectWidget):
     def portal_url(self):
         return self.__parent__.context.portal_url()
 
+
     @apply
     def value():
         """I have moved this code from z3c/form/object.py because I want to allow
@@ -189,7 +176,6 @@ class DataGridFieldObject(ObjectWidget):
         def get(self):
             #value (get) cannot raise an exception, then we return insane values
             try:
-                self.setErrors=True
                 return self.extract()
             except MultipleErrors:
                 value = {}
@@ -219,6 +205,8 @@ def DataGridFieldObjectFactory(field, request):
     """IFieldWidget factory for DataGridField."""
     return FieldWidget(field, DataGridFieldObject(request))
 
+
+#------------[ Form to draw the line ]-----------------------------------------------
 
 class DataGridFieldObjectSubForm(ObjectSubForm):
     """Local class of subform - this is intended to all configuration information
