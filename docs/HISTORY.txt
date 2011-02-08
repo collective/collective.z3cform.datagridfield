@@ -13,6 +13,8 @@ Changelog
     
     * Removed unnessary dependency on dexterity (tks Laurence Rowe).
 
+    * Removed unnessary dependency on grok (tks Laurence Rowe).
+
 0.4 (2011-02-06)
 ----------------
 

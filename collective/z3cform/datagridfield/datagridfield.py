@@ -4,6 +4,7 @@
 
 
 import zope.interface
+import zope.component
 import zope.schema.interfaces
 from zope.schema import getFieldsInOrder, getFieldNames
 from zope.schema.interfaces import IObject, IList
@@ -12,9 +13,6 @@ from z3c.form.browser.object import ObjectWidget
 from z3c.form.object import SubformAdapter, ObjectSubForm
 from z3c.form.error import MultipleErrors
 
-
-
-from five import grok
 
 from z3c.form.browser.multi import MultiWidget
 from z3c.form import interfaces
@@ -135,17 +133,16 @@ class DataGridField(MultiWidget):
         else:
             return not name.endswith('AA') and not name.endswith('TT')
 
-@grok.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
-@grok.implementer(interfaces.IFieldWidget)
+@zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
+@zope.interface.implementer(interfaces.IFieldWidget)
 def DataGridFieldFactory(field, request):
     """IFieldWidget factory for DataGridField."""
     return FieldWidget(field, DataGridField(request))
 
-class GridDataConverter(grok.MultiAdapter, BaseDataConverter):
+class GridDataConverter(BaseDataConverter):
     """Convert between the context and the widget"""
     
-    grok.adapts(zope.schema.interfaces.IList, IDataGridField)
-    grok.implements(interfaces.IDataConverter)
+    zope.component.adapts(zope.schema.interfaces.IList, IDataGridField)
 
     def toWidgetValue(self, value):
         """Simply pass the data through with no change"""
@@ -199,8 +196,8 @@ class DataGridFieldObject(ObjectWidget):
         return property(get, set)
 
 
-@grok.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
-@grok.implementer(interfaces.IFieldWidget)
+@zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
+@zope.interface.implementer(interfaces.IFieldWidget)
 def DataGridFieldObjectFactory(field, request):
     """IFieldWidget factory for DataGridField."""
     return FieldWidget(field, DataGridFieldObject(request))
@@ -225,11 +222,11 @@ class DataGridFieldObjectSubForm(ObjectSubForm):
         return rv
 
 
-class DataGridFieldSubformAdapter(grok.MultiAdapter, SubformAdapter):
+class DataGridFieldSubformAdapter(SubformAdapter):
     """Give it my local class of subform, rather than the default"""
 
-    grok.implements(interfaces.ISubformFactory)
-    grok.adapts(zope.interface.Interface, #widget value
+    zope.interface.implements(interfaces.ISubformFactory)
+    zope.component.adapts(zope.interface.Interface, #widget value
                           interfaces.IFormLayer,    #request
                           zope.interface.Interface, #widget context
                           zope.interface.Interface, #form
@@ -239,19 +236,19 @@ class DataGridFieldSubformAdapter(grok.MultiAdapter, SubformAdapter):
 
     factory = DataGridFieldObjectSubForm
 
-class DataGridValidator(grok.MultiAdapter, SimpleFieldValidator):
+class DataGridValidator(SimpleFieldValidator):
     """
         I am crippling this validator - I return a list of dictionaries. If I don't
         cripple this it will fail because the return type is not of the correct object 
         type. For stronger typing replace both this and the converter
     """
-    grok.adapts(
+    zope.interface.implements(IValidator)
+    zope.component.adapts(
               zope.interface.Interface,
               zope.interface.Interface,
               zope.interface.Interface,  # Form
               IList,          # field
               DataGridField)             #widget
-    grok.provides(IValidator)
 
     def validate(self, value):
         """
