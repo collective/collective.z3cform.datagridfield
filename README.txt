@@ -33,7 +33,7 @@ The layout of the table is defined by a second schema.::
     from zope import interface
     from plone.directives import form
     
-    form collective.z3cforms.datagridfield import DataGridFieldFactory
+    form collective.z3cforms.datagridfield import DataGridFieldFactory, DictRow
     
     class ITableRowSchema(interface.Interface):
         one = schema.TextLine(title=u"One")
@@ -43,7 +43,7 @@ The layout of the table is defined by a second schema.::
     class IFormSchema(interface.Interface):
         four = schema.TextLine(title=u"Four")
         table = schema.List(title=u"Table"
-            value_type=schema.Object(title=u"tablerow", schema=ITableRowSchema))
+            value_type=DictRow(title=u"tablerow", schema=ITableRowSchema))
     
     class EditForm(form.EditForm):
         extends(form.EditForm)
@@ -59,7 +59,8 @@ Storage
 -------
 
 The data can be stored as either a list of dicts or a list of objects.
-In both cases the schema content type is 'schema.Object'. 
+If the data is a list of dicts, the value_type is DictRow.
+Otherwise, the value_type is 'schema.Object'. 
 
 If you are providing an Object content type (as opposed to dicts) you
 must provide your own conversion class. The default conversion class
