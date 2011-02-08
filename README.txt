@@ -125,14 +125,12 @@ TODO
 Demo
 ----
 
-Examples of configurations are in the demo folder.
-Once you install this package, the demo views will be visible on your site. ::
-
-    * http://localhost:8080/Plone/@@demo-collective.z3cform.datagrid
+Examples are in the package collective.z3cform.datagridfield_demo.
 
 References
 ----------
  
     * http://pypi.python.org/pypi/Products.DataGridField
+    * http://pypi.python.org/pypi/collective.z3cform.datagridfield_demo
 
 
