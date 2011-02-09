@@ -60,7 +60,9 @@ td.datagridwidget-hidden-data {
 }
 
 /* You cannot delete the auto-append row */
-tr.auto-append  > td.datagridwidget-manipulator.delete-row {
+tr.auto-append  > td.datagridwidget-manipulator.delete-row,
+tr.auto-append  > td.datagridwidget-manipulator.move-up,
+tr.auto-append  > td.datagridwidget-manipulator.move-down {
     display:none;
 }
 

@@ -35,6 +35,7 @@ class DataGridField(MultiWidget):
 
     allow_insert = True
     allow_delete = True
+    allow_reorder = False
     auto_append = True
 
     def setField(self, value):
@@ -160,6 +161,9 @@ class DataGridFieldObject(ObjectWidget):
 
     def isDeleteEnabled(self):
         return self.__parent__.allow_delete
+
+    def isReorderEnabled(self):
+        return self.__parent__.allow_reorder
 
     def portal_url(self):
         return self.__parent__.context.portal_url()

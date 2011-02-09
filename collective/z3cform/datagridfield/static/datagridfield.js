@@ -196,14 +196,26 @@ dataGridField2Functions = new Object();
         if(idx == null)
             return;     
             
+        // The up and down should cycle through the rows, excluding the auto-append and 
+        // empty-row rows.
+        var validrows = 0
+        for(var i = 0; i < rows.length; i++) {
+            var trow = rows[i];
+            if ($(trow).hasClass('datagridwidget-empty-row') || $(trow).hasClass('auto-append')) {
+                continue
+            }
+            validrows++;
+        }
+            
+
         // If this was the last row (before the blank row at the end used to create
         // new rows), move to the top, else move down one.
-        if(idx + 2 == rows.length) {
-            var nextRow = rows.item[0]
-            this.shiftRow(row, nextRow)
+        if (idx + 1 == validrows) {
+            var nextRow = rows[0];
+            this.shiftRow(row, nextRow);
         } else {
-            var nextRow = rows[idx+1]
-            this.shiftRow(nextRow, row)
+            var nextRow = rows[idx+1];
+            this.shiftRow(nextRow, row);
         }
         
         this.updateOrderIndex(tbody)
@@ -236,11 +248,22 @@ dataGridField2Functions = new Object();
         // Abort if the current row wasn't found
         if(idx == null)
             return;
-            
+
+        // The up and down should cycle through the rows, excluding the auto-append and 
+        // empty-row rows.
+        var validrows = 0
+        for(var i = 0; i < rows.length; i++) {
+            var trow = rows[i];
+            if ($(trow).hasClass('datagridwidget-empty-row') || $(trow).hasClass('auto-append')) {
+                continue
+            }
+            validrows++;
+        }
+
         // If this was the first row, move to the end (i.e. before the blank row
         // at the end used to create new rows), else move up one
         if(idx == 0) {
-            var previousRow = rows[rows.length - 1]
+            var previousRow = rows[validrows]
             this.shiftRow(row, previousRow);
         } else {
             var previousRow = rows[idx-1];
