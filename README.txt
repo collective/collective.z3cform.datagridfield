@@ -76,6 +76,7 @@ The widget can be customised via the updateWidgets method.
         self.widgets['table'].allow_insert = False # Enable/Disable the insert button on the right
         self.widgets['table'].allow_delete = False # Enable/Disable the delete button on the right
         self.widgets['table'].auto_append = False  # Enable/Disable the auto-append feature
+        self.widgets['table'].allow_reorder = False  # Enable/Disable the re-order rows feature
 
 The widget contains an attribute 'columns' which is manipulated to hide column
 titles.
@@ -114,8 +115,6 @@ TODO
 
     * Better styling of table in read-only mode.
       Merge the display and input versions of the layout.
-
-    * Move rows up / down
 
     * kss validation - highlight the incorrect row, rather than the entire widget.
       Possibly show the error message in the field cell.

@@ -4,6 +4,8 @@ Changelog
 0.6 (Unreleased)
 ----------------
 
+    * Implemented reorder functionality
+
 0.5 (2011-02-08)
 ----------------
 
