@@ -17,11 +17,11 @@ Requirements
 Installation
 ------------
 
-Add collective.z3cforms.datagridfield to your buildout eggs.::
+Add collective.z3cform.datagridfield to your buildout eggs.::
 
     eggs=\
         ...
-        collective.z3cforms.datagridfield
+        collective.z3cform.datagridfield
 
 Example usage
 -------------
@@ -33,7 +33,7 @@ The layout of the table is defined by a second schema.::
     from zope import interface
     from plone.directives import form
     
-    form collective.z3cforms.datagridfield import DataGridFieldFactory, DictRow
+    from collective.z3cform.datagridfield import DataGridFieldFactory, DictRow
     
     class ITableRowSchema(interface.Interface):
         one = schema.TextLine(title=u"One")
