@@ -24,10 +24,11 @@ tr.datagridwidget-row {
 }
 
 .datagridwidget-cell input, .datagridwidget-cell select, .datagridwidget-cell textarea {
-    width: 100%;
     border: 1px solid #CCC;
 	padding: 1px;
 }
+.datagridwidget-cell > input:only-child { width: 99%; padding: 0px; }
+
 .datagridwidget-cell div.error {
     color:red;
     font-weight:bold;

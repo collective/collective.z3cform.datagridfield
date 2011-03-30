@@ -4,6 +4,9 @@ Changelog
 0.6 (Unreleased)
 ----------------
 
+    * Only use width:100% on input cells that are the only element in the cell
+      [lentinj]
+
     * Reorder row indices backwards when adding rows. This means that adjacent
       rows don't share the same index temporarily, for example:-
       - Row 1 and 2 contain input:radio based widgets
