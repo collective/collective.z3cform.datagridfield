@@ -77,7 +77,7 @@ dataGridField2Functions = new Object();
             lastRow.parentNode.insertBefore(newtr, lastRow);
             
             // update orderindex hidden fields
-            dataGridField2Functions.updateOrderIndex(tbody);	        	    
+            dataGridField2Functions.updateOrderIndex(tbody,true);
         }    
     }
 
@@ -95,7 +95,7 @@ dataGridField2Functions = new Object();
         thisRow.parentNode.insertBefore(newtr, thisRow);
         
         // update orderindex hidden fields
-        this.updateOrderIndex(tbody);	
+        this.updateOrderIndex(tbody,true);
       
     }
 
@@ -120,7 +120,7 @@ dataGridField2Functions = new Object();
         $(newNode).removeClass('datagridwidget-empty-row');
         
         // update orderindex hidden fields
-        this.updateOrderIndex(tbody);		
+        this.updateOrderIndex(tbody,true);
           
     }
 
@@ -136,10 +136,9 @@ dataGridField2Functions = new Object();
         // hidden template row 
         var lastRow = rows[rows.length-1]; 
         
-        var newtr = document.createElement("tr");
-        newtr.setAttribute("id", "datagridwidget-row");
-        newtr.setAttribute("class", "datagridwidget-row");
-            
+        var newTr = $("<tr/>").attr("id","datagridwidget-row")
+                              .attr("class","datagridwidget-row");
+        
         // clone template contents from the last row to the newly created row
         // HOX HOX HOX
         // If f****ng IE clones lastRow directly it doesn't work.
@@ -148,15 +147,9 @@ dataGridField2Functions = new Object();
         // In Firefox everything worked like a charm.
         // So the code below is really a hack to satisfy Microsoft codeborgs.
         // keywords: IE javascript clone clonenode hidden element render visibility visual
-        child = lastRow.firstChild;
-        while(child != null) {
-            newchild = child.cloneNode(true);
-            newtr.appendChild(newchild);
-            child = child.nextSibling;
-        }		
-            
-        return newtr;	 
-    }
+        $(lastRow).children().clone(true).appendTo(newTr);
+        return newTr[0]
+    }    
 
 
     dataGridField2Functions.removeFieldRow = function(node) {
@@ -165,7 +158,7 @@ dataGridField2Functions = new Object();
         var row = this.getParentElementById(node, 'datagridwidget-row');
         var tbody = this.getParentElementById(node, 'datagridwidget-tbody');
         tbody.removeChild(row);
-        this.updateOrderIndex(tbody);	        	    
+        this.updateOrderIndex(tbody,false);	        	    
     }
 
     dataGridField2Functions.moveRowDown = function(currnode){
@@ -306,7 +299,7 @@ dataGridField2Functions = new Object();
     }
 
 
-    dataGridField2Functions.updateOrderIndex = function (tbody) {
+    dataGridField2Functions.updateOrderIndex = function (tbody, backwards) {
 
         /* Split from the dataGridField2 approach here - and just re-do
          * the numbers produced by z3c.form
@@ -316,11 +309,12 @@ dataGridField2Functions = new Object();
 
         var rows = this.getRows(tbody); 
         for (var i=0; i<rows.length; i++) {
-            var row = rows[i];
+            var idx = backwards ? rows.length-i-1 : i;
+            var row = rows[idx];
             if ($(row).hasClass('datagridwidget-empty-row') || $(row).hasClass('auto-append')) {
                 continue
             }
-            dataGridField2Functions.reindexRow(tbody, row, i);
+            dataGridField2Functions.reindexRow(tbody, row, idx);
         }
 
         $(document).find('input[name="' + name_prefix + 'count"]').each(function(){

@@ -4,6 +4,19 @@ Changelog
 0.6 (Unreleased)
 ----------------
 
+    * Reorder row indices backwards when adding rows. This means that adjacent
+      rows don't share the same index temporarily, for example:-
+      - Row 1 and 2 contain input:radio based widgets
+      - Row 0 added, row renumbering starts
+      - Row 1 widgets renamed 2
+      - Both sets of input:radio share the same name, one deselected
+      - Row 2 widgets renamed 3
+      - . . . 
+      [lentinj]
+
+    * Use jQuery to clone rows, and clone the jQuery events on the rows.
+      [lentinj]
+
     * Implemented reorder functionality
 
 0.5 (2011-02-08)
