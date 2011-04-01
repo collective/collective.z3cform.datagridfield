@@ -4,6 +4,9 @@ Changelog
 0.6 (Unreleased)
 ----------------
 
+    * _validate still used when import/exporting, fix up code so it works
+      [lentinj]
+
     * Add a DictRow serializer for transmogrify.dexterity
       [lentinj]
 
