@@ -4,6 +4,9 @@ Changelog
 0.6 (Unreleased)
 ----------------
 
+    * Add a DictRow serializer for transmogrify.dexterity
+      [lentinj]
+
     * Only use width:100% on input cells that are the only element in the cell
       [lentinj]
 

@@ -5,6 +5,7 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     xmlns:z3c="http://namespaces.zope.org/z3c"
     xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="collective.z3cform.datagridfield">
 
     <!-- Include configuration for dependencies listed in setup.py -->
@@ -40,7 +41,11 @@
   <adapter
         factory=".datagridfield.DataGridValidator"
         />
-              
+
+  <adapter factory=".converters.DictRowSerializer"
+        zcml:condition="installed transmogrify.dexterity"
+        />
+
   <z3c:widgetTemplate
         mode="input"
         widget=".datagridfield.DataGridField"
