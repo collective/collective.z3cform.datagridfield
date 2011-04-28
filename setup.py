@@ -29,6 +29,9 @@ setup(name='collective.z3cform.datagridfield',
           'plone.app.z3cform',
           'collective.testcaselayer',
       ],
+      extras_require={
+        'test': ['collective.z3cform.datagridfield_demo',]
+      },
       entry_points="""
       # -*- Entry points: -*-
 

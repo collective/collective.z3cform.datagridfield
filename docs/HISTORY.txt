@@ -4,6 +4,10 @@ Changelog
 0.6 (Unreleased)
 ----------------
 
+    * Depend on collective.z3cform.datagridfield_demo as a test extra;
+      use the browser view from this package in the tests.
+      [maurits]
+
     * _validate still used when import/exporting, fix up code so it works
       [lentinj]
 

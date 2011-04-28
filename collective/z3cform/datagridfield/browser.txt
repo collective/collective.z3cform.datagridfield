@@ -8,7 +8,7 @@ Functional Tests
 
 Open the demo simple edit form. This form  has a number of lines
 
-    >>> browser.open(portal_url+'/@@demo-simple-edit-form')
+    >>> browser.open(portal_url+'/@@demo-collective.z3cform.datagrid')
 
 Make sure that the first row of data is present
 
