@@ -74,5 +74,11 @@
       template="datagridfieldobject_display.pt"
       />
 
+  <configure zcml:condition="installed plone.supermodel">
+    <utility
+        component=".supermodel.DictRowHandler"
+        name="collective.z3cform.datagridfield.DictRow"
+        />
+  </configure>
 
 </configure>

@@ -4,6 +4,10 @@ Changelog
 0.6 (Unreleased)
 ----------------
 
+    * Register a plone.supermodel handler for the DictRow so it can be used
+      in supermodel models.
+      [davisagli]
+
     * Depend on collective.z3cform.datagridfield_demo as a test extra;
       use the browser view from this package in the tests.
       [maurits]
