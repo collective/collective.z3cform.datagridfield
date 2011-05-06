@@ -4,6 +4,11 @@ Changelog
 0.6 (Unreleased)
 ----------------
 
+    * When extracting a row value fails due to a validation error, convert
+      widget values to field values so the value can be successfully applied
+      to the grid widget.
+      [davisagli]
+
     * Register a plone.supermodel handler for the DictRow so it can be used
       in supermodel models.
       [davisagli]

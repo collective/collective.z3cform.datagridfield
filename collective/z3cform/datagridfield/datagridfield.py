@@ -183,7 +183,13 @@ class DataGridFieldObject(ObjectWidget):
                 active_names = self.subform.fields.keys()
                 for name in getFieldNames(self.field.schema):
                     if name in active_names:
-                        value[name] = self.subform.widgets[name].value
+                        widget = self.subform.widgets[name]
+                        widget_value = widget.value
+                        try:
+                            converter = interfaces.IDataConverter(widget)
+                            value[name] = converter.toFieldValue(widget_value)
+                        except ValueError:
+                            value[name] = widget_value
                 return value
         def set(self, value):
             self._value = value
