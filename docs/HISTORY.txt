@@ -4,6 +4,10 @@ Changelog
 0.6 (Unreleased)
 ----------------
 
+    * Make sure that updateWidgets is called to add blank rows even if the
+      widget has no value.
+      [davisagli]
+
     * When extracting a row value fails due to a validation error, convert
       widget values to field values so the value can be successfully applied
       to the grid widget.
