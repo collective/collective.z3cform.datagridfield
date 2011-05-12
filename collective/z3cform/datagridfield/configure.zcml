@@ -49,28 +49,28 @@
   <z3c:widgetTemplate
         mode="input"
         widget=".datagridfield.DataGridField"
-        layer="z3c.form.interfaces.IFormLayer"
+        layer="plone.app.z3cform.interfaces.IPloneFormLayer"
         template="datagridfield_input.pt"
         />
 
   <z3c:widgetTemplate
       mode="input"
       widget=".datagridfield.DataGridFieldObject"
-      layer="z3c.form.interfaces.IFormLayer"
+      layer="plone.app.z3cform.interfaces.IPloneFormLayer"
       template="datagridfieldobject_input.pt"
       />
 
   <z3c:widgetTemplate
         mode="display"
         widget=".datagridfield.DataGridField"
-        layer="z3c.form.interfaces.IFormLayer"
+        layer="plone.app.z3cform.interfaces.IPloneFormLayer"
         template="datagridfield_display.pt"
         />
 
   <z3c:widgetTemplate
       mode="display"
       widget=".datagridfield.DataGridFieldObject"
-      layer="z3c.form.interfaces.IFormLayer"
+      layer="plone.app.z3cform.interfaces.IPloneFormLayer"
       template="datagridfieldobject_display.pt"
       />
 

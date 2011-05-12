@@ -4,6 +4,10 @@ Changelog
 0.6 (Unreleased)
 ----------------
 
+    * Register templates on plone.app.z3cform.interfaces.IPloneFormLayer to
+      take precedence over that packages list widget templates.
+      [elro]
+
     * Make sure that updateWidgets is called to add blank rows even if the
       widget has no value.
       [davisagli]
