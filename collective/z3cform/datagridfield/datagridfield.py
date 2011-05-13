@@ -25,6 +25,7 @@ from z3c.form.validator import SimpleFieldValidator
 
 from interfaces import IDataGridField
 
+
 #------------[ Main Widget ]-----------------------------------------------
 
 class DataGridField(MultiWidget):
@@ -40,8 +41,9 @@ class DataGridField(MultiWidget):
 
     def setField(self, value):
         """
-            The field information is passed to the widget after it is initialised.
-            Use this call to initialise the column definitions.
+            The field information is passed to the widget after it is
+            initialised.  Use this call to initialise the column
+            definitions.
         """
         self._field = value
 
@@ -61,7 +63,9 @@ class DataGridField(MultiWidget):
     field = property(getField, setField)
 
     def getWidget(self, idx):
-        """Create the object widget. This is used to avoid looking up the widget"""
+        """Create the object widget. This is used to avoid looking up
+        the widget.
+        """
         valueType = self.field.value_type
         if IObject.providedBy(valueType):
             widget = DataGridFieldObjectFactory(valueType, self.request)
@@ -88,6 +92,7 @@ class DataGridField(MultiWidget):
 
     def name_prefix(self):
         return self.prefix
+
     def id_prefix(self):
         return self.prefix.replace('.', '-')
 
@@ -103,7 +108,8 @@ class DataGridField(MultiWidget):
         super(DataGridField, self).updateWidgets()
         if self.mode == INPUT_MODE:
             if self.auto_append:
-                # If we are doing 'auto-append', then a blank row needs to be added
+                # If we are doing 'auto-append', then a blank row
+                # needs to be added
                 widget = self.getWidget('AA')
                 widget.klass = 'datagridwidget-row auto-append'
                 self.widgets.append(widget)
@@ -141,15 +147,17 @@ class DataGridField(MultiWidget):
         else:
             return not name.endswith('AA') and not name.endswith('TT')
 
+
 @zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
 @zope.interface.implementer(interfaces.IFieldWidget)
 def DataGridFieldFactory(field, request):
     """IFieldWidget factory for DataGridField."""
     return FieldWidget(field, DataGridField(request))
 
+
 class GridDataConverter(BaseDataConverter):
     """Convert between the context and the widget"""
-    
+
     zope.component.adapts(zope.schema.interfaces.IList, IDataGridField)
 
     def toWidgetValue(self, value):
@@ -159,7 +167,8 @@ class GridDataConverter(BaseDataConverter):
     def toFieldValue(self, value):
         return value
 
-#------------[ Support for each line ]-----------------------------------------------
+
+#------------[ Support for each line ]-----------------------------------------
 
 class DataGridFieldObject(ObjectWidget):
 
@@ -175,14 +184,16 @@ class DataGridFieldObject(ObjectWidget):
     def portal_url(self):
         return self.__parent__.context.portal_url()
 
-
     @apply
     def value():
-        """I have moved this code from z3c/form/object.py because I want to allow
-           a field to handle a sub-set of the schema. I filter on the subform.fields
+        """I have moved this code from z3c/form/object.py because I
+           want to allow a field to handle a sub-set of the schema. I
+           filter on the subform.fields
         """
+
         def get(self):
-            #value (get) cannot raise an exception, then we return insane values
+            # value (get) cannot raise an exception, then we return
+            # insane values
             try:
                 return self.extract()
             except MultipleErrors:
@@ -198,6 +209,7 @@ class DataGridFieldObject(ObjectWidget):
                         except ValueError:
                             value[name] = widget_value
                 return value
+
         def set(self, value):
             self._value = value
             self.updateWidgets()
@@ -220,11 +232,11 @@ def DataGridFieldObjectFactory(field, request):
     return FieldWidget(field, DataGridFieldObject(request))
 
 
-#------------[ Form to draw the line ]-----------------------------------------------
+#------------[ Form to draw the line ]-----------------------------------------
 
 class DataGridFieldObjectSubForm(ObjectSubForm):
-    """Local class of subform - this is intended to all configuration information
-    to be passed all the way down to the subform.
+    """Local class of subform - this is intended to all configuration
+    information to be passed all the way down to the subform.
 
     All the parent and form nesting can be confusing, especially so
     when you throw fieldsets (groups) into the mix.  So some notes.
@@ -259,17 +271,21 @@ class DataGridFieldObjectSubForm(ObjectSubForm):
     def updateWidgets(self):
         rv = super(DataGridFieldObjectSubForm, self).updateWidgets()
         if hasattr(self.parentForm, 'datagridUpdateWidgets'):
-            self.parentForm.datagridUpdateWidgets(self, self.widgets, self.__parent__.__parent__)
+            self.parentForm.datagridUpdateWidgets(
+                self, self.widgets, self.__parent__.__parent__)
         elif hasattr(self.parentForm.__parent__, 'datagridUpdateWidgets'):
-            self.parentForm.__parent__.datagridUpdateWidgets(self, self.widgets, self.__parent__.__parent__)
+            self.parentForm.__parent__.datagridUpdateWidgets(
+                self, self.widgets, self.__parent__.__parent__)
         return rv
 
     def setupFields(self):
         rv = super(DataGridFieldObjectSubForm, self).setupFields()
         if hasattr(self.parentForm, 'datagridInitialise'):
-            self.parentForm.datagridInitialise(self, self.__parent__.__parent__)
+            self.parentForm.datagridInitialise(
+                self, self.__parent__.__parent__)
         elif hasattr(self.parentForm.__parent__, 'datagridInitialise'):
-            self.parentForm.__parent__.datagridInitialise(self, self.__parent__.__parent__)
+            self.parentForm.__parent__.datagridInitialise(
+                self, self.__parent__.__parent__)
         return rv
 
 
@@ -277,34 +293,36 @@ class DataGridFieldSubformAdapter(SubformAdapter):
     """Give it my local class of subform, rather than the default"""
 
     zope.interface.implements(interfaces.ISubformFactory)
-    zope.component.adapts(zope.interface.Interface, #widget value
-                          interfaces.IFormLayer,    #request
-                          zope.interface.Interface, #widget context
-                          zope.interface.Interface, #form
-                          DataGridFieldObject,      #widget
-                          zope.interface.Interface, #field
-                          zope.interface.Interface) #field.schema
+    zope.component.adapts(zope.interface.Interface,  # widget value
+                          interfaces.IFormLayer,     # request
+                          zope.interface.Interface,  # widget context
+                          zope.interface.Interface,  # form
+                          DataGridFieldObject,       # widget
+                          zope.interface.Interface,  # field
+                          zope.interface.Interface)  # field.schema
 
     factory = DataGridFieldObjectSubForm
 
+
 class DataGridValidator(SimpleFieldValidator):
     """
-        I am crippling this validator - I return a list of dictionaries. If I don't
-        cripple this it will fail because the return type is not of the correct object 
-        type. For stronger typing replace both this and the converter
+        I am crippling this validator - I return a list of
+        dictionaries. If I don't cripple this it will fail because the
+        return type is not of the correct object type. For stronger
+        typing replace both this and the converter
     """
     zope.interface.implements(IValidator)
     zope.component.adapts(
               zope.interface.Interface,
               zope.interface.Interface,
               zope.interface.Interface,  # Form
-              IList,          # field
-              DataGridField)             #widget
+              IList,                     # field
+              DataGridField)             # widget
 
     def validate(self, value):
         """
-            Don't validate the table - however, if there is a cell error, make sure that
-            the table widget shows it.
+            Don't validate the table - however, if there is a cell
+            error, make sure that the table widget shows it.
         """
         for subform in [widget.subform for widget in self.widget.widgets]:
             for widget in subform.widgets.values():
