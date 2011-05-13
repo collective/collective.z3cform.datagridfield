@@ -8,7 +8,7 @@ from row import DictRow
 from zope.schema import getFields
 
 class DictRowSerializer:
-    """Serializer to allow transmogrify.dexterity to write the dict. A custom 
+    """Serializer to allow transmogrify.dexterity to write the dict. A custom
     deserializer doesn't seem to be necessary.
     """
     implements(ISerializer)

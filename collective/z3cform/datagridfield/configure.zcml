@@ -21,11 +21,11 @@
 
   <!-- -*- extra stuff goes here -*- -->
   <class class=".datagridfield.DataGridField">
-        <require 
+        <require
             permission="zope.Public"
             interface=".datagridfield.IDataGridField"
             />
-  </class> 
+  </class>
 
   <browser:resourceDirectory
         name="collective.z3cform.datagridfield"
