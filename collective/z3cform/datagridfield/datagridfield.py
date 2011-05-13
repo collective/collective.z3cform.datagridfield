@@ -260,12 +260,16 @@ class DataGridFieldObjectSubForm(ObjectSubForm):
         rv = super(DataGridFieldObjectSubForm, self).updateWidgets()
         if hasattr(self.parentForm, 'datagridUpdateWidgets'):
             self.parentForm.datagridUpdateWidgets(self, self.widgets, self.__parent__.__parent__)
+        elif hasattr(self.parentForm.__parent__, 'datagridUpdateWidgets'):
+            self.parentForm.__parent__.datagridUpdateWidgets(self, self.widgets, self.__parent__.__parent__)
         return rv
 
     def setupFields(self):
         rv = super(DataGridFieldObjectSubForm, self).setupFields()
         if hasattr(self.parentForm, 'datagridInitialise'):
             self.parentForm.datagridInitialise(self, self.__parent__.__parent__)
+        elif hasattr(self.parentForm.__parent__, 'datagridInitialise'):
+            self.parentForm.__parent__.datagridInitialise(self, self.__parent__.__parent__)
         return rv
 
 

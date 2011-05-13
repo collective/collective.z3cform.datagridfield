@@ -4,6 +4,10 @@ Changelog
 0.6 (Unreleased)
 ----------------
 
+    * Search for datagridInitialise and datagridUpdateWidgets on the
+      parent form, also when in a fieldset.
+      [maurits]
+
     * Register templates on plone.app.z3cform.interfaces.IPloneFormLayer to
       take precedence over that packages list widget templates.
       [elro]
