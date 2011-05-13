@@ -225,6 +225,36 @@ def DataGridFieldObjectFactory(field, request):
 class DataGridFieldObjectSubForm(ObjectSubForm):
     """Local class of subform - this is intended to all configuration information
     to be passed all the way down to the subform.
+
+    All the parent and form nesting can be confusing, especially so
+    when you throw fieldsets (groups) into the mix.  So some notes.
+
+    When the datagrid object is part of a standard form without a
+    fieldset, these are the objects:
+
+    - self.__parent__ is a DataGridFieldObject
+
+    - self.parentForm is self.__parent__.form is the main edit/add
+      form or the view.
+
+    - self.__parent__.__parent__ is the DataGridField
+
+    - self.parentForm.__parent__ is the content item.
+
+    When the datagrid object is part of a fieldset, these are the
+    objects:
+
+    - self.__parent__ is a DataGridFieldObject
+
+    - self.parentForm is self.__parent__.form is the fieldset
+
+    - self.parentForm.__parent__ is self.parentForm.parentForm is the
+      main edit/add form or the view
+
+    - self.__parent__.__parent__ is the DataGridField
+
+    - self.parentForm.parentForm.__parent__ is the content item.
+
     """
     def updateWidgets(self):
         rv = super(DataGridFieldObjectSubForm, self).updateWidgets()
