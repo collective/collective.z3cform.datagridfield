@@ -4,6 +4,10 @@ Changelog
 0.7 (unreleased)
 ----------------
 
+    * Revert my fix to ensure that blank rows are added, because it duplicated
+      a fix in z3c.form resulting in extra rows.
+      [davisagli]
+
 0.6 (2011-05-17)
 ----------------
 

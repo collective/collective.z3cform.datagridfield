@@ -96,13 +96,6 @@ class DataGridField(MultiWidget):
     def id_prefix(self):
         return self.prefix.replace('.', '-')
 
-    def update(self):
-        super(DataGridField, self).update()
-        if not self._value:
-            # make sure we auto-append a blank row even if there's no value
-            # (normally updateWidgets gets called when the value is set)
-            self.updateWidgets()
-
     def updateWidgets(self):
         # if the field has configuration data set - copy it
         super(DataGridField, self).updateWidgets()

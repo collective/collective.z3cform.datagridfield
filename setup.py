@@ -27,6 +27,7 @@ setup(name='collective.z3cform.datagridfield',
           'setuptools',
           # -*- Extra requirements: -*-
           'plone.app.z3cform',
+          'z3c.form >= 2.4.3dev',
           'collective.testcaselayer',
       ],
       extras_require={
