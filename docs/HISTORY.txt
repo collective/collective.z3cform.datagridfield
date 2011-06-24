@@ -4,6 +4,10 @@ Changelog
 0.7 (unreleased)
 ----------------
 
+    * Changed markup/javascript to prevent duplicate HTML id attributes. Changed
+      Javascript to allow for datagrid page templates that don't use tables.
+      [dextermilo]
+
     * Improve spacing in CSS.
       [davisagli]
 

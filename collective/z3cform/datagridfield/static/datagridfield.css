@@ -4,13 +4,13 @@
   IE Hacks from that version or left in on the grounds that they might do something,
 */
 
-table.datagridwidget-table-view {
+.datagridwidget-table-view {
 	width: 100%;
     border: 1px solid #666;
     background: none repeat scroll 0 0 #EEE;
 }
 
-table.datagridwidget-table-view th {
+.datagridwidget-table-view .header {
     font-weight: bold;
     background: none repeat scroll 0 0 #DDD;
     color: #666;
@@ -19,7 +19,7 @@ table.datagridwidget-table-view th {
     text-align: left;
 }
 
-tr.datagridwidget-row {
+.datagridwidget-row {
 	vertical-align: top;
 }
 
@@ -36,18 +36,18 @@ tr.datagridwidget-row {
     font-weight:bold;
 }
 
-tr.datagridwidget-empty-row {
+.datagridwidget-empty-row {
 	/* Hidden row with default selection widget values */
 	display: none;
 }
 
 /* Error message is displayed above the field */
-td.datagridwidget-cell {
+.datagridwidget-cell {
 	vertical-align: bottom;
 	padding: 1px;
 }
 
-td.datagridwidget-manipulator {
+.datagridwidget-manipulator {
 	width: 16px;
 	text-align: center;
 	padding-bottom: 4px;
@@ -55,18 +55,18 @@ td.datagridwidget-manipulator {
 	vertical-align: bottom;
 }
 
-td.datagridwidget-manipulator img {
+.datagridwidget-manipulator img {
 	cursor: pointer;	
 }
 
-td.datagridwidget-hidden-data {
+.datagridwidget-hidden-data {
 	display: none;	
 }
 
 /* You cannot delete the auto-append row */
-tr.auto-append  > td.datagridwidget-manipulator.delete-row,
-tr.auto-append  > td.datagridwidget-manipulator.move-up,
-tr.auto-append  > td.datagridwidget-manipulator.move-down {
+.auto-append  > .datagridwidget-manipulator.delete-row,
+.auto-append  > .datagridwidget-manipulator.move-up,
+.auto-append  > .datagridwidget-manipulator.move-down {
     display:none;
 }
 

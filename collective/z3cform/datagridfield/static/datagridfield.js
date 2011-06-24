@@ -20,25 +20,19 @@ dataGridField2Functions = new Object();
     }
 
     dataGridField2Functions.getWidgetRows = function(currnode) {
-        /* Return primary <tr>s of current node's parent DGW */
-        tbody = this.getParentElementById(currnode, "datagridwidget-tbody");
+        /* Return primary nodes with class of datagridwidget-row,
+           they can be any tag: tr, div, etc. */
+        tbody = this.getParentByClass(currnode, "datagridwidget-body");
         return this.getRows(tbody);
     }
 
     dataGridField2Functions.getRows = function(tbody) {
-        /* Return <tr> rows of <table> element */
+        /* Return primary nodes with class of datagridwidget-row,
+           they can be any tag: tr, div, etc. */
         
         var rows = new Array()
         
-        child = tbody.firstChild;
-        while(child != null) {
-            if(child.tagName != null) {
-                if(child.tagName.toLowerCase() == "tr") {
-                    rows = rows.concat(child);
-                }
-            }
-            child = child.nextSibling;
-        }
+        rows = $(tbody).find('.datagridwidget-row');
                       
         return rows;   
     } 
@@ -52,14 +46,14 @@ dataGridField2Functions = new Object();
 
 
         // fetch required data structure   
-        var tbody = dataGridField2Functions.getParentElement(currnode, "TBODY");
+        var tbody = dataGridField2Functions.getParentByClass(currnode, "datagridwidget-body");
         var rows = dataGridField2Functions.getRows(tbody);        
         var lastRow = rows[rows.length-1]; 
         
-        var thisRow = dataGridField2Functions.getParentElementById(currnode, "datagridwidget-row");      
+        var thisRow = dataGridField2Functions.getParentRow(currnode);      
         $(thisRow).removeClass('auto-append');
         dataGridField2Functions.reindexRow(tbody, thisRow, 0); /* updateOrderIndex will give it the right value later */
-        $(thisRow).find('td.datagridwidget-cell').children().each(function(){
+        $(thisRow).find('.datagridwidget-cell').children().each(function(){
             $(this).unbind('change');
         });
         
@@ -68,7 +62,7 @@ dataGridField2Functions = new Object();
             // Create a new row
             var newtr = dataGridField2Functions.createNewRow(lastRow);
             $(newtr).addClass('auto-append');
-            $(newtr).find('td.datagridwidget-cell').children().each(function(){
+            $(newtr).find('.datagridwidget-cell').children().each(function(){
                 $(this).change(dataGridField2Functions.autoInsertRow);
             });
             dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
@@ -83,193 +77,146 @@ dataGridField2Functions = new Object();
 
     dataGridField2Functions.addRowAfter = function(currnode) {
         /*
-            Creates a new row before the clicked row
+            Creates a new row after the clicked row
         */
         
         // fetch required data structure
-        var tbody = this.getParentElementById(currnode, "datagridwidget-tbody"); 
-        var thisRow = this.getParentElementById(currnode, "datagridwidget-row"); 
+        var tbody = this.getParentByClass(currnode, "datagridwidget-body"); 
+        var thisRow = this.getParentRow(currnode); 
 
         var newtr = this.createNewRow(thisRow);
-            
-        thisRow.parentNode.insertBefore(newtr, thisRow);
+        if (thisRow.hasClass('auto-append') == true) {
+            $(newtr).insertBefore(thisRow);
+        } else {
+            $(newtr).insertAfter(thisRow);
+        }
         
         // update orderindex hidden fields
         this.updateOrderIndex(tbody,true);
       
     }
 
-    dataGridField2Functions.addRow = function(id) {
-        /* Explitcly add row for given dataGridField2 
-        
-            @param id Archetypes field id for the widget	
-        */
-        
-        // fetch required data structure
-        var tbody = document.getElementById("datagridwidget-tbody-" + id);    
-        var rows = this.getRows(tbody);    
-        var lastRow = rows[rows.length-1];
-            
-        var oldRows = rows.length;
-                      
-        // Create a new row
-        var newtr = this.createNewRow(lastRow);
-        
-        // Put new row to DOM tree before template row        
-        newNode = lastRow.parentNode.insertBefore(newtr, lastRow);
-        $(newNode).removeClass('datagridwidget-empty-row');
-        
-        // update orderindex hidden fields
-        this.updateOrderIndex(tbody,true);
-          
-    }
-
-    dataGridField2Functions.createNewRow = function(tr) { 
+    dataGridField2Functions.createNewRow = function(node) { 
         /* Creates a new row 
                
-           @param tr A row in a table where we'll be adding the new row
+           @param node A row in a table where we'll be adding the new row
         */
-        
-        var tbody = this.getParentElementById(tr, "datagridwidget-tbody"); 
-        var rows = this.getRows(tbody);   
+        var tbody = this.getParentByClass(node, "datagridwidget-body");   
         
         // hidden template row 
-        var lastRow = rows[rows.length-1]; 
+        var emptyRow = $(tbody).find('.datagridwidget-empty-row');
         
-        var newTr = $("<tr/>").attr("id","datagridwidget-row")
-                              .attr("class","datagridwidget-row");
+        var markup = $(emptyRow).clone();
         
-        // clone template contents from the last row to the newly created row
-        // HOX HOX HOX
-        // If f****ng IE clones lastRow directly it doesn't work.
-        // lastRow is in hidden state and no matter what you do it remains hidden.
-        // i.e. overriding class doesn't bring it visible.
-        // In Firefox everything worked like a charm.
-        // So the code below is really a hack to satisfy Microsoft codeborgs.
-        // keywords: IE javascript clone clonenode hidden element render visibility visual
-        $(lastRow).children().clone(true).appendTo(newTr);
+        var newTr = $(markup).attr("class","datagridwidget-row");
+        
         return newTr[0]
     }    
 
 
     dataGridField2Functions.removeFieldRow = function(node) {
         /* Remove the row in which the given node is found */
-        
-        var row = this.getParentElementById(node, 'datagridwidget-row');
-        var tbody = this.getParentElementById(node, 'datagridwidget-tbody');
-        tbody.removeChild(row);
+        var tbody = this.getParentByClass(node, "datagridwidget-body"); 
+        var row = this.getParentRow(node);
+        $(row).detach();
         this.updateOrderIndex(tbody,false);	        	    
     }
-
-    dataGridField2Functions.moveRowDown = function(currnode){
+    
+    dataGridField2Functions.moveRow = function(currnode, direction){
         /* Move the given row down one */
                
-        var tbody = this.getParentElementById(currnode, "datagridwidget-tbody");    
+        var tbody = this.getParentByClass(currnode, "datagridwidget-body");    
         
         var rows = this.getWidgetRows(currnode);
         
-        var row = this.getParentElementById(currnode, "datagridwidget-row");      
+        var row = this.getParentRow(currnode);      
         if(row == null) {
             alert("Couldn't find DataGridWidget row");
             return;
         }
         
-        var idx = null
+        var idx = null;
         
         // We can't use nextSibling because of blank text nodes in some browsers
         // Need to find the index of the row
-        for(var t = 0; t < rows.length; t++) {
-            if(rows[t] == row) {
-                idx = t;
-                break;
+        
+        rows.each(function (i) {
+            if (this == row[0]) {
+                idx = i;
             }
-        }
+        });
 
         // Abort if the current row wasn't found
         if(idx == null)
-            return;     
+            return;
+                
             
         // The up and down should cycle through the rows, excluding the auto-append and 
         // empty-row rows.
-        var validrows = 0
-        for(var i = 0; i < rows.length; i++) {
-            var trow = rows[i];
-            if ($(trow).hasClass('datagridwidget-empty-row') || $(trow).hasClass('auto-append')) {
-                continue
+        var validrows = 0;
+        rows.each(function (i) {
+            if ($(this).hasClass('datagridwidget-empty-row') != true && $(this).hasClass('auto-append') != true) {
+                validrows+=1;
             }
-            validrows++;
-        }
-            
-
-        // If this was the last row (before the blank row at the end used to create
-        // new rows), move to the top, else move down one.
-        if (idx + 1 == validrows) {
-            var nextRow = rows[0];
-            this.shiftRow(row, nextRow);
-        } else {
-            var nextRow = rows[idx+1];
-            this.shiftRow(nextRow, row);
-        }
+        });
         
-        this.updateOrderIndex(tbody)
-
+        if (idx+1 == validrows) {
+            if (direction = "down") {
+                this.moveRowToTop(row);
+            } else {
+                nextRow = rows[idx-1];
+                this.shiftRow(row, nextRow);
+            }
+            
+        } else if (idx == 0) {
+            if (direction == "up") {
+                this.moveRowToBottom(row);
+            } else {
+                nextRow = rows[parseInt(idx+1)];
+                this.shiftRow(row, nextRow);
+            }
+            
+        } else {
+            if (direction == "up") {
+                nextRow = rows[idx-1];
+                this.shiftRow(nextRow, row);
+            } else {
+                nextRow = rows[parseInt(idx+1)];
+                this.shiftRow(row, nextRow);
+            }
+        }
+        this.updateOrderIndex(tbody);
+    }
+    
+    dataGridField2Functions.moveRowDown = function(currnode){
+        this.moveRow(currnode, "down");
     }
 
     dataGridField2Functions.moveRowUp = function(currnode){
-        /* Move the given row up one */
-        
-        var tbody = this.getParentElementById(currnode, "datagridwidget-tbody");    
-        var rows = this.getWidgetRows(currnode);
-        
-        var row = this.getParentElementById(currnode, "datagridwidget-row");      
-        if(row == null) {
-            alert("Couldn't find DataGridWidget row");
-            return;
-        }
-
-        var idx = null
-        
-        // We can't use nextSibling because of blank text nodes in some browsers
-        // Need to find the index of the row
-        for(var t = 0; t < rows.length; t++) {
-            if(rows[t] == row) {
-                idx = t;
-                break;
-            }
-        }
-        
-        // Abort if the current row wasn't found
-        if(idx == null)
-            return;
-
-        // The up and down should cycle through the rows, excluding the auto-append and 
-        // empty-row rows.
-        var validrows = 0
-        for(var i = 0; i < rows.length; i++) {
-            var trow = rows[i];
-            if ($(trow).hasClass('datagridwidget-empty-row') || $(trow).hasClass('auto-append')) {
-                continue
-            }
-            validrows++;
-        }
-
-        // If this was the first row, move to the end (i.e. before the blank row
-        // at the end used to create new rows), else move up one
-        if(idx == 0) {
-            var previousRow = rows[validrows]
-            this.shiftRow(row, previousRow);
-        } else {
-            var previousRow = rows[idx-1];
-            this.shiftRow(row, previousRow);
-        }
-        
-        this.updateOrderIndex(tbody);
+        this.moveRow(currnode, "up");
     }
 
     dataGridField2Functions.shiftRow = function(bottom, top){
         /* Put node top before node bottom */
+        $(top).insertBefore(bottom);   
+    }
+    
+    dataGridField2Functions.moveRowToTop = function (row) {
+        rows = this.getWidgetRows(row);
+        $(row).insertBefore(rows[0]);
+    }
+    
+    dataGridField2Functions.moveRowToBottom = function (row) {
+        rows = this.getWidgetRows(row);
         
-        bottom.parentNode.insertBefore(bottom, top)   
+        // make sure we insert the directly above any auto appended rows
+        var insert_after = 0;
+        rows.each(function (i) {
+            if ($(this).hasClass('datagridwidget-empty-row') != true && $(this).hasClass('auto-append') != true) {
+                insert_after = i;
+            }
+        });
+        $(row).insertAfter(rows[insert_after]);
     }
 
     dataGridField2Functions.reindexRow = function (tbody, row, newindex) {
@@ -304,7 +251,7 @@ dataGridField2Functions = new Object();
         /* Split from the dataGridField2 approach here - and just re-do
          * the numbers produced by z3c.form
          */
-        var data=$(tbody).data();
+        var data=tbody.data();
         var name_prefix = data.name_prefix + '.';
 
         var rows = this.getRows(tbody); 
@@ -345,6 +292,20 @@ dataGridField2Functions = new Object();
 
         return parent;
     }
+    
+    dataGridField2Functions.getParentRow = function (node) {
+        return this.getParentByClass(node, 'datagridwidget-row')
+    }
+    
+    dataGridField2Functions.getParentByClass = function(node, klass) {
+        var parent = $(node).closest("." + klass);
+        
+        if (parent.length) {
+            return parent;
+        }
+        
+        return null;
+    }
 
     dataGridField2Functions.getParentElementById = function(currnode, id) {
         /* Find the first parent node with the given id 
@@ -377,7 +338,7 @@ dataGridField2Functions = new Object();
     }
 
     /* Bind the handlers to the auto append rows */
-    $('tr.auto-append > td.datagridwidget-cell').live('change', dataGridField2Functions.autoInsertRow);
+    $('.auto-append > .datagridwidget-cell').live('change', dataGridField2Functions.autoInsertRow);
   });
 })(jQuery);
 
