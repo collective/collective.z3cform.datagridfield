@@ -1,108 +1,108 @@
 Changelog
 =========
 
-0.7 (unreleased)
+0.7 (2011-07-01)
 ----------------
 
-    * Changed markup/javascript to prevent duplicate HTML id attributes. Changed
-      Javascript to allow for datagrid page templates that don't use tables.
-      [dextermilo]
+* Changed markup/javascript to prevent duplicate HTML id attributes. Changed
+  Javascript to allow for datagrid page templates that don't use tables.
+  [dextermilo]
 
-    * Improve spacing in CSS.
-      [davisagli]
+* Improve spacing in CSS.
+  [davisagli]
 
-    * Revert my fix to ensure that blank rows are added, because it duplicated
-      a fix in z3c.form resulting in extra rows.
-      [davisagli]
+* Revert my fix to ensure that blank rows are added, because it duplicated
+  a fix in z3c.form resulting in extra rows.
+  [davisagli]
 
 0.6 (2011-05-17)
 ----------------
 
-    * Search for datagridInitialise and datagridUpdateWidgets on the
-      parent form, also when in a fieldset.
-      [maurits]
+* Search for datagridInitialise and datagridUpdateWidgets on the
+  parent form, also when in a fieldset.
+  [maurits]
 
-    * Register templates on plone.app.z3cform.interfaces.IPloneFormLayer to
-      take precedence over that packages list widget templates.
-      [elro]
+* Register templates on plone.app.z3cform.interfaces.IPloneFormLayer to
+  take precedence over that packages list widget templates.
+  [elro]
 
-    * Make sure that updateWidgets is called to add blank rows even if the
-      widget has no value.
-      [davisagli]
+* Make sure that updateWidgets is called to add blank rows even if the
+  widget has no value.
+  [davisagli]
 
-    * When extracting a row value fails due to a validation error, convert
-      widget values to field values so the value can be successfully applied
-      to the grid widget.
-      [davisagli]
+* When extracting a row value fails due to a validation error, convert
+  widget values to field values so the value can be successfully applied
+  to the grid widget.
+  [davisagli]
 
-    * Register a plone.supermodel handler for the DictRow so it can be used
-      in supermodel models.
-      [davisagli]
+* Register a plone.supermodel handler for the DictRow so it can be used
+  in supermodel models.
+  [davisagli]
 
-    * Depend on collective.z3cform.datagridfield_demo as a test extra;
-      use the browser view from this package in the tests.
-      [maurits]
+* Depend on collective.z3cform.datagridfield_demo as a test extra;
+  use the browser view from this package in the tests.
+  [maurits]
 
-    * _validate still used when import/exporting, fix up code so it works
-      [lentinj]
+* _validate still used when import/exporting, fix up code so it works
+  [lentinj]
 
-    * Add a DictRow serializer for transmogrify.dexterity
-      [lentinj]
+* Add a DictRow serializer for transmogrify.dexterity
+  [lentinj]
 
-    * Only use width:100% on input cells that are the only element in the cell
-      [lentinj]
+* Only use width:100% on input cells that are the only element in the cell
+  [lentinj]
 
-    * Reorder row indices backwards when adding rows. This means that adjacent
-      rows don't share the same index temporarily, for example:-
-      - Row 1 and 2 contain input:radio based widgets
-      - Row 0 added, row renumbering starts
-      - Row 1 widgets renamed 2
-      - Both sets of input:radio share the same name, one deselected
-      - Row 2 widgets renamed 3
-      - . . . 
-      [lentinj]
+* Reorder row indices backwards when adding rows. This means that adjacent
+  rows don't share the same index temporarily, for example:-
+  - Row 1 and 2 contain input:radio based widgets
+  - Row 0 added, row renumbering starts
+  - Row 1 widgets renamed 2
+  - Both sets of input:radio share the same name, one deselected
+  - Row 2 widgets renamed 3
+  - . . . 
+  [lentinj]
 
-    * Use jQuery to clone rows, and clone the jQuery events on the rows.
-      [lentinj]
+* Use jQuery to clone rows, and clone the jQuery events on the rows.
+  [lentinj]
 
-    * Implemented reorder functionality
+* Implemented reorder functionality
 
 0.5 (2011-02-08)
 ----------------
 
-    * Put in the DictRow class (tks Martin Aspeli)
+* Put in the DictRow class (tks Martin Aspeli)
 
-    * Moved the demo code out to a separate package collective.z3cform.datagridfield_demo
-      (tks Laurence Rowe).
+* Moved the demo code out to a separate package collective.z3cform.datagridfield_demo
+  (tks Laurence Rowe).
 
-    * Removed superfluous lines from setup.py (tks Laurence Rowe).
-    
-    * Removed unnessary dependency on dexterity (tks Laurence Rowe).
+* Removed superfluous lines from setup.py (tks Laurence Rowe).
 
-    * Removed unnessary dependency on grok (tks Laurence Rowe).
+* Removed unnessary dependency on dexterity (tks Laurence Rowe).
+
+* Removed unnessary dependency on grok (tks Laurence Rowe).
 
 0.4 (2011-02-06)
 ----------------
 
-    * Renamed the demo pages. The starting point is now @@demo-collective.z3cform.datagrid .
+* Renamed the demo pages. The starting point is now @@demo-collective.z3cform.datagrid .
 
-    * The widget can now be configured via the updateWidgets method. It
-      is no longer necessary to create a custom factory.
+* The widget can now be configured via the updateWidgets method. It
+  is no longer necessary to create a custom factory.
 
-    * The columns can now be omitted.
+* The columns can now be omitted.
 
-    * Provide a set of demo views for Object access.
+* Provide a set of demo views for Object access.
 
 0.3 (2011-02-04)
 ----------------
 
-    * The auto-append functionality did not bind correctly for popup forms.
-      I switched to using jQuery.live() instead of binding at document load time.
+* The auto-append functionality did not bind correctly for popup forms.
+  I switched to using jQuery.live() instead of binding at document load time.
 
-    * Added a menu to the demo pages
+* Added a menu to the demo pages
 
-    * Added a display only form option.
+* Added a display only form option.
 
-    * Fixed the restructured text of the main README.txt so that it will show
-      more friendly in PyPI.
+* Fixed the restructured text of the main README.txt so that it will show
+  more friendly in PyPI.
 
