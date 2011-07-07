@@ -5,5 +5,7 @@
     <div tal:replace="structure widget/render" />
   </td>
 </tal:block>
-<input name="field-empty-marker" type="hidden" value="1"
-       tal:attributes="name string:${view/name}-empty-marker" />
+  <td class="datagridwidget-hidden-data">
+    <input name="field-empty-marker" type="hidden" value="1"
+           tal:attributes="name string:${view/name}-empty-marker" />
+  </td>
