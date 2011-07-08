@@ -4,10 +4,14 @@ Changelog
 0.8 (unreleased)
 ----------------
 
+* Tidying up and reducing complexity of auto-insert functionality
+  [davidjb]
+
 * Removing unnecessary auto-insert bind and unbind as this is already covered 
   by jQuery's `live()` function against the `auto-append` class. Adding/removing
   this class against rows automatically does this.
   [davidjb]
+
 * Resolved issue with auto-insert functionality not working by removing
   table-specific check in Javascript.
   [davidjb]

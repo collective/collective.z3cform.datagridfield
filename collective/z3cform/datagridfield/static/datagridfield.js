@@ -47,22 +47,21 @@ dataGridField2Functions = new Object();
 
         // fetch required data structure   
         var tbody = dataGridField2Functions.getParentByClass(currnode, "datagridwidget-body");
-        var rows = dataGridField2Functions.getRows(tbody);        
-        var lastRow = rows[rows.length-1]; 
-        
-        var thisRow = dataGridField2Functions.getParentRow(currnode);      
+        var thisRow = dataGridField2Functions.getParentRow(currnode);
+
+        // Remove the auto-append functionality from the row
         $(thisRow).removeClass('auto-append');
-        dataGridField2Functions.reindexRow(tbody, thisRow, 0); /* updateOrderIndex will give it the right value later */
         
         // Create a new row
-        var newtr = dataGridField2Functions.createNewRow(lastRow);
+        var newtr = dataGridField2Functions.createNewRow(thisRow);
+        // Add auto-append functionality to our new row
         $(newtr).addClass('auto-append');
         dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
                                                             
         // Put new row to DOM tree before template row        
-        $(newtr).insertBefore(lastRow);
+        $(newtr).insertAfter(thisRow);
         
-        // update orderindex hidden fields
+        // Update order index to give rows correct values
         dataGridField2Functions.updateOrderIndex(tbody,true);
     }
 
