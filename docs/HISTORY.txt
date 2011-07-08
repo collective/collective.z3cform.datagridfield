@@ -4,6 +4,12 @@ Changelog
 0.8 (unreleased)
 ----------------
 
+* During auto-insert, add our new row into the document first, before reindexing
+  it and changing its elements' IDs. This allows Javascript that depends on 
+  these IDs (such as plone.formwidget.autocomplete) to pick up the correct 
+  fields.
+  [davidjb]
+
 * Tidying up and reducing complexity of auto-insert functionality
   [davidjb]
 

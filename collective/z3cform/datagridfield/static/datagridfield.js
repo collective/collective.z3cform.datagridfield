@@ -44,7 +44,6 @@ dataGridField2Functions = new Object();
          */
         var currnode = window.event ? window.event.srcElement : e.currentTarget;
 
-
         // fetch required data structure   
         var tbody = dataGridField2Functions.getParentByClass(currnode, "datagridwidget-body");
         var thisRow = dataGridField2Functions.getParentRow(currnode);
@@ -56,10 +55,18 @@ dataGridField2Functions = new Object();
         var newtr = dataGridField2Functions.createNewRow(thisRow);
         // Add auto-append functionality to our new row
         $(newtr).addClass('auto-append');
-        dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
                                                             
-        // Put new row to DOM tree before template row        
+        /* Put new row to DOM tree after our current row.  Do this before 
+         * reindexing to ensure that any Javascript we insert that depends on 
+         * DOM element IDs (such as plone.formwidget.autocomplete) will
+         * pick up this row before any IDs get changed.  At this point, 
+         * we techinically have duplicate TT IDs in our document
+         * (one for this new row, one for the hidden row), but jQuery 
+         * selectors will pick up elements in this new row first.
+         */
         $(newtr).insertAfter(thisRow);
+
+        dataGridField2Functions.reindexRow(tbody, newtr, 'AA'); 
         
         // Update order index to give rows correct values
         dataGridField2Functions.updateOrderIndex(tbody,true);
