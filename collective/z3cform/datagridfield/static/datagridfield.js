@@ -53,20 +53,14 @@ dataGridField2Functions = new Object();
         var thisRow = dataGridField2Functions.getParentRow(currnode);      
         $(thisRow).removeClass('auto-append');
         dataGridField2Functions.reindexRow(tbody, thisRow, 0); /* updateOrderIndex will give it the right value later */
-        $(thisRow).find('.datagridwidget-cell').children().each(function(){
-            $(this).unbind('change');
-        });
         
         // Create a new row
         var newtr = dataGridField2Functions.createNewRow(lastRow);
         $(newtr).addClass('auto-append');
-        $(newtr).find('.datagridwidget-cell').children().each(function(){
-            $(this).change(dataGridField2Functions.autoInsertRow);
-        });
         dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
                                                             
         // Put new row to DOM tree before template row        
-        lastRow.parentNode.insertBefore(newtr, lastRow);
+        $(newtr).insertBefore(lastRow);
         
         // update orderindex hidden fields
         dataGridField2Functions.updateOrderIndex(tbody,true);
