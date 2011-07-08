@@ -57,22 +57,19 @@ dataGridField2Functions = new Object();
             $(this).unbind('change');
         });
         
-        /* Skip the very last row which is a hidden template row */
-        if (rows.length-1 == (thisRow.rowIndex)) {
-            // Create a new row
-            var newtr = dataGridField2Functions.createNewRow(lastRow);
-            $(newtr).addClass('auto-append');
-            $(newtr).find('.datagridwidget-cell').children().each(function(){
-                $(this).change(dataGridField2Functions.autoInsertRow);
-            });
-            dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
-                                                                
-            // Put new row to DOM tree before template row        
-            lastRow.parentNode.insertBefore(newtr, lastRow);
-            
-            // update orderindex hidden fields
-            dataGridField2Functions.updateOrderIndex(tbody,true);
-        }    
+        // Create a new row
+        var newtr = dataGridField2Functions.createNewRow(lastRow);
+        $(newtr).addClass('auto-append');
+        $(newtr).find('.datagridwidget-cell').children().each(function(){
+            $(this).change(dataGridField2Functions.autoInsertRow);
+        });
+        dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
+                                                            
+        // Put new row to DOM tree before template row        
+        lastRow.parentNode.insertBefore(newtr, lastRow);
+        
+        // update orderindex hidden fields
+        dataGridField2Functions.updateOrderIndex(tbody,true);
     }
 
     dataGridField2Functions.addRowAfter = function(currnode) {

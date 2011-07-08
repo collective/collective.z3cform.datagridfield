@@ -4,7 +4,9 @@ Changelog
 0.8 (unreleased)
 ----------------
 
-- Nothing changed yet.
+* Resolved issue with auto-insert functionality not working by removing
+  table-specific check in Javascript.
+  [davidjb]
 
 
 0.7 (2011-07-01)
