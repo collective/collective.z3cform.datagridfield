@@ -4,6 +4,10 @@ Changelog
 0.8 (unreleased)
 ----------------
 
+* Don't error out when getting a ``FormatterValidationError``, pass
+  it on to z3c.form instead.
+  [claytron]
+
 * Give manipulator images a relative src rather than absolute. This
   previously meant the widget didn't work on sites without Plone/Zope at the
   root of the domain.

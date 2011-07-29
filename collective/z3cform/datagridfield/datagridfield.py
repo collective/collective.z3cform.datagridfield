@@ -20,6 +20,7 @@ from z3c.form import interfaces
 from z3c.form.interfaces import IValidator, INPUT_MODE
 from z3c.form.widget import FieldWidget
 from z3c.form.converter import BaseDataConverter
+from z3c.form.converter import FormatterValidationError
 from z3c.form.validator import SimpleFieldValidator
 
 
@@ -199,7 +200,7 @@ class DataGridFieldObject(ObjectWidget):
                         try:
                             converter = interfaces.IDataConverter(widget)
                             value[name] = converter.toFieldValue(widget_value)
-                        except ValueError:
+                        except (FormatterValidationError, ValueError):
                             value[name] = widget_value
                 return value
 
