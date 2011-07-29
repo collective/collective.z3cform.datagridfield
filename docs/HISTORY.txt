@@ -4,6 +4,11 @@ Changelog
 0.8 (unreleased)
 ----------------
 
+* Give manipulator images a relative src rather than absolute. This
+  previously meant the widget didn't work on sites without Plone/Zope at the
+  root of the domain.
+  [davidjb]
+
 * During auto-insert, add our new row into the document first, before reindexing
   it and changing its elements' IDs. This allows Javascript that depends on 
   these IDs (such as plone.formwidget.autocomplete) to pick up the correct 

@@ -11,27 +11,27 @@
 </td>
 <td class="datagridwidget-manipulator insert-row"
     tal:condition="view/isInsertEnabled">
-    <img src="/++resource++collective.z3cform.datagridfield/add_row_icon.gif"
+    <img src="++resource++collective.z3cform.datagridfield/add_row_icon.gif"
       alt="Add row"
       i18n:attributes="alt label_datagridwidget_manipulators_addrow"
       onclick="dataGridField2Functions.addRowAfter(this); return false"/>
 </td>
 <td  class="datagridwidget-manipulator delete-row"
     tal:condition="view/isDeleteEnabled">
-  <img src="/++resource++collective.z3cform.datagridfield/delete_row_icon.gif"
+  <img src="++resource++collective.z3cform.datagridfield/delete_row_icon.gif"
       alt="Delete row"
       i18n:attributes="alt label_datagridwidget_manipulators_deleterow"
       onclick="dataGridField2Functions.removeFieldRow(this);return false"/>
 </td>
 <td class="datagridwidget-manipulator move-up"
     tal:condition="view/isReorderEnabled">
-  <img src="/++resource++collective.z3cform.datagridfield/move_row_up_icon.gif"
+  <img src="++resource++collective.z3cform.datagridfield/move_row_up_icon.gif"
        alt="▲" i18n:attributes="alt label_datagridwidget_manipulators_moverowup"
          onclick="dataGridField2Functions.moveRowUp(this);return false"/>
 </td>
 <td class="datagridwidget-manipulator move-down"
     tal:condition="view/isReorderEnabled">
-  <img src="/++resource++collective.z3cform.datagridfield/move_row_down_icon.gif"
+  <img src="++resource++collective.z3cform.datagridfield/move_row_down_icon.gif"
        alt="▼" i18n:attributes="alt label_datagridwidget_manipulators_moverowdown"
          onclick="dataGridField2Functions.moveRowDown(this);return false"/>
 </td>
