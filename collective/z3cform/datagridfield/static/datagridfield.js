@@ -1,7 +1,6 @@
 dataGridField2Functions = new Object();
 
-(function($) {
-  $(document).ready(function(){
+jQuery(function($) {
 
     dataGridField2Functions.getInputOrSelect = function(node) {
         /* Get the (first) input or select form element under the given node */
@@ -334,6 +333,5 @@ dataGridField2Functions = new Object();
 
     /* Bind the handlers to the auto append rows */
     $('.auto-append > .datagridwidget-cell').live('change', dataGridField2Functions.autoInsertRow);
-  });
-})(jQuery);
 
+});
