@@ -217,9 +217,8 @@ dataGridField2Functions = new Object();
     }
 
     dataGridField2Functions.reindexRow = function (tbody, row, newindex) {
-        var data=$(tbody).data();
-        var name_prefix = data.name_prefix + '.';
-        var id_prefix = data.id_prefix + '-';
+        var name_prefix = $(tbody).attr('data-name_prefix') + '.';
+        var id_prefix = $(tbody).attr('data-id_prefix') + '-';
 
         $(row).find('[name^="' + name_prefix +'"]').each(function(){
             var oldname = this.name.substr(name_prefix.length);
@@ -248,8 +247,7 @@ dataGridField2Functions = new Object();
         /* Split from the dataGridField2 approach here - and just re-do
          * the numbers produced by z3c.form
          */
-        var data=tbody.data();
-        var name_prefix = data.name_prefix + '.';
+        var name_prefix = $(tbody).attr('data-name_prefix') + '.';
 
         var rows = this.getRows(tbody); 
         for (var i=0; i<rows.length; i++) {

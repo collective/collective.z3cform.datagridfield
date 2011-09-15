@@ -24,8 +24,7 @@
 </thead>
 <tbody class="datagridwidget-body" tal:attributes="data-name_prefix view/name_prefix; data-id_prefix view/id_prefix">
   <tal:block repeat="widget view/widgets">
-    <tr class="row"
-        tal:attributes="class python:'%s%s datagridwidget-row' % (widget.klass, widget.mode=='hidden' and ' hidden' or '')"
+    <tr tal:attributes="class python:'%s%s' % (widget.klass, widget.mode=='hidden' and ' hidden' or '')"
         tal:condition="python:view._includeRow(widget.name)">
       <metal:block define-macro="widget-row">
           <div tal:replace="structure widget/render"></div>

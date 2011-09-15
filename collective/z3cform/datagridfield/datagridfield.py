@@ -82,7 +82,7 @@ class DataGridField(MultiWidget):
         widget.__parent__ = self
 
         widget.mode = self.mode
-        widget.klass = 'row'
+        widget.klass = 'datagridwidget-row'
         #set widget.form (objectwidget needs this)
         if interfaces.IFormAware.providedBy(self):
             widget.form = self.form

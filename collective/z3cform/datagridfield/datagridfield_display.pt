@@ -20,8 +20,8 @@
 </thead>
 <tbody id="datagridwidget-tbody" tal:attributes="data-name_prefix view/name_prefix; data-id_prefix view/id_prefix">
   <tal:block repeat="widget view/widgets">
-    <tr class="row" id="datagridwidget-row" tal:attributes="class widget/klass"
-         tal:condition="python:widget.mode != 'hidden' and not widget.name.endswith('AA') and not widget.name.endswith('TT')">
+    <tr tal:attributes="class widget/klass"
+        tal:condition="python:widget.mode != 'hidden' and not widget.name.endswith('AA') and not widget.name.endswith('TT')">
       <metal:block define-macro="widget-row">
           <div tal:replace="structure widget/render"></div>
       </metal:block>
