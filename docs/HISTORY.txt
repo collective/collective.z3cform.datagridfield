@@ -7,8 +7,8 @@ Changelog
 * Avoid using the "row" CSS class.
   [davisagli]
 
-* Fixes to work with jQuery 1.3.x (use .remove() instead of .detach(), and fetch data
-  attributes a different way).
+* Fixes to work with jQuery 1.3.x (use .remove() instead of .detach(), fetch data
+  attributes a different way, and avoid live binding the change event).
   [davisagli]
 
 * Don't error out when getting a ``FormatterValidationError``, pass

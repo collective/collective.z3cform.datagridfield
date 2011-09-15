@@ -48,6 +48,7 @@ jQuery(function($) {
         var thisRow = dataGridField2Functions.getParentRow(currnode);
 
         // Remove the auto-append functionality from the row
+        $('.auto-append > .datagridwidget-cell').unbind('change');
         $(thisRow).removeClass('auto-append');
         
         // Create a new row
@@ -64,6 +65,7 @@ jQuery(function($) {
          * selectors will pick up elements in this new row first.
          */
         $(newtr).insertAfter(thisRow);
+        $('.auto-append > .datagridwidget-cell').change(dataGridField2Functions.autoInsertRow);
 
         dataGridField2Functions.reindexRow(tbody, newtr, 'AA'); 
         
@@ -332,6 +334,6 @@ jQuery(function($) {
     }
 
     /* Bind the handlers to the auto append rows */
-    $('.auto-append > .datagridwidget-cell').live('change', dataGridField2Functions.autoInsertRow);
+    $('.auto-append > .datagridwidget-cell').change(dataGridField2Functions.autoInsertRow);
 
 });
