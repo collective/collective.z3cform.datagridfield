@@ -4,6 +4,10 @@ Changelog
 0.8 (unreleased)
 ----------------
 
+* Use .remove() instead of .detach(), as the latter is available in older
+  jQuery.
+  [davisagli]
+
 * Don't error out when getting a ``FormatterValidationError``, pass
   it on to z3c.form instead.
   [claytron]

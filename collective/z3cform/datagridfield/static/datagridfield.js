@@ -115,8 +115,8 @@ dataGridField2Functions = new Object();
         /* Remove the row in which the given node is found */
         var tbody = this.getParentByClass(node, "datagridwidget-body"); 
         var row = this.getParentRow(node);
-        $(row).detach();
-        this.updateOrderIndex(tbody,false);	        	    
+        $(row).remove();
+        this.updateOrderIndex(tbody,false);
     }
     
     dataGridField2Functions.moveRow = function(currnode, direction){
