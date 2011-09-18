@@ -13,9 +13,9 @@
 
   <genericsetup:registerProfile
       name="default"
-      title="Version of DataGridField for use with Dexterity / z3c.form"
+      title="Data grid field for z3c.form"
       directory="profiles/default"
-      description="Extension profile for Version of DataGridField for use with Dexterity / z3c.form"
+      description=""
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
