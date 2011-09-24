@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.8 (unreleased)
+0.8 (2011-09-24)
 ----------------
 
 * Avoid using the "row" CSS class.
