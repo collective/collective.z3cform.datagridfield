@@ -235,10 +235,17 @@ jQuery(function($) {
             }
             this.name = name_prefix + newindex + oldname.substr(oldindex.length);
         });
-        $(row).find('[id^="' + id_prefix +'"]').each(function(){
-            var oldid = this.id.substr(id_prefix.length);
-            var oldindex = oldid.split('-', 1)[0];
-            this.id = id_prefix + newindex + oldid.substr(oldindex.length);
+        $(row).find('[id*="' + id_prefix +'"]').each(function(){
+            var regexp = new RegExp(id_prefix + ".*-")
+            this.id = this.id.replace(regexp, id_prefix + newindex + "-");
+        });
+        $(row).find('[for*="' + id_prefix +'"]').each(function(){
+            var regexp = new RegExp(id_prefix + ".*-")
+            this.setAttribute('for', this.getAttribute('for').replace(regexp, id_prefix + newindex + "-"));
+        });
+        $(row).find('[class*="' + name_prefix +'"]').each(function(){
+            var regexp = new RegExp(name_prefix + ".*\\.")
+            this.className = this.className.replace(regexp, name_prefix + newindex + ".");
         });
     }
 
