@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.9 (unreleased)
+0.9 (2011-10-27)
 ----------------
 
 * Clone events when adding new row - fixes bug where browse button of
