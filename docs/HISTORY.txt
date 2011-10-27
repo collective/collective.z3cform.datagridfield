@@ -4,6 +4,12 @@ Changelog
 0.9 (unreleased)
 ----------------
 
+* Clone events when adding new row - fixes bug where browse button of
+  plone.formwidget.contenttree did nothing for new rows
+  [anthonygerrard]
+
+* Reindex more indexed attributes of cloned row
+  [anthonygerrard] 
 
 0.8 (2011-09-24)
 ----------------

@@ -104,7 +104,7 @@ jQuery(function($) {
         // hidden template row 
         var emptyRow = $(tbody).find('.datagridwidget-empty-row');
         
-        var markup = $(emptyRow).clone();
+        var markup = $(emptyRow).clone(true);
         
         var newTr = $(markup).attr("class","datagridwidget-row");
         
@@ -236,15 +236,15 @@ jQuery(function($) {
             this.name = name_prefix + newindex + oldname.substr(oldindex.length);
         });
         $(row).find('[id*="' + id_prefix +'"]').each(function(){
-            var regexp = new RegExp(id_prefix + ".*-")
+            var regexp = new RegExp(id_prefix + ".*?-")
             this.id = this.id.replace(regexp, id_prefix + newindex + "-");
         });
         $(row).find('[for*="' + id_prefix +'"]').each(function(){
-            var regexp = new RegExp(id_prefix + ".*-")
+            var regexp = new RegExp(id_prefix + ".*?-")
             this.setAttribute('for', this.getAttribute('for').replace(regexp, id_prefix + newindex + "-"));
         });
         $(row).find('[class*="' + name_prefix +'"]').each(function(){
-            var regexp = new RegExp(name_prefix + ".*\\.")
+            var regexp = new RegExp(name_prefix + ".*?\\.")
             this.className = this.className.replace(regexp, name_prefix + newindex + ".");
         });
     }
