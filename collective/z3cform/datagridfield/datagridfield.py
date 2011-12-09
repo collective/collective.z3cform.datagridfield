@@ -155,11 +155,32 @@ class GridDataConverter(BaseDataConverter):
     zope.component.adapts(zope.schema.interfaces.IList, IDataGridField)
 
     def toWidgetValue(self, value):
-        """Simply pass the data through with no change"""
-        return value
+        if value is self.field.missing_value:
+            return interfaces.NO_VALUE
+
+        retval = []
+        for row in value:
+            retrow = {}
+            for name in zope.schema.getFieldNames(self.field.value_type.schema):
+                dm = zope.component.getMultiAdapter(
+                    (row, self.field.value_type.schema[name]), interfaces.IDataManager)
+                retrow[name] = dm.query(value)
+            retval.append(retrow)
+        return retval
 
     def toFieldValue(self, value):
-        return value
+        if value is interfaces.NO_VALUE:
+            return self.field.missing_value
+
+        retval = []
+        for row in value:
+            retrow = {}
+            for name in zope.schema.getFieldNames(self.field.value_type.schema):
+                dm = zope.component.getMultiAdapter(
+                    (retrow, self.field.value_type.schema[name]), interfaces.IDataManager)
+                dm.set(row[name])
+            retval.append(retrow)
+        return retval
 
 
 #------------[ Support for each line ]-----------------------------------------
