@@ -25,12 +25,41 @@ class TestCase(ptc.PloneTestCase):
     layer = layer
 
 
+from zope.publisher.browser import TestRequest
+from zope.interface import alsoProvides
+from zope.interface import implements
+from plone.app.z3cform.interfaces import IPloneFormLayer
+from Products.Five.utilities.marker import mark
+from plone.z3cform.interfaces import IWrappedForm
+from collective.z3cform.datagridfield_demo.testdata import EditForm, IPerson
+
+
+
+class RelationsTestCase(ptc.PloneTestCase):
+    layer = layer
+
+    def afterSetUp(self):
+        pass
+
+    def test_relation(self):
+        request = TestRequest()
+        alsoProvides(request, IPloneFormLayer)
+        alsoProvides(self.portal, IPerson)
+        
+        form = EditForm(self.portal, request)
+        mark(form, IWrappedForm)
+        html = form()
+        pass
+
+
 def test_suite():
     return unittest.TestSuite([
 
         ztc.FunctionalDocFileSuite(
             'browser.txt', package='collective.z3cform.datagridfield',
             test_class=TestCase),
+
+        unittest.makeSuite(RelationsTestCase),
 
         ])
 
