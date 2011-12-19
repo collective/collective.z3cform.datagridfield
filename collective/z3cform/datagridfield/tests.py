@@ -66,6 +66,7 @@ class RelationsTestCase(ptc.PloneTestCase):
         # address should be a list of dicts, each containing a RelationValue for the link
         assert hasattr(self.portal.aq_base, 'address')
         assert isinstance(self.portal.address, list)
+        assert len(self.portal.address) > 0
         for f in self.portal.address:
             assert isinstance(f['link'], RelationValue)
 
@@ -93,7 +94,9 @@ class RelationsTestCase(ptc.PloneTestCase):
         # address should be a list of dicts, each containing a RelationValue for the link
         assert hasattr(self.portal.aq_base, 'address')
         assert isinstance(self.portal.address, list)
+        assert len(self.portal.address) > 0
         for f in self.portal.address:
+            assert len(f['links']) > 0
             for l in f['links']:
                 assert isinstance(l, RelationValue)
 
