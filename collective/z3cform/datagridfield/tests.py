@@ -15,8 +15,18 @@ class Layer(BasePTCLayer):
     def afterSetUp(self):
         # Install the example.conference product
         fiveconfigure.debug_mode = True
+        self.addProfile('plone.app.dexterity:default')
         self.addProfile('collective.z3cform.datagridfield:default')
         fiveconfigure.debug_mode = False
+
+        from zope.intid.interfaces import IIntIds
+        from zope.component import getUtility
+
+        intids = getUtility(IIntIds)
+        intids.register(self.portal.news)
+        intids.register(self.portal['front-page'])
+
+
 
 layer = Layer([ptc_layer])
 
@@ -47,8 +57,12 @@ class RelationsTestCase(ptc.PloneTestCase):
         assert not hasattr(self.portal.aq_base, 'address')
 
         request = TestRequest(form={'form.widgets.mytitle': 'This is my title',
+                                    'form.widgets.address.0-empty-marker': '1',
                                     'form.widgets.address.0.widgets.anothertitle': 'This is another title',
-                                    'form.widgets.address.0.widgets.link': ['/Plone/news', ]})
+                                    'form.widgets.address.0.widgets.link': ['/plone/news'],
+                                    'form.widgets.address.0.widgets.link-empty-marker': '1',
+                                    'form.widgets.address.count': '1',
+                                    })
         alsoProvides(request, IPloneFormLayer)
         alsoProvides(request, IAttributeAnnotatable)
         alsoProvides(self.portal, IPerson)
@@ -75,8 +89,12 @@ class RelationsTestCase(ptc.PloneTestCase):
         assert not hasattr(self.portal.aq_base, 'address')
 
         request = TestRequest(form={'form.widgets.mytitle': 'This is my title',
+                                    'form.widgets.address.0-empty-marker': '1',
                                     'form.widgets.address.0.widgets.anothertitle': 'This is another title',
-                                    'form.widgets.address.0.widgets.links': ['/Plone/news', '/Plone/front-page' ]})
+                                    'form.widgets.address.0.widgets.links': ['/plone/news', '/plone/front-page'],
+                                    'form.widgets.address.0.widgets.links-empty-marker': '1',
+                                    'form.widgets.address.count': '1',
+                                    })
         alsoProvides(request, IPloneFormLayer)
         alsoProvides(request, IAttributeAnnotatable)
         alsoProvides(self.portal, IPerson)
