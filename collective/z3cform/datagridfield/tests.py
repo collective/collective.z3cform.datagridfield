@@ -25,12 +25,91 @@ class TestCase(ptc.PloneTestCase):
     layer = layer
 
 
+from zope.publisher.browser import TestRequest
+from zope.interface import alsoProvides
+from zope.interface import implements
+from plone.app.z3cform.interfaces import IPloneFormLayer
+from Products.Five.utilities.marker import mark
+from plone.z3cform.interfaces import IWrappedForm
+from collective.z3cform.datagridfield_demo.testdata import EditForm, IPerson
+from zope.annotation.interfaces import IAttributeAnnotatable
+from z3c.relationfield import RelationValue
+
+
+class RelationsTestCase(ptc.PloneTestCase):
+    layer = layer
+
+    def afterSetUp(self):
+        pass
+
+    def test_relationchoice(self):
+        
+        assert not hasattr(self.portal.aq_base, 'address')
+
+        request = TestRequest(form={'form.widgets.mytitle': 'This is my title',
+                                    'form.widgets.address.0.widgets.anothertitle': 'This is another title',
+                                    'form.widgets.address.0.widgets.link': ['/Plone/news', ]})
+        alsoProvides(request, IPloneFormLayer)
+        alsoProvides(request, IAttributeAnnotatable)
+        alsoProvides(self.portal, IPerson)
+        
+        form = EditForm(self.portal, request)
+        mark(form, IWrappedForm)
+
+        form.update()
+        form.render()
+        
+        # Fake submitting. Plone redirects after a successful save.
+        data, errors = form.extractData()
+        form.applyChanges(data)
+
+        # address should be a list of dicts, each containing a RelationValue for the link
+        assert hasattr(self.portal.aq_base, 'address')
+        assert isinstance(self.portal.address, list)
+        assert len(self.portal.address) > 0
+        for f in self.portal.address:
+            assert isinstance(f['link'], RelationValue)
+
+    def test_relationlist(self):
+        
+        assert not hasattr(self.portal.aq_base, 'address')
+
+        request = TestRequest(form={'form.widgets.mytitle': 'This is my title',
+                                    'form.widgets.address.0.widgets.anothertitle': 'This is another title',
+                                    'form.widgets.address.0.widgets.links': ['/Plone/news', '/Plone/front-page' ]})
+        alsoProvides(request, IPloneFormLayer)
+        alsoProvides(request, IAttributeAnnotatable)
+        alsoProvides(self.portal, IPerson)
+        
+        form = EditForm(self.portal, request)
+        mark(form, IWrappedForm)
+
+        form.update()
+        form.render()
+        
+        # Fake submitting. Plone redirects after a successful save.
+        data, errors = form.extractData()
+        form.applyChanges(data)
+
+        # address should be a list of dicts, each containing a RelationValue for the link
+        assert hasattr(self.portal.aq_base, 'address')
+        assert isinstance(self.portal.address, list)
+        assert len(self.portal.address) > 0
+        for f in self.portal.address:
+            assert len(f['links']) > 0
+            for l in f['links']:
+                assert isinstance(l, RelationValue)
+
+
+
 def test_suite():
     return unittest.TestSuite([
 
         ztc.FunctionalDocFileSuite(
             'browser.txt', package='collective.z3cform.datagridfield',
             test_class=TestCase),
+
+        unittest.makeSuite(RelationsTestCase),
 
         ])
 

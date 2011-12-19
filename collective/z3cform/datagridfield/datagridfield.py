@@ -234,8 +234,9 @@ class DataGridFieldObject(ObjectWidget):
                 active_names = self.subform.fields.keys()
                 for name in getFieldNames(self.field.schema):
                     if name in active_names:
-                        self.applyValue(self.subform.widgets[name],
-                                    value.get(name, interfaces.NO_VALUE))
+                        val = value.get(name, interfaces.NO_VALUE)
+                        if val != interfaces.NO_VALUE:
+                            self.applyValue(self.subform.widgets[name], val)
 
         return property(get, set)
 
