@@ -155,8 +155,8 @@ class GridDataConverter(BaseDataConverter):
     zope.component.adapts(zope.schema.interfaces.IList, IDataGridField)
 
     def toWidgetValue(self, value):
-        if value is self.field.missing_value:
-            return interfaces.NO_VALUE
+        if value == [interfaces.NO_VALUE]:
+            return value
 
         retval = []
         for row in value:
@@ -169,7 +169,7 @@ class GridDataConverter(BaseDataConverter):
         return retval
 
     def toFieldValue(self, value):
-        if value is interfaces.NO_VALUE:
+        if value == [interfaces.NO_VALUE]:
             return self.field.missing_value
 
         retval = []
