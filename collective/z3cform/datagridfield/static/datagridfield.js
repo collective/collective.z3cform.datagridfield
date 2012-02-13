@@ -159,11 +159,11 @@ jQuery(function($) {
         });
         
         if (idx+1 == validrows) {
-            if (direction = "down") {
+            if (direction == "down") {
                 this.moveRowToTop(row);
             } else {
                 nextRow = rows[idx-1];
-                this.shiftRow(row, nextRow);
+                this.shiftRow(nextRow, row);
             }
             
         } else if (idx == 0) {
