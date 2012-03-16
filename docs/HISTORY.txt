@@ -4,6 +4,9 @@ Changelog
 0.11 (unreleased)
 -----------------
 
+* be able to use with plone.app.registry
+  [vangheem]
+
 
 0.10 (2012-02-12)
 -----------------
