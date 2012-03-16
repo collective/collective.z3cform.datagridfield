@@ -100,6 +100,17 @@ There are two callbacks to your main form:
     *   This is called when the subform widgets have been created. At this point,
         you can configure the widgets, e.g. specify the size of a widget.
 
+
+Working with plone.app.registry
+-------------------------------
+
+To use the field with plone.app.registry, you'll have to use
+a version of the field that has PersistentField as it's base
+class::
+
+    from collective.z3cform.datagridfield.registry import DictRow
+
+
 Notes
 -----
 
