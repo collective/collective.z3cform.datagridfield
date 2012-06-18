@@ -6,7 +6,7 @@ version = '0.12dev'
 setup(name='collective.z3cform.datagridfield',
       version=version,
       description="Version of DataGridField for use with Dexterity / z3c.form",
-      long_description=open("README.txt").read() + "\n" +
+      long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -17,7 +17,7 @@ setup(name='collective.z3cform.datagridfield',
       keywords='Plone, Dexterity, z3c.form',
       author='Kevin Gill',
       author_email='kevin@movieextras.ie',
-      url='http://svn.plone.org/svn/collective/',
+      url='https://github.com/collective/collective.z3cform.datagridfield',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['collective', 'collective.z3cform'],
