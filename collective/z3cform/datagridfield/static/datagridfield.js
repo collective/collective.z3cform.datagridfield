@@ -67,10 +67,11 @@ jQuery(function($) {
         $(newtr).insertAfter(thisRow);
         $('.auto-append > .datagridwidget-cell').change(dataGridField2Functions.autoInsertRow);
 
-        dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
 
         // Update order index to give rows correct values
         dataGridField2Functions.updateOrderIndex(tbody,true);
+
+        dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
     }
 
     dataGridField2Functions.addRowAfter = function(currnode) {
@@ -341,6 +342,7 @@ jQuery(function($) {
     }
 
     /* Bind the handlers to the auto append rows */
-    $('.auto-append > .datagridwidget-cell').change(dataGridField2Functions.autoInsertRow);
-
+    $(window).load(function () {
+        $('.auto-append > .datagridwidget-cell').change(dataGridField2Functions.autoInsertRow);
+    });
 });
