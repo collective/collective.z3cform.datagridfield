@@ -42,7 +42,7 @@ The layout of the table is defined by a second schema.::
     
     class IFormSchema(interface.Interface):
         four = schema.TextLine(title=u"Four")
-        table = schema.List(title=u"Table"
+        table = schema.List(title=u"Table",
             value_type=DictRow(title=u"tablerow", schema=ITableRowSchema))
     
     class EditForm(form.EditForm):
