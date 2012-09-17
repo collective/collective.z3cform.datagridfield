@@ -71,6 +71,8 @@ Configuration
 
 The widget can be customised via the updateWidgets method.
 
+::
+
     def updateWidgets(self):
         super(EditForm, self).updateWidgets()
         self.widgets['table'].allow_insert = False # Enable/Disable the insert button on the right
