@@ -102,6 +102,56 @@ There are two callbacks to your main form:
     *   This is called when the subform widgets have been created. At this point,
         you can configure the widgets, e.g. specify the size of a widget.
 
+Here is an example how one can customize per-field widgets for the data grid field::
+
+    from zope import schema
+    from zope import interface
+    from Products.CMFCore.interfaces import ISiteRoot
+
+    from five import grok
+
+    from plone.directives import form
+
+    from collective.z3cform.datagridfield import DataGridFieldFactory, DictRow
+    from .widget import DGFTreeSelectFieldWidget
+
+
+    class ITableRowSchema(interface.Interface):
+        one = schema.TextLine(title=u"Level 1")
+        two = schema.TextLine(title=u"Level 2")
+        three = schema.TextLine(title=u"Level 3")
+
+
+    class IFormSchema(form.Schema):
+
+        form.widget(table=DataGridFieldFactory)
+        table = schema.List(title=u"Nested selection tree test",
+            value_type=DictRow(title=u"tablerow", schema=ITableRowSchema))
+
+
+    class EditForm(form.SchemaForm):
+        grok.context(ISiteRoot)
+        grok.name("dgftreeselect-test")
+        grok.require('zope2.View')
+
+        ignoreContext = True
+        schema = IFormSchema
+
+        label = u"Tree selection demo and manual testing"
+
+        def datagridInitialise(self, subform, field):
+            """ Callback to customize the datagridfield
+
+            :param field: DataGridField instance
+
+            :param subform: DataGridFieldObjectSubForm instance
+            """
+
+            # Turn all fields in the table to use custom election widgets
+            for field in subform.fields.values():
+                field.widgetFactory = DGFTreeSelectFieldWidget
+
+
 
 Working with plone.app.registry
 -------------------------------
