@@ -4,6 +4,8 @@ Changelog
 0.12dev (unreleased)
 --------------------
 
+* Added ``DataGridField.extra`` parameter, so you can pass out
+  application specific data to Javascript [miohtama]
 
 0.11 (2012-05-16)
 -----------------
@@ -26,7 +28,7 @@ Changelog
   [anthonygerrard]
 
 * Reindex more indexed attributes of cloned row
-  [anthonygerrard] 
+  [anthonygerrard]
 
 0.8 (2011-09-24)
 ----------------
@@ -48,15 +50,15 @@ Changelog
   [davidjb]
 
 * During auto-insert, add our new row into the document first, before reindexing
-  it and changing its elements' IDs. This allows Javascript that depends on 
-  these IDs (such as plone.formwidget.autocomplete) to pick up the correct 
+  it and changing its elements' IDs. This allows Javascript that depends on
+  these IDs (such as plone.formwidget.autocomplete) to pick up the correct
   fields.
   [davidjb]
 
 * Tidying up and reducing complexity of auto-insert functionality
   [davidjb]
 
-* Removing unnecessary auto-insert bind and unbind as this is already covered 
+* Removing unnecessary auto-insert bind and unbind as this is already covered
   by jQuery's `live()` function against the `auto-append` class. Adding/removing
   this class against rows automatically does this.
   [davidjb]
@@ -124,7 +126,7 @@ Changelog
   - Row 1 widgets renamed 2
   - Both sets of input:radio share the same name, one deselected
   - Row 2 widgets renamed 3
-  - . . . 
+  - . . .
   [lentinj]
 
 * Use jQuery to clone rows, and clone the jQuery events on the rows.

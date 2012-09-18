@@ -40,6 +40,11 @@ class DataGridField(MultiWidget):
     allow_reorder = False
     auto_append = True
 
+    # You can give data-extra attribute
+    # for the widget to allow there some custom
+    # JSON payload concerning all rows
+    extra = None
+
     def setField(self, value):
         """
             The field information is passed to the widget after it is
@@ -100,6 +105,7 @@ class DataGridField(MultiWidget):
     def updateWidgets(self):
         # if the field has configuration data set - copy it
         super(DataGridField, self).updateWidgets()
+
         if self.mode == INPUT_MODE:
             if self.auto_append:
                 # If we are doing 'auto-append', then a blank row
