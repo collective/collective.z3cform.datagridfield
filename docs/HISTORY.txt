@@ -4,6 +4,8 @@ Changelog
 0.12dev (unreleased)
 --------------------
 
+* Support plone.autoform and grok'ed row schemas [miohtama]
+
 * Added ``DataGridField.extra`` parameter, so you can pass out
   application specific data to Javascript [miohtama]
 

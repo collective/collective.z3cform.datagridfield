@@ -32,35 +32,39 @@ The layout of the table is defined by a second schema.::
     from zope import schema
     from zope import interface
     from plone.directives import form
-    
+
     from collective.z3cform.datagridfield import DataGridFieldFactory, DictRow
-    
+
     class ITableRowSchema(interface.Interface):
         one = schema.TextLine(title=u"One")
         two = schema.TextLine(title=u"Two")
         three = schema.TextLine(title=u"Three")
-    
+
     class IFormSchema(interface.Interface):
         four = schema.TextLine(title=u"Four")
         table = schema.List(title=u"Table",
             value_type=DictRow(title=u"tablerow", schema=ITableRowSchema))
-    
+
     class EditForm(form.EditForm):
         extends(form.EditForm)
-    
+
         grok.context(IFormSchema)
         grok.require('zope2.View')
         fields = field.Fields(IFormSchema)
         label=u"Demo Usage of DataGridField"
-                
+
         fields['table'].widgetFactory = DataGridFieldFactory
+
+You can also use grok'ed forms where you subclass the schema
+from ``plone.directives.form.SchemaForm`` and declare
+widgets witin the schema using ``form.widget()``.
 
 Storage
 -------
 
 The data can be stored as either a list of dicts or a list of objects.
 If the data is a list of dicts, the value_type is DictRow.
-Otherwise, the value_type is 'schema.Object'. 
+Otherwise, the value_type is 'schema.Object'.
 
 If you are providing an Object content type (as opposed to dicts) you
 must provide your own conversion class. The default conversion class
@@ -93,7 +97,7 @@ in turn creates the DataGridFieldObjectSubForm to store the fields.
 There are two callbacks to your main form:
 
     datagridInitialise(subform, widget)
-    
+
     *   This is called when the subform fields have been initialised, but before
         the widgets have been created. Field based configuration could occur here.
 
@@ -117,8 +121,14 @@ Here is an example how one can customize per-field widgets for the data grid fie
 
 
     class ITableRowSchema(interface.Interface):
+
+        form.widget(one=DGFTreeSelectFieldWidget)
         one = schema.TextLine(title=u"Level 1")
+
+        form.widget(two=DGFTreeSelectFieldWidget)
         two = schema.TextLine(title=u"Level 2")
+
+        # Uses the default widget
         three = schema.TextLine(title=u"Level 3")
 
 
@@ -127,30 +137,6 @@ Here is an example how one can customize per-field widgets for the data grid fie
         form.widget(table=DataGridFieldFactory)
         table = schema.List(title=u"Nested selection tree test",
             value_type=DictRow(title=u"tablerow", schema=ITableRowSchema))
-
-
-    class EditForm(form.SchemaForm):
-        grok.context(ISiteRoot)
-        grok.name("dgftreeselect-test")
-        grok.require('zope2.View')
-
-        ignoreContext = True
-        schema = IFormSchema
-
-        label = u"Tree selection demo and manual testing"
-
-        def datagridInitialise(self, subform, field):
-            """ Callback to customize the datagridfield
-
-            :param field: DataGridField instance
-
-            :param subform: DataGridFieldObjectSubForm instance
-            """
-
-            # Turn all fields in the table to use custom election widgets
-            for field in subform.fields.values():
-                field.widgetFactory = DGFTreeSelectFieldWidget
-
 
 
 Working with plone.app.registry
@@ -191,7 +177,7 @@ Examples are in the package collective.z3cform.datagridfield_demo.
 
 References
 ----------
- 
+
     * http://pypi.python.org/pypi/Products.DataGridField
     * http://pypi.python.org/pypi/collective.z3cform.datagridfield_demo
 

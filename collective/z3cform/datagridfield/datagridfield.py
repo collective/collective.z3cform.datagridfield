@@ -10,7 +10,7 @@ from zope.schema import getFieldsInOrder, getFieldNames
 from zope.schema.interfaces import IObject, IList
 
 from z3c.form.browser.object import ObjectWidget
-from z3c.form.object import SubformAdapter, ObjectSubForm
+
 from z3c.form.error import MultipleErrors
 
 
@@ -25,6 +25,16 @@ from z3c.form.validator import SimpleFieldValidator
 
 
 from interfaces import IDataGridField
+
+try:
+    # support plone.autoform directives within the row schema
+    import plone.autoform
+    from autoform import AutoExtensibleSubForm as ObjectSubForm
+    from autoform import AutoExtensibleSubformAdapter as SubformAdapter
+except ImportError:
+    # Plain z3c ObjectSubForm support
+    from z3c.form.object import ObjectSubForm
+    from z3c.form.object import SubformAdapter
 
 
 #------------[ Main Widget ]-----------------------------------------------
@@ -233,6 +243,7 @@ def DataGridFieldObjectFactory(field, request):
 
 
 #------------[ Form to draw the line ]-----------------------------------------
+
 
 class DataGridFieldObjectSubForm(ObjectSubForm):
     """Local class of subform - this is intended to all configuration
