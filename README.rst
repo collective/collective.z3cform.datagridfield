@@ -120,7 +120,7 @@ Here is an example how one can customize per-field widgets for the data grid fie
     from .widget import DGFTreeSelectFieldWidget
 
 
-    class ITableRowSchema(interface.Interface):
+    class ITableRowSchema(form.Schema):
 
         form.widget(one=DGFTreeSelectFieldWidget)
         one = schema.TextLine(title=u"Level 1")
