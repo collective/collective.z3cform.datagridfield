@@ -35,6 +35,15 @@ class AutoExtensibleSubForm(AutoExtensibleForm, ObjectSubForm):
     def refreshActions(self):
         pass
 
+    def update(self):
+        """
+        """
+        ObjectSubForm.update(self)
+
+    def updateFields(self):
+        self.updateFieldsFromSchemata()
+        super(AutoExtensibleForm, self).updateFields()
+
 
 class AutoExtensibleSubformAdapter(SubformAdapter, grok.MultiAdapter):
     grok.provides(ISubformFactory)

@@ -83,6 +83,7 @@ class DataGridField(MultiWidget):
         the widget.
         """
         valueType = self.field.value_type
+
         if IObject.providedBy(valueType):
             widget = DataGridFieldObjectFactory(valueType, self.request)
             if idx in ['TT', 'AA']:
