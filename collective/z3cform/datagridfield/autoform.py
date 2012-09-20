@@ -35,14 +35,33 @@ class AutoExtensibleSubForm(AutoExtensibleForm, ObjectSubForm):
     def refreshActions(self):
         pass
 
+    def updateWidgets(self):
+        #AutoExtensibleForm.updateWidgets(self)
+        ObjectSubForm.updateWidgets(self)
+
     def update(self):
         """
         """
-        ObjectSubForm.update(self)
+
+        # This is awful hack but I am not sure
+        # how otherwise we can get the parent
+        # call chain work correctly with
+        # both zope.interface.Interface schemas
+        # and plone.directives.form.SchemaForm schemas.
+        # This might not be 100% but worked when tested with
+        # plain and grokked form.
+        rowSchema = self.__parent__.field.schema
+
+        if u'plone.autoform.widgets' in rowSchema.getTaggedValueTags():
+            AutoExtensibleForm.update(self)
+            self.setupFields()
+        else:
+            # zope.interface.Interface path
+            ObjectSubForm.update(self)
 
     def updateFields(self):
         self.updateFieldsFromSchemata()
-        super(AutoExtensibleForm, self).updateFields()
+        super(AutoExtensibleSubForm, self).updateFields()
 
 
 class AutoExtensibleSubformAdapter(SubformAdapter, grok.MultiAdapter):
