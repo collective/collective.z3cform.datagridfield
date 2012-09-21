@@ -148,6 +148,34 @@ class::
 
     from collective.z3cform.datagridfield.registry import DictRow
 
+Javascript events
+-------------------
+
+``collective.z3cform.datagridfield`` fires jQuery events,
+so that you can hook them in your own Javascript for DataGridField
+behavior customization.
+
+The following events are currently fired against ``table.datagridwidget-table-view``
+
+* ``beforeaddrow`` [datagridfield, newRow]
+
+* ``afteraddrow`` [datagridfield, newRow]
+
+* ``beforeaddrowauto`` [datagridfield, newRow]
+
+* ``afteraddrowauto`` [datagridfield, newRow]
+
+Example usage::
+
+    handleDGFInsert : function(event, dgf, row) {
+        row = $(row);
+        console.log("Got new row:");
+        console.log(row);
+    },
+
+    // Bind all DGF handlers on the page
+    $(document.body).delegate(".datagridwidget-table-view", "beforeaddrow beforeaddrowauto", handleDGFInsert);
+
 
 Notes
 -----
