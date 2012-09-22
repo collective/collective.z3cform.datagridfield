@@ -29,9 +29,7 @@ jQuery(function($) {
         /* Return primary nodes with class of datagridwidget-row,
            they can be any tag: tr, div, etc. */
 
-        var rows = [];
-
-        rows = $(tbody).find('.datagridwidget-row');
+        var rows = $(tbody).children('.datagridwidget-row');
 
         return rows;
     };
@@ -234,7 +232,10 @@ jQuery(function($) {
         var name_prefix = $(tbody).attr('data-name_prefix') + '.';
         var id_prefix = $(tbody).attr('data-id_prefix') + '-';
 
-        $(row).find('[name^="' + name_prefix +'"]').each(function(){
+
+        var cells = $(row).children("td");
+
+        cells.children('[name^="' + name_prefix +'"]').each(function(){
             var oldname = this.name.substr(name_prefix.length);
             var oldindex1 = oldname.split('.', 1)[0];
             var oldindex2 = oldname.split('-', 1)[0];
@@ -248,15 +249,18 @@ jQuery(function($) {
             }
             this.name = name_prefix + newindex + oldname.substr(oldindex.length);
         });
-        $(row).find('[id*="' + id_prefix +'"]').each(function(){
+
+        cells.children('[id*="' + id_prefix +'"]').each(function(){
             var regexp = new RegExp(id_prefix + ".*?-");
             this.id = this.id.replace(regexp, id_prefix + newindex + "-");
         });
-        $(row).find('[for*="' + id_prefix +'"]').each(function(){
+
+        cells.children('[for*="' + id_prefix +'"]').each(function(){
             var regexp = new RegExp(id_prefix + ".*?-");
             this.setAttribute('for', this.getAttribute('for').replace(regexp, id_prefix + newindex + "-"));
         });
-        $(row).find('[class*="' + name_prefix +'"]').each(function(){
+
+        cells.children('[class*="' + name_prefix +'"]').each(function(){
             var regexp = new RegExp(name_prefix + ".*?\\.");
             this.className = this.className.replace(regexp, name_prefix + newindex + ".");
         });
