@@ -4,6 +4,8 @@ Changelog
 0.12dev (unreleased)
 --------------------
 
+* Nested DataGridField support (yo dawg...) [miohtama]
+
 * Support plone.autoform and grok'ed row schemas [miohtama]
 
 * Added ``DataGridField.extra`` parameter, so you can pass out
