@@ -113,7 +113,7 @@ jQuery(function($) {
         var tbody = this.getParentByClass(node, "datagridwidget-body");
 
         // hidden template row
-        var emptyRow = $(tbody).find('.datagridwidget-empty-row');
+        var emptyRow = $(tbody).find('>.datagridwidget-empty-row');
 
         var markup = $(emptyRow).clone(true);
 

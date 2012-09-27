@@ -4,6 +4,8 @@ Changelog
 0.12dev (unreleased)
 --------------------
 
+* Updated empty row selection. [jstegle]
+
 * Nested DataGridField support (yo dawg...) [miohtama]
 
 * Support plone.autoform and grok'ed row schemas [miohtama]
