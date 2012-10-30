@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.12dev (unreleased)
+0.12 (2012-10-30)
 --------------------
 
 * Updated empty row selection. [jstegle]
