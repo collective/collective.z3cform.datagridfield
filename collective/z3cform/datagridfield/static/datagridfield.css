@@ -84,6 +84,11 @@
 /**
  * Block edit mode styles
  */
+
+.datagridwidget-table-view-block {
+    border-collapse: collapse;
+}
+
 .datagridwidget-table-view-block .datagridwidget-row {
     border-bottom: 1px solid black;
 }
@@ -93,10 +98,13 @@
 }
 
 .datagridwidget-block-edit-cell {
-    padding: 0.5em;
+    width: auto;
+}
+.datagridwidget-table-view-block .datagridwidget-manipulator {
+    width: 16px;
 }
 
 .datagridwidget-block {
-    padding-bottom: 0.5em;
+    padding: 0.5em;
 }
 
