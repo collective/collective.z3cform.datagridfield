@@ -1,0 +1,61 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      tal:omit-tag=""
+      >
+
+    <td class="datagridwidget-block-edit-cell">
+    <tal:block tal:repeat="widget view/subform/widgets/values">
+
+      <div tal:attributes="class python:widget.mode == 'hidden' and 'datagridwidget-hidden-data' or 'datagridwidget-block'">
+            <div class="label">
+              <label tal:attributes="for widget/id">
+                <span i18n:translate=""
+                    tal:content="widget/label">label</span>
+                <span class="required"
+                      tal:condition="widget/required">*</span>
+              </label>
+            </div>
+            <div tal:condition="widget/error"
+                 tal:replace="structure widget/error/render">error</div>
+
+            <div tal:replace="structure widget/render" />
+
+
+      </div>
+    </tal:block>
+    </td>
+
+    <td class="datagridwidget-hidden-data">
+      <input name="field-empty-marker" type="hidden" value="1"
+             tal:attributes="name string:${view/name}-empty-marker" />
+    </td>
+    <td class="datagridwidget-manipulator insert-row"
+        tal:condition="view/isInsertEnabled">
+        <img src="++resource++collective.z3cform.datagridfield/add_row_icon.gif"
+          alt="Add row"
+          i18n:attributes="alt label_datagridwidget_manipulators_addrow"
+          onclick="dataGridField2Functions.addRowAfter(this); return false"/>
+    </td>
+    <td  class="datagridwidget-manipulator delete-row"
+        tal:condition="view/isDeleteEnabled">
+      <img src="++resource++collective.z3cform.datagridfield/delete_row_icon.gif"
+          alt="Delete row"
+          i18n:attributes="alt label_datagridwidget_manipulators_deleterow"
+          onclick="dataGridField2Functions.removeFieldRow(this);return false"/>
+    </td>
+    <td class="datagridwidget-manipulator move-up"
+        tal:condition="view/isReorderEnabled">
+      <img src="++resource++collective.z3cform.datagridfield/move_row_up_icon.gif"
+           alt="▲" i18n:attributes="alt label_datagridwidget_manipulators_moverowup"
+             onclick="dataGridField2Functions.moveRowUp(this);return false"/>
+    </td>
+    <td class="datagridwidget-manipulator move-down"
+        tal:condition="view/isReorderEnabled">
+      <img src="++resource++collective.z3cform.datagridfield/move_row_down_icon.gif"
+           alt="▼" i18n:attributes="alt label_datagridwidget_manipulators_moverowdown"
+             onclick="dataGridField2Functions.moveRowDown(this);return false"/>
+    </td>
+
+</html>

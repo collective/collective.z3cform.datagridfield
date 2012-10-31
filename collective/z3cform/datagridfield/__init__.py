@@ -6,8 +6,9 @@ from interfaces import IDataGridField
 from interfaces import IRow
 
 from datagridfield import DataGridFieldFactory
-from datagridfield import BlockDataGridFieldFactory
 from datagridfield import DataGridField
-from datagridfield import BlockDataGridField
+
+from blockdatagridfield import BlockDataGridField
+from blockdatagridfield import BlockDataGridFieldFactory
 
 from row import DictRow

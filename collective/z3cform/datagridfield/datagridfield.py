@@ -80,10 +80,13 @@ class DataGridField(MultiWidget):
 
     field = property(getField, setField)
 
-    def getWidget(self, idx):
-        """Create the object widget. This is used to avoid looking up
-        the widget.
+    def createObjectWidget(self, idx):
         """
+        Create the widget which handles individual rows.
+
+        Allow row-widget overriding for more specific use cases.
+        """
+
         valueType = self.field.value_type
 
         if IObject.providedBy(valueType):
@@ -95,7 +98,15 @@ class DataGridField(MultiWidget):
         else:
             widget = zope.component.getMultiAdapter((valueType, self.request),
                 interfaces.IFieldWidget)
-        self.setName(widget, idx)
+
+        return widget
+
+    def getWidget(self, idx):
+        """Create the object widget. This is used to avoid looking up
+        the widget.
+        """
+
+        widget = self.createObjectWidget(idx)
 
         widget.__parent__ = self
 
@@ -161,11 +172,6 @@ class DataGridField(MultiWidget):
             return not name.endswith('AA') and not name.endswith('TT')
 
 
-class BlockDataGridField(DataGridField):
-    """
-    Render edit mode widgets in blocks (vertical) instead of cells (horizontal).
-    """
-
 
 
 @zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
@@ -173,14 +179,6 @@ class BlockDataGridField(DataGridField):
 def DataGridFieldFactory(field, request):
     """IFieldWidget factory for DataGridField."""
     return FieldWidget(field, DataGridField(request))
-
-
-
-@zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
-@zope.interface.implementer(interfaces.IFieldWidget)
-def BlockDataGridFieldFactory(field, request):
-    """IFieldWidget factory for BlockDataGridField."""
-    return FieldWidget(field, BlockDataGridField(request))
 
 
 class GridDataConverter(BaseDataConverter):
