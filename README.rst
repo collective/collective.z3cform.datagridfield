@@ -202,7 +202,7 @@ TODO
 Demo
 ----
 
-Examples are in the package collective.z3cform.datagridfield_demo.
+Examples are in the package `collective.z3cform.datagridfield_demo <https://github.com/collective/collective.z3cform.datagridfield_demo>`_.
 
 References
 ----------
