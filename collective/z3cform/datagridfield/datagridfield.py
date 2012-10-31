@@ -55,6 +55,8 @@ class DataGridField(MultiWidget):
     # JSON payload concerning all rows
     extra = None
 
+    # Define all possible template backends
+
     def setField(self, value):
         """
             The field information is passed to the widget after it is
@@ -159,11 +161,26 @@ class DataGridField(MultiWidget):
             return not name.endswith('AA') and not name.endswith('TT')
 
 
+class BlockDataGridField(DataGridField):
+    """
+    Render edit mode widgets in blocks (vertical) instead of cells (horizontal).
+    """
+
+
+
 @zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
 @zope.interface.implementer(interfaces.IFieldWidget)
 def DataGridFieldFactory(field, request):
     """IFieldWidget factory for DataGridField."""
     return FieldWidget(field, DataGridField(request))
+
+
+
+@zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
+@zope.interface.implementer(interfaces.IFieldWidget)
+def BlockDataGridFieldFactory(field, request):
+    """IFieldWidget factory for BlockDataGridField."""
+    return FieldWidget(field, BlockDataGridField(request))
 
 
 class GridDataConverter(BaseDataConverter):
