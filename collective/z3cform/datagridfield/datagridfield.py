@@ -108,6 +108,9 @@ class DataGridField(MultiWidget):
 
         widget = self.createObjectWidget(idx)
 
+        # widgets.line1 -> form-widgets-address-0-widgets-line1
+        self.setName(widget, idx)
+
         widget.__parent__ = self
 
         widget.mode = self.mode

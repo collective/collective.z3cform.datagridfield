@@ -4,7 +4,7 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       tal:omit-tag="">
 
-<table class="datagridwidget-table-view datagridwidget-table-view-block" tal:attributes="data-extra view/extra">
+<table class="datagridwidget-table-view datagridwidget-table-view-block" data-mode="block" tal:attributes="data-extra view/extra">
 <thead>
   <tr>
     <th class="header">

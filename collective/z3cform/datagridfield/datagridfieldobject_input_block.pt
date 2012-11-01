@@ -31,6 +31,7 @@
                 >field description</div>
 
             </div>
+
         </tal:block>
     </td>
 
@@ -38,6 +39,7 @@
         <input name="field-empty-marker" type="hidden" value="1"
              tal:attributes="name string:${view/name}-empty-marker" />
     </td>
+
     <td class="datagridwidget-manipulator insert-row"
         tal:condition="view/isInsertEnabled">
         <img src="++resource++collective.z3cform.datagridfield/add_row_icon.gif"

@@ -1,6 +1,21 @@
-dataGridField2Functions = {};
+/*global window, console*/
 
 jQuery(function($) {
+
+    // No globals, dude!
+    "use strict";
+
+    var dataGridField2Functions = {};
+
+    /**
+     * Get edit mode of the DGF instance
+     *
+     * @return {String} "row" or "block"
+     */
+    dataGridField2Functions.getMode = function(node) {
+         var dgf = $(dataGridField2Functions.getParentByClass(node, "datagridwidget-table-view"));
+         return dgf.attr("data-mode");
+    };
 
     dataGridField2Functions.getInputOrSelect = function(node) {
         /* Get the (first) input or select form element under the given node */
@@ -21,7 +36,7 @@ jQuery(function($) {
     dataGridField2Functions.getWidgetRows = function(currnode) {
         /* Return primary nodes with class of datagridwidget-row,
            they can be any tag: tr, div, etc. */
-        tbody = this.getParentByClass(currnode, "datagridwidget-body");
+        var tbody = this.getParentByClass(currnode, "datagridwidget-body");
         return this.getRows(tbody);
     };
 
@@ -133,6 +148,7 @@ jQuery(function($) {
 
     dataGridField2Functions.moveRow = function(currnode, direction){
         /* Move the given row down one */
+        var nextRow;
 
         var tbody = this.getParentByClass(currnode, "datagridwidget-body");
 
@@ -140,7 +156,7 @@ jQuery(function($) {
 
         var row = this.getParentRow(currnode);
         if(!row) {
-            alert("Couldn't find DataGridWidget row");
+            window.alert("Couldn't find DataGridWidget row");
             return;
         }
 
@@ -211,12 +227,12 @@ jQuery(function($) {
     };
 
     dataGridField2Functions.moveRowToTop = function (row) {
-        rows = this.getWidgetRows(row);
+        var rows = this.getWidgetRows(row);
         $(row).insertBefore(rows[0]);
     };
 
     dataGridField2Functions.moveRowToBottom = function (row) {
-        rows = this.getWidgetRows(row);
+        var rows = this.getWidgetRows(row);
 
         // make sure we insert the directly above any auto appended rows
         var insert_after = 0;
@@ -228,12 +244,41 @@ jQuery(function($) {
         $(row).insertAfter(rows[insert_after]);
     };
 
+    /**
+     * Rename <input> controls so that each control has unique name
+     * based on the row its on. On the server side, the
+     * DGF logic will rebuild rows based on this information.
+     *
+     * If indexing for some reasons fails you'll get double
+     * input values and Zope converts inputs to list, failing
+     * in funny ways.
+     *
+     * @param  {DOM} tbody
+     * @param  {DOM} row
+     * @param  {Number} newindex
+     */
     dataGridField2Functions.reindexRow = function (tbody, row, newindex) {
         var name_prefix = $(tbody).attr('data-name_prefix') + '.';
         var id_prefix = $(tbody).attr('data-id_prefix') + '-';
+        var cells;
 
+        // console.log("Reindexing row " + newindex);
 
-        var cells = $(row).children("td");
+        // We need to select
+        // - all direct children inputs in row mode
+        // - all direct children inputs in block mode
+        // - but not nested inputs, as it would break nested datagridfields
+        var mode = this.getMode(tbody);
+
+        if(mode == "row") {
+            cells = $(row).children("td");
+        }  else if(mode == "block") {
+            cells = $(row).children("td").children(".datagridwidget-block");
+        } else {
+            throw new Error("Unknown DGF mode:" + mode);
+        }
+
+        // console.log("Got cells:" + cells.size());
 
         cells.children('[name^="' + name_prefix +'"]').each(function(){
             var oldname = this.name.substr(name_prefix.length);
@@ -327,15 +372,18 @@ jQuery(function($) {
         return null;
     };
 
+    /**
+     * Find the first parent node with the given id
+     *
+     * Id is partially matched: the beginning of
+     * an element id matches parameter id string.
+     *
+     * @param  {DOM} currnode Node where ascending in DOM tree beings
+     * @param  {String} id       Id string to look for.
+     * @return {DOM} Found node or null
+     */
     dataGridField2Functions.getParentElementById = function(currnode, id) {
-        /* Find the first parent node with the given id
-
-            Id is partially matched: the beginning of
-            an element id matches parameter id string.
-
-            Currnode: Node where ascending in DOM tree beings
-            Id: Id string to look for.
-
+        /*
         */
 
         id = id.toLowerCase();
@@ -356,6 +404,9 @@ jQuery(function($) {
 
         return parent;
     };
+
+    // Export module for customizers to mess around
+    window.dataGridField2Functions = dataGridField2Functions;
 
     /* Bind the handlers to the auto append rows */
     $('.auto-append > .datagridwidget-cell').change(dataGridField2Functions.autoInsertRow);
