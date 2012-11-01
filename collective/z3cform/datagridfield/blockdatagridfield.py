@@ -46,7 +46,7 @@ class BlockDataGridField(DataGridField):
 
     def getTTRows(self):
         """
-        Insert template row.
+        Insert template rows.
         """
         for w in self.widgets:
             if w.name.endswith("TT"):
@@ -55,7 +55,7 @@ class BlockDataGridField(DataGridField):
 
     def getAARows(self):
         """
-        Auto-append template row.
+        Auto-append template rows.
         """
         for w in self.widgets:
             if w.name.endswith("AA"):
