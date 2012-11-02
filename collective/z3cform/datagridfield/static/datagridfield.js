@@ -64,7 +64,7 @@ jQuery(function($) {
         var thisRow = dataGridField2Functions.getParentRow(currnode);
 
         // Remove the auto-append functionality from the row
-        $('.auto-append > .datagridwidget-cell').unbind('change.dgf');
+        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').unbind('change.dgf');
         $(thisRow).removeClass('auto-append');
 
         // Create a new row
