@@ -175,8 +175,6 @@ class DataGridField(MultiWidget):
             return not name.endswith('AA') and not name.endswith('TT')
 
 
-
-
 @zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
 @zope.interface.implementer(interfaces.IFieldWidget)
 def DataGridFieldFactory(field, request):

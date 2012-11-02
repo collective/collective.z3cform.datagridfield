@@ -4,8 +4,11 @@ Changelog
 0.13 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added block edit mode [miohtama]
 
+- "use strict;" and ECMAScript 5 compatible Javascript clean-up [miohtama]
+
+- Added *afterrowmoved* JS event [miohtama]
 
 0.12 (2012-10-30)
 --------------------

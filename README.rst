@@ -189,6 +189,8 @@ The following events are currently fired against ``table.datagridwidget-table-vi
 
 * ``afteraddrowauto`` [datagridfield, newRow]
 
+* ``aftermoverow`` [datagridfield]
+
 Example usage::
 
     handleDGFInsert : function(event, dgf, row) {

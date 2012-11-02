@@ -150,6 +150,8 @@ jQuery(function($) {
         /* Move the given row down one */
         var nextRow;
 
+        var dgf = $(dataGridField2Functions.getParentByClass(currnode, "datagridwidget-table-view"));
+
         var tbody = this.getParentByClass(currnode, "datagridwidget-body");
 
         var rows = this.getWidgetRows(currnode);
@@ -210,7 +212,10 @@ jQuery(function($) {
                 this.shiftRow(row, nextRow);
             }
         }
+
         this.updateOrderIndex(tbody);
+
+        dgf.trigger("aftermoverow", [dgf]);
     };
 
     dataGridField2Functions.moveRowDown = function(currnode){
