@@ -89,6 +89,10 @@
     border-collapse: collapse;
 }
 
+.datagridwidget-table-view-block thead {
+    display: none;
+}
+
 .datagridwidget-table-view-block .datagridwidget-row {
     border-bottom: 1px solid black;
 }
