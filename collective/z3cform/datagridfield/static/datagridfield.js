@@ -49,11 +49,13 @@ jQuery(function($) {
         return rows;
     };
 
+    /**
+     * Add a new row when changing the last row
+     *
+     * (i.e. the infamous auto insert feature)
+     */
     dataGridField2Functions.autoInsertRow = function(e) {
-        /* Add a new row when changing the last row
-           (i.e. the infamous auto insert feature)
 
-         */
         var currnode = window.event ? window.event.srcElement : e.currentTarget;
 
         // fetch required data structure
@@ -62,7 +64,7 @@ jQuery(function($) {
         var thisRow = dataGridField2Functions.getParentRow(currnode);
 
         // Remove the auto-append functionality from the row
-        $('.auto-append > .datagridwidget-cell').unbind('change');
+        $('.auto-append > .datagridwidget-cell').unbind('change.dgf');
         $(thisRow).removeClass('auto-append');
 
         // Create a new row
@@ -413,7 +415,8 @@ jQuery(function($) {
     // Export module for customizers to mess around
     window.dataGridField2Functions = dataGridField2Functions;
 
-    /* Bind the handlers to the auto append rows */
-    $('.auto-append > .datagridwidget-cell').change(dataGridField2Functions.autoInsertRow);
+    // Bind the handlers to the auto append rows
+    // Use namespaced jQuery events to avoid unbind() conflicts later on
+    $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", dataGridField2Functions.autoInsertRow);
 
 });
