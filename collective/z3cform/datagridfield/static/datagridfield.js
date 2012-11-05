@@ -65,7 +65,6 @@ jQuery(function($) {
 
         // Remove the auto-append functionality from the all rows in this widget
         var autoAppendHandlers = dgf.find('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell');
-        console.log("auto append handlers size:" + autoAppendHandlers.size());
         autoAppendHandlers.unbind('change.dgf');
         $(thisRow).removeClass('auto-append');
 
@@ -272,6 +271,7 @@ jQuery(function($) {
         var name_prefix = $(tbody).attr('data-name_prefix') + '.';
         var id_prefix = $(tbody).attr('data-id_prefix') + '-';
         var cells;
+        var hidden = null;
 
         // console.log("Reindexing row " + newindex);
 
@@ -284,14 +284,20 @@ jQuery(function($) {
         if(mode == "row") {
             cells = $(row).children("td");
         }  else if(mode == "block") {
+            // We need to update hidden data rows also which are not rendered as blocks
             cells = $(row).children("td").children(".datagridwidget-block");
+            hidden = $(row).children(".datagridwidget-hidden-data");
+            cells = cells.add(hidden); // AA and TT row stuff
         } else {
             throw new Error("Unknown DGF mode:" + mode);
         }
 
-        // console.log("Got cells:" + cells.size());
 
-        cells.children('[name^="' + name_prefix +'"]').each(function(){
+        // Math all <input> by name on the row which fields' names we update
+        var inputs = cells.children('[name^="' + name_prefix +'"]');
+
+        inputs.each(function(){
+
             var oldname = this.name.substr(name_prefix.length);
             var oldindex1 = oldname.split('.', 1)[0];
             var oldindex2 = oldname.split('-', 1)[0];
