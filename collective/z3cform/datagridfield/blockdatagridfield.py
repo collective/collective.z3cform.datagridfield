@@ -33,38 +33,12 @@ class BlockDataGridField(DataGridField):
 
         return widget
 
-    def getNormalRows(self):
-        """
-        Get all DGF rows filled on the postback or were already filled when editing started.
-        """
-        rows = []
-        for w in self.widgets:
-            if w.name.endswith("TT") or w.name.endswith("AA"):
-                continue
-            rows.append(w)
-        return rows
-
-    def getTTRows(self):
-        """
-        Insert template rows.
-        """
-        for w in self.widgets:
-            if w.name.endswith("TT"):
-                return [w]
-        return []
-
-    def getAARows(self):
-        """
-        Auto-append template rows.
-        """
-        for w in self.widgets:
-            if w.name.endswith("AA"):
-                return [w]
-        return []
-
 
 class BlockDataGridFieldObject(DataGridFieldObject):
     """
+    Define one row as a widget in BDGF.
+
+    Does not override functionality, but exist to allow template overriding.
     """
 
 
