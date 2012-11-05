@@ -112,3 +112,9 @@
     padding: 0.5em;
 }
 
+.datagridwidget-block-edit-cell .error {
+    background-color: #FFDDCC;
+    border: 1px solid red;
+    margin: 1em 0;
+    padding: 0.5em;
+}
