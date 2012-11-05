@@ -52,7 +52,7 @@ jQuery(function($) {
     /**
      * Add a new row when changing the last row
      *
-     * (i.e. the infamous auto insert feature)
+     *
      */
     dataGridField2Functions.autoInsertRow = function(e) {
 
@@ -61,10 +61,12 @@ jQuery(function($) {
         // fetch required data structure
         var dgf = $(dataGridField2Functions.getParentByClass(currnode, "datagridwidget-table-view"));
         var tbody = dataGridField2Functions.getParentByClass(currnode, "datagridwidget-body");
-        var thisRow = dataGridField2Functions.getParentRow(currnode);
+        var thisRow = dataGridField2Functions.getParentRow(currnode); // The new row we are working on
 
-        // Remove the auto-append functionality from the row
-        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').unbind('change.dgf');
+        // Remove the auto-append functionality from the all rows in this widget
+        var autoAppendHandlers = dgf.find('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell');
+        console.log("auto append handlers size:" + autoAppendHandlers.size());
+        autoAppendHandlers.unbind('change.dgf');
         $(thisRow).removeClass('auto-append');
 
         // Create a new row
@@ -84,7 +86,9 @@ jQuery(function($) {
         dgf.trigger("beforeaddrowauto", [dgf, newtr]);
 
         $(newtr).insertAfter(thisRow);
-        $('.auto-append > .datagridwidget-cell').change(dataGridField2Functions.autoInsertRow);
+
+        // Re-enable auto-append change handler feature on the new auto-appended row
+        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", dataGridField2Functions.autoInsertRow);
 
         dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
 
