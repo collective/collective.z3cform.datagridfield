@@ -274,6 +274,13 @@ jQuery(function($) {
         var hidden = null;
 
         // console.log("Reindexing row " + newindex);
+        //
+
+        // Expand jQuery z3c.form widget selection to cover checkbox <input>s
+        function expandAllZ3CFormInputs(sel) {
+            var checkboxes = sel.children(".option");
+            return sel.add(checkboxes);
+        }
 
         // We need to select
         // - all direct children inputs in row mode
@@ -282,10 +289,14 @@ jQuery(function($) {
         var mode = this.getMode(tbody);
 
         if(mode == "row") {
+            // Select normal inputs, checkboxes
             cells = $(row).children("td");
+            cells = expandAllZ3CFormInputs(cells);
         }  else if(mode == "block") {
             // We need to update hidden data rows also which are not rendered as blocks
             cells = $(row).children("td").children(".datagridwidget-block");
+            // Checkboxes
+            cells = expandAllZ3CFormInputs(cells);
             hidden = $(row).children(".datagridwidget-hidden-data");
             cells = cells.add(hidden); // AA and TT row stuff
         } else {
@@ -298,6 +309,7 @@ jQuery(function($) {
 
         inputs.each(function(){
 
+            console.log("Got: " + this.name);
             var oldname = this.name.substr(name_prefix.length);
             var oldindex1 = oldname.split('.', 1)[0];
             var oldindex2 = oldname.split('-', 1)[0];

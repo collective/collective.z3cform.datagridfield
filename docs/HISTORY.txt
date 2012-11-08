@@ -4,6 +4,8 @@ Changelog
 0.13 (unreleased)
 -----------------
 
+- Fixed checkbox saving, was broken by nested DGF support [miohtama]
+
 - Added block edit mode [miohtama]
 
 - "use strict;" and ECMAScript 5 compatible Javascript clean-up [miohtama]
