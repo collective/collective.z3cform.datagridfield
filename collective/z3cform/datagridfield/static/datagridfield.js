@@ -309,7 +309,7 @@ jQuery(function($) {
 
         inputs.each(function(){
 
-            console.log("Got: " + this.name);
+            //console.log("Got: " + this.name);
             var oldname = this.name.substr(name_prefix.length);
             var oldindex1 = oldname.split('.', 1)[0];
             var oldindex2 = oldname.split('-', 1)[0];
