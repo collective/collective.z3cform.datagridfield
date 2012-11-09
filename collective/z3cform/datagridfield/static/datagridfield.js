@@ -92,7 +92,7 @@ jQuery(function($) {
         dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
 
         // Update order index to give rows correct values
-        dataGridField2Functions.updateOrderIndex(tbody,true);
+        dataGridField2Functions.updateOrderIndex(tbody, true);
 
         dgf.trigger("afteraddrowauto", [dgf, newtr]);
     };
@@ -341,21 +341,63 @@ jQuery(function($) {
     };
 
 
+    /**
+     * Update all row indexes on a DGF table.
+     *
+     * @param  {Object} tbody     [description]
+     * @param  {Boolean} backwards [description]
+     */
     dataGridField2Functions.updateOrderIndex = function (tbody, backwards) {
 
         /* Split from the dataGridField2 approach here - and just re-do
          * the numbers produced by z3c.form
          */
         var name_prefix = $(tbody).attr('data-name_prefix') + '.';
+        var i, idx, row, $row, $nextRow;
+
+        // Was this auto-append table
+        var autoAppend = false;
 
         var rows = this.getRows(tbody);
-        for (var i=0; i<rows.length; i++) {
-            var idx = backwards ? rows.length-i-1 : i;
-            var row = rows[idx];
-            if ($(row).hasClass('datagridwidget-empty-row') || $(row).hasClass('auto-append')) {
+        for (i=0; i<rows.length; i++) {
+            idx = backwards ? rows.length-i-1 : i;
+            row = rows[idx], $row = $(row);
+
+            if ($row.hasClass('datagridwidget-empty-row')) {
                 continue;
             }
+
+            if($row.hasClass('auto-append')) {
+                autoAppend = true;
+            }
+
             dataGridField2Functions.reindexRow(tbody, row, idx);
+        }
+
+        // Add a special first and class row classes
+        // to hide manipulation handles
+        // (AA and TT doesn't count here)
+        if(autoAppend) {
+            for (i=0; i<rows.length; i++) {
+                row = rows[i], $row = $(row);
+
+                if(i<rows.length) {
+                    $nextRow = $(rows[i+1]);
+                }
+
+                if(i===0) {
+                    $row.addClass("datagridfield-first-filled-row");
+                } else {
+                    $row.removeClass("datagridfield-first-filled-row");
+                }
+
+                // Last visible before AA
+                if($nextRow && $nextRow.hasClass("auto-append")) {
+                    $row.addClass("datagridfield-last-filled-row");
+                } else {
+                    $row.removeClass("datagridfield-last-filled-row");
+                }
+            }
         }
 
         $(document).find('input[name="' + name_prefix + 'count"]').each(function(){
@@ -434,11 +476,26 @@ jQuery(function($) {
         return parent;
     };
 
+    /**
+     * When DOM model is ready execute this actions to wire up page logic.
+     */
+    dataGridField2Functions.init = function() {
+
+        // Bind the handlers to the auto append rows
+        // Use namespaced jQuery events to avoid unbind() conflicts later on
+        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", dataGridField2Functions.autoInsertRow);
+
+        // Reindex all rows to get proper row classes on them
+        $(".datagridwidget-body").each(function() {
+            dataGridField2Functions.updateOrderIndex(this, false);
+        });
+    };
+
+
+    $(document).ready(dataGridField2Functions.init);
+
     // Export module for customizers to mess around
     window.dataGridField2Functions = dataGridField2Functions;
 
-    // Bind the handlers to the auto append rows
-    // Use namespaced jQuery events to avoid unbind() conflicts later on
-    $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", dataGridField2Functions.autoInsertRow);
 
 });
