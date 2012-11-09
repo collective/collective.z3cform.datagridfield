@@ -279,7 +279,12 @@ jQuery(function($) {
         // Expand jQuery z3c.form widget selection to cover checkbox <input>s
         function expandAllZ3CFormInputs(sel) {
             var checkboxes = sel.children(".option");
-            return sel.add(checkboxes);
+            sel = sel.add(checkboxes);
+
+            var datetimedropdowns = sel.children(".datetimepicker_input").find("select").parent();
+            sel = sel.add(datetimedropdowns);
+
+            return sel;
         }
 
         // We need to select
