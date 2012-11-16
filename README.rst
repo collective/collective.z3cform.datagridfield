@@ -209,6 +209,25 @@ Notes
 I have attempted to keep the markup close to Products.DataGridField, so that the
 styling approach is the same.
 
+
+Demo
+----
+
+Examples are in the package `collective.z3cform.datagridfield_demo <https://github.com/collective/collective.z3cform.datagridfield_demo>`_.
+
+See also
+---------
+
+* https://github.com/miohtama/collective.z3cform.dgftreeselect
+
+* https://github.com/collective/collective.z3cform.widgets/
+
+References
+----------
+
+    * http://pypi.python.org/pypi/Products.DataGridField
+    * http://pypi.python.org/pypi/collective.z3cform.datagridfield_demo
+
 TODO
 ----
 
@@ -223,16 +242,5 @@ TODO
       Possibly show the error message in the field cell.
 
     * hidden mode
-
-Demo
-----
-
-Examples are in the package `collective.z3cform.datagridfield_demo <https://github.com/collective/collective.z3cform.datagridfield_demo>`_.
-
-References
-----------
-
-    * http://pypi.python.org/pypi/Products.DataGridField
-    * http://pypi.python.org/pypi/collective.z3cform.datagridfield_demo
 
 
