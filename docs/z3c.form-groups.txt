@@ -1,0 +1,104 @@
+
+# z3c.form 2.5.1
+# Fix DGF validation behavior in subforms.
+# EditTimepointFull form uses z3c.form Group subforms.
+# DataGridField validatoin does not always kick in at
+# the proper chain of events for Groups.
+# This means that field tries to save an invalid value
+# and breaks the page with an exception. We patch DGF
+# so that invalid value saves are simply ignores.
+# The validator should catch the bug after failed set() attempt
+# and the error is presented to the user.
+#
+# The datetime field on DGF object must be required
+#
+
+from collective.z3cform.datagridfield import datagridfield
+from z3c.form.widget import FieldWidget
+from zope.schema.interfaces import IObject
+from z3c.form.browser.object import ObjectWidget
+from z3c.form.error import MultipleErrors
+from zope.schema import getFieldNames
+from z3c.form import interfaces
+
+
+class FixedDataGridFieldObject(datagridfield.DataGridFieldObject):
+
+    @apply
+    def value():
+        """I have moved this code from z3c/form/object.py because I
+           want to allow a field to handle a sub-set of the schema. I
+           filter on the subform.fields
+        """
+
+        def get(self):
+            # value (get) cannot raise an exception, then we return
+            # insane values
+            try:
+                return self.extract()
+            except MultipleErrors:
+                value = {}
+                active_names = self.subform.fields.keys()
+                for name in getFieldNames(self.field.schema):
+                    if name in active_names:
+                        widget = self.subform.widgets[name]
+                        widget_value = widget.value
+                        try:
+                            converter = interfaces.IDataConverter(widget)
+                            value[name] = converter.toFieldValue(widget_value)
+                        except (FormatterValidationError, ValueError):
+                            value[name] = widget_value
+                return value
+
+        def set(self, value):
+            self._value = value
+            self.updateWidgets()
+
+            # ensure that we apply our new values to the widgets
+            if value is not interfaces.NO_VALUE:
+                active_names = self.subform.fields.keys()
+                for name in getFieldNames(self.field.schema):
+                    if name in active_names:
+                        try:
+                            self.applyValue(self.subform.widgets[name],
+                                        value.get(name, interfaces.NO_VALUE))
+                        except TypeError:
+                            # a float is required
+                            pass
+                        except ValueError:
+                            # Entering 999,999 to int field
+                            pass
+                        except AttributeError:
+                            # AttributeError: 'tuple' object has no attribute 'year'
+                            pass
+
+        return property(get, set)
+
+
+def DataGridFieldObjectFactory(field, request):
+    """IFieldWidget factory for DataGridField."""
+    return FieldWidget(field, FixedDataGridFieldObject(request))
+
+
+def createObjectWidget(self, idx):
+    """
+    Create the widget which handles individual rows.
+
+    Allow row-widget overriding for more specific use cases.
+    """
+
+    valueType = self.field.value_type
+
+    if IObject.providedBy(valueType):
+        widget = DataGridFieldObjectFactory(valueType, self.request)
+        if idx in ['TT', 'AA']:
+            widget.setErrors = False
+        else:
+            widget.setErrors = True
+    else:
+        widget = zope.component.getMultiAdapter((valueType, self.request),
+            interfaces.IFieldWidget)
+
+    return widget
+
+datagridfield.DataGridField.createObjectWidget = createObjectWidget

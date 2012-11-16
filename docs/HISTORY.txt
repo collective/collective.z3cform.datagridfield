@@ -4,8 +4,19 @@ Changelog
 0.13 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Correctly bind DGF events on DOM content loaded, not when Javascript is parsed [miohtama]
 
+- Don't display movement handles if the row cannot be moved [miohtama]
+
+- Changed move up and down handlers to stay in fixed positions to make cells stay in the same width regardless of moving [miohtama]
+
+- Fixed checkbox saving, was broken by nested DGF support [miohtama]
+
+- Added block edit mode [miohtama]
+
+- "use strict;" and ECMAScript 5 compatible Javascript clean-up [miohtama]
+
+- Added *afterrowmoved* JS event [miohtama]
 
 0.12 (2012-10-30)
 --------------------
