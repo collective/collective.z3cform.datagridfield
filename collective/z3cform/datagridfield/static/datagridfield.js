@@ -494,6 +494,8 @@ jQuery(function($) {
         $(".datagridwidget-body").each(function() {
             dataGridField2Functions.updateOrderIndex(this, false);
         });
+
+        $(document).trigger("afterdatagridfieldinit");
     };
 
 

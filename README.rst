@@ -191,6 +191,8 @@ The following events are currently fired against ``table.datagridwidget-table-vi
 
 * ``aftermoverow`` [datagridfield]
 
+* ``afterdatagridfieldinit`` - All DGFs on the page have been initialized
+
 Example usage::
 
     handleDGFInsert : function(event, dgf, row) {
