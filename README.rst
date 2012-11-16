@@ -74,6 +74,9 @@ returns a list of dicts, not of your object class. See the demos.
 Configuration
 -------------
 
+Row editor handles
+++++++++++++++++++++++
+
 The widget can be customised via the updateWidgets method.
 
 ::
@@ -87,6 +90,26 @@ The widget can be customised via the updateWidgets method.
 
 The widget contains an attribute 'columns' which is manipulated to hide column
 titles.
+
+Block edit mode
+++++++++++++++++++++
+
+A widget class variation ``BlockDataGridField`` is provided.
+This widget renders subform widgets vertically in blocks instead
+of horizontally in cells. It makes sense when there are many
+subform fields and they have problem to fit on the screen once.
+
+Example::
+
+    class EditForm9(EditForm):
+        label = u'Rendering widgets as blocks instead of cells'
+
+        grok.name('demo-collective.z3cform.datagrid-block-edit')
+
+        def update(self):
+            # Set a custom widget for a field for this form instance only
+            self.fields['address'].widgetFactory = BlockDataGridFieldFactory
+            super(EditForm9, self).update()
 
 Manipulating the Sub-form
 -------------------------
@@ -165,6 +188,8 @@ The following events are currently fired against ``table.datagridwidget-table-vi
 * ``beforeaddrowauto`` [datagridfield, newRow]
 
 * ``afteraddrowauto`` [datagridfield, newRow]
+
+* ``aftermoverow`` [datagridfield]
 
 Example usage::
 

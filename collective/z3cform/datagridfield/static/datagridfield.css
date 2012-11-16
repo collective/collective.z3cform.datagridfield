@@ -51,25 +51,34 @@
 	width: 16px;
 	text-align: center;
 	padding-bottom: 4px;
-	margin: 0;	
+	margin: 0;
 	vertical-align: bottom;
 }
 
 .datagridwidget-manipulator img {
-	cursor: pointer;	
+	cursor: pointer;
 }
 
 .datagridwidget-hidden-data {
-	display: none;	
+	display: none;
 }
 
 /* You cannot delete the auto-append row */
-.auto-append  > .datagridwidget-manipulator.delete-row,
-.auto-append  > .datagridwidget-manipulator.move-up,
-.auto-append  > .datagridwidget-manipulator.move-down {
+.auto-append  > .datagridwidget-manipulator.delete-row img,
+.auto-append  > .datagridwidget-manipulator.move-up img ,
+.auto-append  > .datagridwidget-manipulator.move-down img {
     display:none;
 }
 
+/* Cannot move up out of the grid */
+.datagridfield-first-filled-row > .datagridwidget-manipulator.move-up img {
+    display: none;
+}
+
+/* Cannot move below auto-append row */
+.datagridfield-last-filled-row > .datagridwidget-manipulator.move-down img {
+    display: none;
+}
 
 /*
  	Workaround for IE which cannot propeply handle
@@ -81,3 +90,40 @@
 	background-image: none;
 }
 
+/**
+ * Block edit mode styles
+ */
+
+.datagridwidget-table-view-block {
+    border-collapse: collapse;
+}
+
+.datagridwidget-table-view-block thead {
+    display: none;
+}
+
+.datagridwidget-table-view-block .datagridwidget-row {
+    border-bottom: 1px solid black;
+}
+
+.datagridwidget-table-view-block td {
+    vertical-align: top;
+}
+
+.datagridwidget-block-edit-cell {
+    width: auto;
+}
+.datagridwidget-table-view-block .datagridwidget-manipulator {
+    width: 16px;
+}
+
+.datagridwidget-block {
+    padding: 0.5em;
+}
+
+.datagridwidget-block-edit-cell .error {
+    background-color: #FFDDCC;
+    border: 1px solid red;
+    margin: 1em 0;
+    padding: 0.5em;
+}

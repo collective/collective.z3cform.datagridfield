@@ -55,6 +55,8 @@ class DataGridField(MultiWidget):
     # JSON payload concerning all rows
     extra = None
 
+    # Define all possible template backends
+
     def setField(self, value):
         """
             The field information is passed to the widget after it is
@@ -78,10 +80,13 @@ class DataGridField(MultiWidget):
 
     field = property(getField, setField)
 
-    def getWidget(self, idx):
-        """Create the object widget. This is used to avoid looking up
-        the widget.
+    def createObjectWidget(self, idx):
         """
+        Create the widget which handles individual rows.
+
+        Allow row-widget overriding for more specific use cases.
+        """
+
         valueType = self.field.value_type
 
         if IObject.providedBy(valueType):
@@ -93,6 +98,17 @@ class DataGridField(MultiWidget):
         else:
             widget = zope.component.getMultiAdapter((valueType, self.request),
                 interfaces.IFieldWidget)
+
+        return widget
+
+    def getWidget(self, idx):
+        """Create the object widget. This is used to avoid looking up
+        the widget.
+        """
+
+        widget = self.createObjectWidget(idx)
+
+        # widgets.line1 -> form-widgets-address-0-widgets-line1
         self.setName(widget, idx)
 
         widget.__parent__ = self

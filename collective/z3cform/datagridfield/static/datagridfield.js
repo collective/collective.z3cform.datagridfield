@@ -1,6 +1,21 @@
-dataGridField2Functions = {};
+/*global window, console*/
 
 jQuery(function($) {
+
+    // No globals, dude!
+    "use strict";
+
+    var dataGridField2Functions = {};
+
+    /**
+     * Get edit mode of the DGF instance
+     *
+     * @return {String} "row" or "block"
+     */
+    dataGridField2Functions.getMode = function(node) {
+         var dgf = $(dataGridField2Functions.getParentByClass(node, "datagridwidget-table-view"));
+         return dgf.attr("data-mode");
+    };
 
     dataGridField2Functions.getInputOrSelect = function(node) {
         /* Get the (first) input or select form element under the given node */
@@ -21,7 +36,7 @@ jQuery(function($) {
     dataGridField2Functions.getWidgetRows = function(currnode) {
         /* Return primary nodes with class of datagridwidget-row,
            they can be any tag: tr, div, etc. */
-        tbody = this.getParentByClass(currnode, "datagridwidget-body");
+        var tbody = this.getParentByClass(currnode, "datagridwidget-body");
         return this.getRows(tbody);
     };
 
@@ -34,20 +49,23 @@ jQuery(function($) {
         return rows;
     };
 
+    /**
+     * Add a new row when changing the last row
+     *
+     *
+     */
     dataGridField2Functions.autoInsertRow = function(e) {
-        /* Add a new row when changing the last row
-           (i.e. the infamous auto insert feature)
 
-         */
         var currnode = window.event ? window.event.srcElement : e.currentTarget;
 
         // fetch required data structure
         var dgf = $(dataGridField2Functions.getParentByClass(currnode, "datagridwidget-table-view"));
         var tbody = dataGridField2Functions.getParentByClass(currnode, "datagridwidget-body");
-        var thisRow = dataGridField2Functions.getParentRow(currnode);
+        var thisRow = dataGridField2Functions.getParentRow(currnode); // The new row we are working on
 
-        // Remove the auto-append functionality from the row
-        $('.auto-append > .datagridwidget-cell').unbind('change');
+        // Remove the auto-append functionality from the all rows in this widget
+        var autoAppendHandlers = dgf.find('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell');
+        autoAppendHandlers.unbind('change.dgf');
         $(thisRow).removeClass('auto-append');
 
         // Create a new row
@@ -67,12 +85,14 @@ jQuery(function($) {
         dgf.trigger("beforeaddrowauto", [dgf, newtr]);
 
         $(newtr).insertAfter(thisRow);
-        $('.auto-append > .datagridwidget-cell').change(dataGridField2Functions.autoInsertRow);
+
+        // Re-enable auto-append change handler feature on the new auto-appended row
+        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", dataGridField2Functions.autoInsertRow);
 
         dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
 
         // Update order index to give rows correct values
-        dataGridField2Functions.updateOrderIndex(tbody,true);
+        dataGridField2Functions.updateOrderIndex(tbody, true);
 
         dgf.trigger("afteraddrowauto", [dgf, newtr]);
     };
@@ -133,6 +153,9 @@ jQuery(function($) {
 
     dataGridField2Functions.moveRow = function(currnode, direction){
         /* Move the given row down one */
+        var nextRow;
+
+        var dgf = $(dataGridField2Functions.getParentByClass(currnode, "datagridwidget-table-view"));
 
         var tbody = this.getParentByClass(currnode, "datagridwidget-body");
 
@@ -140,7 +163,7 @@ jQuery(function($) {
 
         var row = this.getParentRow(currnode);
         if(!row) {
-            alert("Couldn't find DataGridWidget row");
+            window.alert("Couldn't find DataGridWidget row");
             return;
         }
 
@@ -194,7 +217,10 @@ jQuery(function($) {
                 this.shiftRow(row, nextRow);
             }
         }
+
         this.updateOrderIndex(tbody);
+
+        dgf.trigger("aftermoverow", [dgf]);
     };
 
     dataGridField2Functions.moveRowDown = function(currnode){
@@ -211,12 +237,12 @@ jQuery(function($) {
     };
 
     dataGridField2Functions.moveRowToTop = function (row) {
-        rows = this.getWidgetRows(row);
+        var rows = this.getWidgetRows(row);
         $(row).insertBefore(rows[0]);
     };
 
     dataGridField2Functions.moveRowToBottom = function (row) {
-        rows = this.getWidgetRows(row);
+        var rows = this.getWidgetRows(row);
 
         // make sure we insert the directly above any auto appended rows
         var insert_after = 0;
@@ -228,14 +254,67 @@ jQuery(function($) {
         $(row).insertAfter(rows[insert_after]);
     };
 
+    /**
+     * Rename <input> controls so that each control has unique name
+     * based on the row its on. On the server side, the
+     * DGF logic will rebuild rows based on this information.
+     *
+     * If indexing for some reasons fails you'll get double
+     * input values and Zope converts inputs to list, failing
+     * in funny ways.
+     *
+     * @param  {DOM} tbody
+     * @param  {DOM} row
+     * @param  {Number} newindex
+     */
     dataGridField2Functions.reindexRow = function (tbody, row, newindex) {
         var name_prefix = $(tbody).attr('data-name_prefix') + '.';
         var id_prefix = $(tbody).attr('data-id_prefix') + '-';
+        var cells;
+        var hidden = null;
+
+        // console.log("Reindexing row " + newindex);
+        //
+
+        // Expand jQuery z3c.form widget selection to cover checkbox <input>s
+        function expandAllZ3CFormInputs(sel) {
+            var checkboxes = sel.children(".option");
+            sel = sel.add(checkboxes);
+
+            var datetimedropdowns = sel.children(".datetimepicker_input").find("select").parent();
+            sel = sel.add(datetimedropdowns);
+
+            return sel;
+        }
+
+        // We need to select
+        // - all direct children inputs in row mode
+        // - all direct children inputs in block mode
+        // - but not nested inputs, as it would break nested datagridfields
+        var mode = this.getMode(tbody);
+
+        if(mode == "row") {
+            // Select normal inputs, checkboxes
+            cells = $(row).children("td");
+            cells = expandAllZ3CFormInputs(cells);
+        }  else if(mode == "block") {
+            // We need to update hidden data rows also which are not rendered as blocks
+            cells = $(row).children("td").children(".datagridwidget-block");
+            // Checkboxes
+            cells = expandAllZ3CFormInputs(cells);
+            hidden = $(row).children(".datagridwidget-hidden-data");
+            cells = cells.add(hidden); // AA and TT row stuff
+        } else {
+            throw new Error("Unknown DGF mode:" + mode);
+        }
 
 
-        var cells = $(row).children("td");
+        // Math all <input> by name on the row which fields' names we update
+        var inputs = cells.children('[name^="' + name_prefix +'"]');
 
-        cells.children('[name^="' + name_prefix +'"]').each(function(){
+        inputs.each(function(){
+
+            //console.log("Got: " + this.name);
             var oldname = this.name.substr(name_prefix.length);
             var oldindex1 = oldname.split('.', 1)[0];
             var oldindex2 = oldname.split('-', 1)[0];
@@ -267,21 +346,63 @@ jQuery(function($) {
     };
 
 
+    /**
+     * Update all row indexes on a DGF table.
+     *
+     * @param  {Object} tbody     [description]
+     * @param  {Boolean} backwards [description]
+     */
     dataGridField2Functions.updateOrderIndex = function (tbody, backwards) {
 
         /* Split from the dataGridField2 approach here - and just re-do
          * the numbers produced by z3c.form
          */
         var name_prefix = $(tbody).attr('data-name_prefix') + '.';
+        var i, idx, row, $row, $nextRow;
+
+        // Was this auto-append table
+        var autoAppend = false;
 
         var rows = this.getRows(tbody);
-        for (var i=0; i<rows.length; i++) {
-            var idx = backwards ? rows.length-i-1 : i;
-            var row = rows[idx];
-            if ($(row).hasClass('datagridwidget-empty-row') || $(row).hasClass('auto-append')) {
+        for (i=0; i<rows.length; i++) {
+            idx = backwards ? rows.length-i-1 : i;
+            row = rows[idx], $row = $(row);
+
+            if ($row.hasClass('datagridwidget-empty-row')) {
                 continue;
             }
+
+            if($row.hasClass('auto-append')) {
+                autoAppend = true;
+            }
+
             dataGridField2Functions.reindexRow(tbody, row, idx);
+        }
+
+        // Add a special first and class row classes
+        // to hide manipulation handles
+        // (AA and TT doesn't count here)
+        if(autoAppend) {
+            for (i=0; i<rows.length; i++) {
+                row = rows[i], $row = $(row);
+
+                if(i<rows.length) {
+                    $nextRow = $(rows[i+1]);
+                }
+
+                if(i===0) {
+                    $row.addClass("datagridfield-first-filled-row");
+                } else {
+                    $row.removeClass("datagridfield-first-filled-row");
+                }
+
+                // Last visible before AA
+                if($nextRow && $nextRow.hasClass("auto-append")) {
+                    $row.addClass("datagridfield-last-filled-row");
+                } else {
+                    $row.removeClass("datagridfield-last-filled-row");
+                }
+            }
         }
 
         $(document).find('input[name="' + name_prefix + 'count"]').each(function(){
@@ -327,15 +448,18 @@ jQuery(function($) {
         return null;
     };
 
+    /**
+     * Find the first parent node with the given id
+     *
+     * Id is partially matched: the beginning of
+     * an element id matches parameter id string.
+     *
+     * @param  {DOM} currnode Node where ascending in DOM tree beings
+     * @param  {String} id       Id string to look for.
+     * @return {DOM} Found node or null
+     */
     dataGridField2Functions.getParentElementById = function(currnode, id) {
-        /* Find the first parent node with the given id
-
-            Id is partially matched: the beginning of
-            an element id matches parameter id string.
-
-            Currnode: Node where ascending in DOM tree beings
-            Id: Id string to look for.
-
+        /*
         */
 
         id = id.toLowerCase();
@@ -357,7 +481,26 @@ jQuery(function($) {
         return parent;
     };
 
-    /* Bind the handlers to the auto append rows */
-    $('.auto-append > .datagridwidget-cell').change(dataGridField2Functions.autoInsertRow);
+    /**
+     * When DOM model is ready execute this actions to wire up page logic.
+     */
+    dataGridField2Functions.init = function() {
+
+        // Bind the handlers to the auto append rows
+        // Use namespaced jQuery events to avoid unbind() conflicts later on
+        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", dataGridField2Functions.autoInsertRow);
+
+        // Reindex all rows to get proper row classes on them
+        $(".datagridwidget-body").each(function() {
+            dataGridField2Functions.updateOrderIndex(this, false);
+        });
+    };
+
+
+    $(document).ready(dataGridField2Functions.init);
+
+    // Export module for customizers to mess around
+    window.dataGridField2Functions = dataGridField2Functions;
+
 
 });
