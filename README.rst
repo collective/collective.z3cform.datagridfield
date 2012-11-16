@@ -1,10 +1,10 @@
 Introduction
-============
+--------------
 
-Licence: GNU General Public License
-
-This module provides a z3c.form version of the Products.DataGridField. This product
+This module provides a z3c.form version of the `Products.DataGridField <http://plone.org/products/datagridfield>`_ . This product
 was developed for use with Plone4 and Dexterity.
+
+.. contents :: :local:
 
 Requirements
 ------------
