@@ -50,13 +50,19 @@ jQuery(function($) {
     };
 
     /**
+     * Handle auto insert events
+     */
+    dataGridField2Functions.onInsert = function(e) {
+        var currnode = window.event ? window.event.srcElement : e.currentTarget;
+        this.autoInsertRow(currnode);
+    },
+
+    /**
      * Add a new row when changing the last row
      *
      *
      */
-    dataGridField2Functions.autoInsertRow = function(e) {
-
-        var currnode = window.event ? window.event.srcElement : e.currentTarget;
+    dataGridField2Functions.autoInsertRow = function(currnode) {
 
         // fetch required data structure
         var dgf = $(dataGridField2Functions.getParentByClass(currnode, "datagridwidget-table-view"));
@@ -87,7 +93,7 @@ jQuery(function($) {
         $(newtr).insertAfter(thisRow);
 
         // Re-enable auto-append change handler feature on the new auto-appended row
-        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", dataGridField2Functions.autoInsertRow);
+        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", dataGridField2Functions.onInsert);
 
         dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
 
@@ -125,19 +131,28 @@ jQuery(function($) {
 
     };
 
+    /**
+     * Creates a new row.
+     *
+     * The row is not inserted to the table, but is returned.
+     *
+     * @param {Object} <tr> or <tbody> DOM node in a table where we'll be adding the new row
+     */
     dataGridField2Functions.createNewRow = function(node) {
-        /* Creates a new row
 
-           @param node A row in a table where we'll be adding the new row
-        */
         var tbody = this.getParentByClass(node, "datagridwidget-body");
 
         // hidden template row
-        var emptyRow = $(tbody).find('>.datagridwidget-empty-row');
+        var emptyRow = $(tbody).children('.datagridwidget-empty-row');
 
-        var markup = $(emptyRow).clone(true);
+        if(emptyRow.size() === 0) {
+            // Ghetto assert()
+            throw new Error("Could not locate empty template row in DGF");
+        }
 
-        var newTr = $(markup).attr("class","datagridwidget-row");
+        var markup = emptyRow.clone(true);
+
+        var newTr = markup.attr("class","datagridwidget-row");
 
         return newTr[0];
     };
@@ -481,6 +496,50 @@ jQuery(function($) {
         return parent;
     };
 
+
+    /**
+     * Make sure there is at least one visible row available in DGF
+     * to edit in all the time.
+     *
+     * There are cases where one doesn't want to have the count of DGF
+     * rows to go down to zero. Otherwise there no insert handle left
+     * on the edit mode and the user cannot add any more rows.
+     *
+     * One should case is when
+     *
+     * - DGF is empty (new form)
+     *
+     * - Auto append is set to false (initial row is not visible)
+     *
+     * We fix this situation by checking the available rows
+     * and generating one empty AA row if needed.
+     *
+     * ... or simply when the user removes all the rows
+     *
+     * @param {Object} tbody DOM object of <tbody>
+     */
+    dataGridField2Functions.ensureMinimumRows = function(tbody) {
+        var rows = this.getRows(tbody);
+        var self = this;
+
+        // We rape jQuery.filter here, because of
+        // IE8 Array.filter http://kangax.github.com/es5-compat-table/
+
+        // Consider "real" rows only
+        var filteredRows = $(rows).filter(function() {
+            var $tr = $(this);
+            return !$tr.hasClass("datagridwidget-empty-row");
+        });
+
+        // Rows = 0 -> make one AA row available
+        if(filteredRows.length === 0) {
+            // XXX: make the function call signatures more sane
+            var child = rows[0];
+            this.autoInsertRow(child);
+        }
+    },
+
+
     /**
      * When DOM model is ready execute this actions to wire up page logic.
      */
@@ -488,11 +547,12 @@ jQuery(function($) {
 
         // Bind the handlers to the auto append rows
         // Use namespaced jQuery events to avoid unbind() conflicts later on
-        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", dataGridField2Functions.autoInsertRow);
+        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", dataGridField2Functions.onInsert);
 
         // Reindex all rows to get proper row classes on them
         $(".datagridwidget-body").each(function() {
             dataGridField2Functions.updateOrderIndex(this, false);
+            dataGridField2Functions.ensureMinimumRows(this);
         });
 
         $(document).trigger("afterdatagridfieldinit");
