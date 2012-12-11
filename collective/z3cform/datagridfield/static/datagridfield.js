@@ -98,7 +98,10 @@ jQuery(function($) {
         if($thisRow.hasClass("minimum-row")) {
             // The change event was not triggered on real AA row,
             // but on a minimum ensured row (row 0).
-            // don't do auto-aa logic as the user should use + insert row icon
+            // 1. Don't add new row
+            // 2. Make widget to "normal" state now as the user has edited the empty row so we assume it's a real row
+            tbody.children().removeClass("auto-append");
+            dataGridField2Functions.updateOrderIndex(tbody, true, false);
             return;
         }
 
@@ -171,9 +174,11 @@ jQuery(function($) {
             $(newtr).insertAfter(thisRow);
         }
 
-        // Ensure minimum is needed as we have now at least 2 rows
-        tbody.children().removeClass("minimum-row");
-        tbody.children().removeClass("auto-append");
+        // Ensure minimum special behavior is no longer needed as we have now at least 2 rows
+        if(thisRow.hasClass("minimum-row")) {
+            tbody.children().removeClass("minimum-row");
+            tbody.children().removeClass("auto-append");
+        }
 
         // update orderindex hidden fields
         this.updateOrderIndex(tbody, true);
@@ -577,6 +582,11 @@ jQuery(function($) {
      * Make sure there is at least one visible row available in DGF
      * to edit in all the time.
      *
+     * We need a lot of special logic for the case where
+     * we have empty datagridfield and need to have one OPTIONAL
+     * row present there for the editing when the user opens
+     * the form for the first time.
+     *
      * There are cases where one doesn't want to have the count of DGF
      * rows to go down to zero. Otherwise there no insert handle left
      * on the edit mode and the user cannot add any more rows.
@@ -604,6 +614,7 @@ jQuery(function($) {
             // XXX: make the function call signatures more sane
             var child = rows[0];
             this.autoInsertRow(child, true);
+
         }
     },
 
@@ -612,10 +623,6 @@ jQuery(function($) {
      * When DOM model is ready execute this actions to wire up page logic.
      */
     dataGridField2Functions.init = function() {
-
-        // Bind the handlers to the auto append rows
-        // Use namespaced jQuery events to avoid unbind() conflicts later on
-        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
 
         // Reindex all rows to get proper row classes on them
         $(".datagridwidget-body").each(function() {
@@ -643,6 +650,10 @@ jQuery(function($) {
                 dataGridField2Functions.ensureMinimumRows(this);
             }
         });
+
+        // Bind the handlers to the auto append rows
+        // Use namespaced jQuery events to avoid unbind() conflicts later on
+        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
 
         $(document).trigger("afterdatagridfieldinit");
     };
