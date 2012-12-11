@@ -65,8 +65,9 @@
 
 /* You cannot delete the auto-append row */
 .auto-append  > .datagridwidget-manipulator.delete-row img,
-.auto-append  > .datagridwidget-manipulator.move-up img ,
-.auto-append  > .datagridwidget-manipulator.move-down img {
+.auto-append  > .datagridwidget-manipulator.move-up img,
+.auto-append  > .datagridwidget-manipulator.move-down img,
+.auto-append  > .datagridwidget-manipulator.insert-row img {
     display:none;
 }
 

@@ -49,6 +49,27 @@ jQuery(function($) {
         return rows;
     };
 
+
+    /**
+     * Get all visible rows of DGF
+     *
+     * Incl. normal rows + AA row
+     */
+    dataGridField2Functions.getVisibleRows = function(tbody) {
+
+        var rows = this.getRows(tbody);
+        // We rape jQuery.filter here, because of
+        // IE8 Array.filter http://kangax.github.com/es5-compat-table/
+
+        // Consider "real" rows only
+        var filteredRows = $(rows).filter(function() {
+            var $tr = $(this);
+            return !$tr.hasClass("datagridwidget-empty-row");
+        });
+
+        return rows;
+    };
+
     /**
      * Handle auto insert events
      */
@@ -93,7 +114,7 @@ jQuery(function($) {
         $(newtr).insertAfter(thisRow);
 
         // Re-enable auto-append change handler feature on the new auto-appended row
-        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", dataGridField2Functions.onInsert);
+        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
 
         dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
 
@@ -103,10 +124,12 @@ jQuery(function($) {
         dgf.trigger("afteraddrowauto", [dgf, newtr]);
     };
 
+    /**
+     * Creates a new row after the the target row.
+     *
+     * @param {Object} currnode DOM <tr>
+     */
     dataGridField2Functions.addRowAfter = function(currnode) {
-        /*
-            Creates a new row after the clicked row
-        */
 
         // fetch required data structure
         var tbody = this.getParentByClass(currnode, "datagridwidget-body");
@@ -118,14 +141,18 @@ jQuery(function($) {
 
         dgf.trigger("beforeaddrow", [dgf, newtr]);
 
-        if (thisRow.hasClass('auto-append') === true) {
+        var filteredRows = this.getVisibleRows(currnode);
+
+        // If using auto-append we add the "real" row before AA
+        // We have a special case when there is only one visible in the gid
+        if (thisRow.hasClass('auto-append') === true && filteredRows.length >= 2) {
             $(newtr).insertBefore(thisRow);
         } else {
             $(newtr).insertAfter(thisRow);
         }
 
         // update orderindex hidden fields
-        this.updateOrderIndex(tbody,true);
+        this.updateOrderIndex(tbody, true);
 
         dgf.trigger("afteraddrow", [dgf, newtr]);
 
@@ -178,8 +205,7 @@ jQuery(function($) {
 
         var row = this.getParentRow(currnode);
         if(!row) {
-            window.alert("Couldn't find DataGridWidget row");
-            return;
+            throw new Error("Couldn't find DataGridWidget row");
         }
 
         var idx = null;
@@ -507,7 +533,7 @@ jQuery(function($) {
      *
      * One should case is when
      *
-     * - DGF is empty (new form)
+     * - DGF is empty on new form
      *
      * - Auto append is set to false (initial row is not visible)
      *
@@ -520,16 +546,8 @@ jQuery(function($) {
      */
     dataGridField2Functions.ensureMinimumRows = function(tbody) {
         var rows = this.getRows(tbody);
+        var filteredRows = this.getVisibleRows(tbody);
         var self = this;
-
-        // We rape jQuery.filter here, because of
-        // IE8 Array.filter http://kangax.github.com/es5-compat-table/
-
-        // Consider "real" rows only
-        var filteredRows = $(rows).filter(function() {
-            var $tr = $(this);
-            return !$tr.hasClass("datagridwidget-empty-row");
-        });
 
         // Rows = 0 -> make one AA row available
         if(filteredRows.length === 0) {
@@ -547,7 +565,7 @@ jQuery(function($) {
 
         // Bind the handlers to the auto append rows
         // Use namespaced jQuery events to avoid unbind() conflicts later on
-        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", dataGridField2Functions.onInsert);
+        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
 
         // Reindex all rows to get proper row classes on them
         $(".datagridwidget-body").each(function() {

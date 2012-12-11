@@ -4,6 +4,8 @@ Changelog
 0.13 (unreleased)
 -----------------
 
+- Deal with situations where there is zero rows on DGF and no auto-append row available [miohtama]
+
 - Correctly bind DGF events on DOM content loaded, not when Javascript is parsed [miohtama]
 
 - Don't display movement handles if the row cannot be moved [miohtama]
