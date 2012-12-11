@@ -5,6 +5,7 @@ jQuery(function($) {
     // No globals, dude!
     "use strict";
 
+    // Local singleton object containing our functions
     var dataGridField2Functions = {};
 
     /**
@@ -71,34 +72,45 @@ jQuery(function($) {
     };
 
     /**
-     * Handle auto insert events
+     * Handle auto insert events by auto append
      */
     dataGridField2Functions.onInsert = function(e) {
         var currnode = window.event ? window.event.srcElement : e.currentTarget;
+
         this.autoInsertRow(currnode);
     },
 
     /**
      * Add a new row when changing the last row
      *
-     *
+     * @param {Boolean} ensureMinimumRows we insert a special minimum row so the widget is not empty
      */
-    dataGridField2Functions.autoInsertRow = function(currnode) {
+    dataGridField2Functions.autoInsertRow = function(currnode, ensureMinimumRows) {
 
         // fetch required data structure
         var dgf = $(dataGridField2Functions.getParentByClass(currnode, "datagridwidget-table-view"));
         var tbody = dataGridField2Functions.getParentByClass(currnode, "datagridwidget-body");
         var thisRow = dataGridField2Functions.getParentRow(currnode); // The new row we are working on
+        var $thisRow = $(thisRow);
+
+        var autoAppendMode = $(tbody).data("auto-append");
+
+        if($thisRow.hasClass("minimum-row")) {
+            // The change event was not triggered on real AA row,
+            // but on a minimum ensured row (row 0).
+            // don't do auto-aa logic as the user should use + insert row icon
+            return;
+        }
 
         // Remove the auto-append functionality from the all rows in this widget
         var autoAppendHandlers = dgf.find('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell');
         autoAppendHandlers.unbind('change.dgf');
-        $(thisRow).removeClass('auto-append');
+        $thisRow.removeClass('auto-append');
 
         // Create a new row
-        var newtr = dataGridField2Functions.createNewRow(thisRow);
+        var newtr = dataGridField2Functions.createNewRow(thisRow), $newtr = $(newtr);
         // Add auto-append functionality to our new row
-        $(newtr).addClass('auto-append');
+        $newtr.addClass('auto-append');
 
         /* Put new row to DOM tree after our current row.  Do this before
          * reindexing to ensure that any Javascript we insert that depends on
@@ -111,15 +123,23 @@ jQuery(function($) {
 
         dgf.trigger("beforeaddrowauto", [dgf, newtr]);
 
-        $(newtr).insertAfter(thisRow);
+        if(ensureMinimumRows) {
+            // Add a special class so we can later deal with it
+            $newtr.addClass("minimum-row");
+            $newtr.insertBefore(thisRow);
+        } else {
+            $newtr.insertAfter(thisRow);
+        }
 
         // Re-enable auto-append change handler feature on the new auto-appended row
-        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
+        if(autoAppendMode) {
+            $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
+        }
 
         dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
 
         // Update order index to give rows correct values
-        dataGridField2Functions.updateOrderIndex(tbody, true);
+        dataGridField2Functions.updateOrderIndex(tbody, true, ensureMinimumRows);
 
         dgf.trigger("afteraddrowauto", [dgf, newtr]);
     };
@@ -145,11 +165,15 @@ jQuery(function($) {
 
         // If using auto-append we add the "real" row before AA
         // We have a special case when there is only one visible in the gid
-        if (thisRow.hasClass('auto-append') === true && filteredRows.length >= 2) {
+        if (thisRow.hasClass('auto-append') === true && filteredRows.length < 2) {
             $(newtr).insertBefore(thisRow);
         } else {
             $(newtr).insertAfter(thisRow);
         }
+
+        // Ensure minimum is needed as we have now at least 2 rows
+        tbody.children().removeClass("minimum-row");
+        tbody.children().removeClass("auto-append");
 
         // update orderindex hidden fields
         this.updateOrderIndex(tbody, true);
@@ -390,15 +414,17 @@ jQuery(function($) {
     /**
      * Update all row indexes on a DGF table.
      *
-     * @param  {Object} tbody     [description]
-     * @param  {Boolean} backwards [description]
+     * @param  {Object} tbody     DOM of DGF <tbody>
+     * @param  {Boolean} backwards iterate rows backwards
+     * @param  {Boolean} ensureMinimumRows We have inserted a special auto-append row
      */
-    dataGridField2Functions.updateOrderIndex = function (tbody, backwards) {
+    dataGridField2Functions.updateOrderIndex = function (tbody, backwards, ensureMinimumRows) {
 
         /* Split from the dataGridField2 approach here - and just re-do
          * the numbers produced by z3c.form
          */
-        var name_prefix = $(tbody).attr('data-name_prefix') + '.';
+        var $tbody = $(tbody);
+        var name_prefix = $tbody.attr('data-name_prefix') + '.';
         var i, idx, row, $row, $nextRow;
 
         // Was this auto-append table
@@ -417,7 +443,15 @@ jQuery(function($) {
                 autoAppend = true;
             }
 
-            dataGridField2Functions.reindexRow(tbody, row, idx);
+            this.reindexRow(tbody, row, idx);
+        }
+
+        // Handle a special case where
+        // 1. Widget is empty
+        // 2. We don't have AA mode turned on
+        if(ensureMinimumRows) {
+            this.reindexRow(tbody, rows[0], "AA");
+            autoAppend = true;
         }
 
         // Add a special first and class row classes
@@ -445,6 +479,12 @@ jQuery(function($) {
                 }
             }
         }
+
+        // Set total visible row counts and such and hint CSS
+        var vis = this.getVisibleRows(tbody).length;
+        $tbody.attr("data-count", this.getRows(tbody).length);
+        $tbody.attr("data-visible-count", this.getVisibleRows(tbody).length);
+        $tbody.attr("data-many-rows", vis >= 2 ? "true" : "false");
 
         $(document).find('input[name="' + name_prefix + 'count"]').each(function(){
             // do not include the TT and the AA rows in the count
@@ -553,7 +593,7 @@ jQuery(function($) {
         if(filteredRows.length === 0) {
             // XXX: make the function call signatures more sane
             var child = rows[0];
-            this.autoInsertRow(child);
+            this.autoInsertRow(child, true);
         }
     },
 
@@ -569,8 +609,29 @@ jQuery(function($) {
 
         // Reindex all rows to get proper row classes on them
         $(".datagridwidget-body").each(function() {
+
+            // Initialize widget data on <tbody>
+            // We keep some mode attributes around
+            var $this = $(this);
+            var aa;
+
+            // Check if this widget is in auto-append mode
+            // and store for later usage
+            aa = $this.children(".auto-append").size() > 0;
+            $this.data("auto-append", aa);
+
+            // Hint CSS
+            if(aa) {
+                $this.addClass("datagridwidget-body-auto-append");
+            } else {
+                $this.addClass("datagridwidget-body-non-auto-append");
+            }
+
             dataGridField2Functions.updateOrderIndex(this, false);
-            dataGridField2Functions.ensureMinimumRows(this);
+
+            if(!aa) {
+                dataGridField2Functions.ensureMinimumRows(this);
+            }
         });
 
         $(document).trigger("afterdatagridfieldinit");

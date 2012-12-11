@@ -71,6 +71,11 @@
     display:none;
 }
 
+/* When no AA mode, only one row in the widget */
+.minimum-row  > .datagridwidget-manipulator.insert-row img {
+    display: block;
+}
+
 /* Cannot move up out of the grid */
 .datagridfield-first-filled-row > .datagridwidget-manipulator.move-up img {
     display: none;
@@ -80,6 +85,19 @@
 .datagridfield-last-filled-row > .datagridwidget-manipulator.move-down img {
     display: none;
 }
+
+.datagridwidget-body-non-auto-append[data-many-rows = "true"] .datagridfield-last-filled-row > .datagridwidget-manipulator.move-down img,
+.datagridwidget-body-non-auto-append[data-many-rows = "true"] .datagridfield-first-filled-row > .datagridwidget-manipulator.move-up img {
+    display: block;
+}
+
+/* LAST ROW handling.. no delete, no move */
+.datagridwidget-body-non-auto-append[data-visible-count = "1"] .datagridwidget-manipulator.delete-row img,
+.datagridwidget-body-non-auto-append[data-visible-count = "1"] .datagridwidget-manipulator.move-down img,
+.datagridwidget-body-non-auto-append[data-visible-count = "1"] .datagridwidget-manipulator.move-up img {
+    display: none;
+}
+
 
 /*
  	Workaround for IE which cannot propeply handle
