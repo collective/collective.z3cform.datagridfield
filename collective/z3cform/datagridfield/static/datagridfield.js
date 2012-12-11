@@ -76,7 +76,6 @@ jQuery(function($) {
      */
     dataGridField2Functions.onInsert = function(e) {
         var currnode = window.event ? window.event.srcElement : e.currentTarget;
-
         this.autoInsertRow(currnode);
     },
 
@@ -100,8 +99,7 @@ jQuery(function($) {
             // but on a minimum ensured row (row 0).
             // 1. Don't add new row
             // 2. Make widget to "normal" state now as the user has edited the empty row so we assume it's a real row
-            tbody.children().removeClass("auto-append");
-            dataGridField2Functions.updateOrderIndex(tbody, true, false);
+            this.supressEnsureMinimum(tbody);
             return;
         }
 
@@ -176,8 +174,7 @@ jQuery(function($) {
 
         // Ensure minimum special behavior is no longer needed as we have now at least 2 rows
         if(thisRow.hasClass("minimum-row")) {
-            tbody.children().removeClass("minimum-row");
-            tbody.children().removeClass("auto-append");
+            this.supressEnsureMinimum(tbody);
         }
 
         // update orderindex hidden fields
@@ -415,6 +412,24 @@ jQuery(function($) {
         });
     };
 
+    /**
+     * Stop ensure miminum special behavior.
+     *
+     * The caller is responsible to check there was one and only one minimum-row in the table.
+     *
+     * Call when data is edited for the first time or a row added.
+     */
+    dataGridField2Functions.supressEnsureMinimum = function(tbody) {
+
+        var autoAppendHandlers = $(tbody).find('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell');
+        autoAppendHandlers.unbind('change.dgf');
+
+        tbody.children().removeClass("auto-append");
+        tbody.children().removeClass("minimum-row");
+
+
+        dataGridField2Functions.updateOrderIndex(tbody, true, false);
+    };
 
     /**
      * Update all row indexes on a DGF table.
