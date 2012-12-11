@@ -67,7 +67,7 @@ jQuery(function($) {
             return !$tr.hasClass("datagridwidget-empty-row");
         });
 
-        return rows;
+        return filteredRows;
     };
 
     /**
