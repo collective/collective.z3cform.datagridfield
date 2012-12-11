@@ -68,22 +68,12 @@
 .auto-append  > .datagridwidget-manipulator.move-up img,
 .auto-append  > .datagridwidget-manipulator.move-down img,
 .auto-append  > .datagridwidget-manipulator.insert-row img {
-    display:none;
+    display: none;
 }
 
 /* When no AA mode, only one row in the widget */
 .minimum-row  > .datagridwidget-manipulator.insert-row img {
     display: block;
-}
-
-/* Cannot move up out of the grid */
-.datagridfield-first-filled-row > .datagridwidget-manipulator.move-up img {
-    display: none;
-}
-
-/* Cannot move below auto-append row */
-.datagridfield-last-filled-row > .datagridwidget-manipulator.move-down img {
-    display: none;
 }
 
 .datagridwidget-body-non-auto-append[data-many-rows = "true"] .datagridfield-last-filled-row > .datagridwidget-manipulator.move-down img,
@@ -98,6 +88,15 @@
     display: none;
 }
 
+/* Cannot move up out of the grid */
+.datagridfield-first-filled-row > .datagridwidget-manipulator.move-up img {
+    display: none !important;
+}
+
+/* Cannot move below auto-append row */
+.datagridfield-last-filled-row > .datagridwidget-manipulator.move-down img {
+    display: none !important;
+}
 
 /*
  	Workaround for IE which cannot propeply handle

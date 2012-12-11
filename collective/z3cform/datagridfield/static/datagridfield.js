@@ -456,29 +456,38 @@ jQuery(function($) {
 
         // Add a special first and class row classes
         // to hide manipulation handles
-        // (AA and TT doesn't count here)
-        if(autoAppend) {
-            for (i=0; i<rows.length; i++) {
-                row = rows[i], $row = $(row);
+        // AA handling is different once again
+        var visibleRows = this.getVisibleRows(tbody);
 
-                if(i<rows.length) {
-                    $nextRow = $(rows[i+1]);
-                }
+        for (i=0; i<visibleRows.length; i++) {
+            row = visibleRows[i], $row = $(row);
 
-                if(i===0) {
-                    $row.addClass("datagridfield-first-filled-row");
-                } else {
-                    $row.removeClass("datagridfield-first-filled-row");
-                }
+            if(i<visibleRows.length-2) {
+                $nextRow = $(visibleRows[i+1]);
+            }
 
-                // Last visible before AA
+            if(i===0) {
+                $row.addClass("datagridfield-first-filled-row");
+            } else {
+                $row.removeClass("datagridfield-first-filled-row");
+            }
+
+            // Last visible before AA
+            if(autoAppend) {
                 if($nextRow && $nextRow.hasClass("auto-append")) {
+                    $row.addClass("datagridfield-last-filled-row");
+                } else {
+                    $row.removeClass("datagridfield-last-filled-row");
+                }
+            } else {
+                if(i==visibleRows.length-1) {
                     $row.addClass("datagridfield-last-filled-row");
                 } else {
                     $row.removeClass("datagridfield-last-filled-row");
                 }
             }
         }
+
 
         // Set total visible row counts and such and hint CSS
         var vis = this.getVisibleRows(tbody).length;
