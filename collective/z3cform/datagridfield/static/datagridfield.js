@@ -165,7 +165,7 @@ jQuery(function($) {
 
         // If using auto-append we add the "real" row before AA
         // We have a special case when there is only one visible in the gid
-        if (thisRow.hasClass('auto-append') === true && filteredRows.length < 2) {
+        if (thisRow.hasClass('auto-append') && !thisRow.hasClass("minimum-row")) {
             $(newtr).insertBefore(thisRow);
         } else {
             $(newtr).insertAfter(thisRow);
@@ -414,15 +414,15 @@ jQuery(function($) {
     /**
      * Update all row indexes on a DGF table.
      *
+     * Each <tr> and input widget has recalculated row index number in its name,
+     * so that the server can then parsit the submitted data in the correct order.
+     *
      * @param  {Object} tbody     DOM of DGF <tbody>
      * @param  {Boolean} backwards iterate rows backwards
      * @param  {Boolean} ensureMinimumRows We have inserted a special auto-append row
      */
     dataGridField2Functions.updateOrderIndex = function (tbody, backwards, ensureMinimumRows) {
 
-        /* Split from the dataGridField2 approach here - and just re-do
-         * the numbers produced by z3c.form
-         */
         var $tbody = $(tbody);
         var name_prefix = $tbody.attr('data-name_prefix') + '.';
         var i, idx, row, $row, $nextRow;
@@ -449,6 +449,7 @@ jQuery(function($) {
         // Handle a special case where
         // 1. Widget is empty
         // 2. We don't have AA mode turned on
+        // 3. We need to have minimum editable row count of 1
         if(ensureMinimumRows) {
             this.reindexRow(tbody, rows[0], "AA");
             autoAppend = true;
