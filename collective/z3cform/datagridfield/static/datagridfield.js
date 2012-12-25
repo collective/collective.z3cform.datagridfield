@@ -402,9 +402,22 @@ jQuery(function($) {
         });
 
         cells.children('[for*="' + id_prefix +'"]').each(function(){
+
             var regexp = new RegExp(id_prefix + ".*?-");
-            this.setAttribute('for', this.getAttribute('for').replace(regexp, id_prefix + newindex + "-"));
+            // IE7 I love you
+            // It's Friday and I need to fix some shit
+            // in some shit piece of software which was released
+            // when I still had hair and happy life ahead
+            // MICROSOFT YOU HAVE F*CKING ruined my life
+            // http://webbugtrack.blogspot.com.br/2007/08/bug-217-getattribute-doesnt-always-work.html
+            // getAttribute() does not work all the time
+            var forrrr = this.attributes['for'].nodeValue;
+
+            var newvalue = id_prefix + newindex + "-";
+            forrrr = forrrr.replace(regexp, newvalue);
+            this.setAttribute('for', forrrr);
         });
+
 
         cells.children('[class*="' + name_prefix +'"]').each(function(){
             var regexp = new RegExp(name_prefix + ".*?\\.");
