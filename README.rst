@@ -33,6 +33,7 @@ The layout of the table is defined by a second schema.::
     from zope import interface
     from plone.directives import form
     from z3c.form.form import extends
+    from z3c.form import field
 
     from collective.z3cform.datagridfield import DataGridFieldFactory, DictRow
 
