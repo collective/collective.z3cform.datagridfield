@@ -4,7 +4,7 @@ Changelog
 0.13 (unreleased)
 -----------------
 
-- Fix IE7 failing on <label> for manipulation [miohtama]
+- Fix IE7 failing on `<label>` for manipulation [miohtama]
 
 - Deal with situations where there is zero rows on DGF and no auto-append row available [miohtama]
 
