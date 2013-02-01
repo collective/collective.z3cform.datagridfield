@@ -1,10 +1,10 @@
 Introduction
-============
+--------------
 
-Licence: GNU General Public License
-
-This module provides a z3c.form version of the Products.DataGridField. This product
+This module provides a z3c.form version of the `Products.DataGridField <http://plone.org/products/datagridfield>`_ . This product
 was developed for use with Plone4 and Dexterity.
+
+.. contents :: :local:
 
 Requirements
 ------------
@@ -33,6 +33,7 @@ The layout of the table is defined by a second schema.::
     from zope import interface
     from plone.directives import form
     from z3c.form.form import extends
+    from z3c.form import field
 
     from collective.z3cform.datagridfield import DataGridFieldFactory, DictRow
 
@@ -211,6 +212,25 @@ Notes
 I have attempted to keep the markup close to Products.DataGridField, so that the
 styling approach is the same.
 
+
+Demo
+----
+
+Examples are in the package `collective.z3cform.datagridfield_demo <https://github.com/collective/collective.z3cform.datagridfield_demo>`_.
+
+See also
+---------
+
+* https://github.com/miohtama/collective.z3cform.dgftreeselect
+
+* https://github.com/collective/collective.z3cform.widgets/
+
+References
+----------
+
+    * http://pypi.python.org/pypi/Products.DataGridField
+    * http://pypi.python.org/pypi/collective.z3cform.datagridfield_demo
+
 TODO
 ----
 
@@ -225,16 +245,5 @@ TODO
       Possibly show the error message in the field cell.
 
     * hidden mode
-
-Demo
-----
-
-Examples are in the package collective.z3cform.datagridfield_demo.
-
-References
-----------
-
-    * http://pypi.python.org/pypi/Products.DataGridField
-    * http://pypi.python.org/pypi/collective.z3cform.datagridfield_demo
 
 
