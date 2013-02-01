@@ -34,4 +34,6 @@ dist
 .project
 .pydevproject
 .DS_Store
+venv
+bin
 
