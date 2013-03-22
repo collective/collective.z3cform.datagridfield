@@ -233,7 +233,9 @@ class DataGridFieldObject(ObjectWidget):
                         try:
                             converter = interfaces.IDataConverter(widget)
                             value[name] = converter.toFieldValue(widget_value)
-                        except (FormatterValidationError, ValueError):
+                        except (FormatterValidationError,
+                                zope.schema.interfaces.ValidationError,
+                                ValueError):
                             value[name] = widget_value
                 return value
 

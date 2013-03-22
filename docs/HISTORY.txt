@@ -4,6 +4,9 @@ Changelog
 0.13 (unreleased)
 -----------------
 
+- Fix to expect ``zope.schema.interfaces.ValidationError`` to work better
+  with *TooLong* and *TooShort* exceptions. [datakurre]
+
 - Fix IE7 failing on `<label>` for manipulation [miohtama]
 
 - Deal with situations where there is zero rows on DGF and no auto-append row available [miohtama]
