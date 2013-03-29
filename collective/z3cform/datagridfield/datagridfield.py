@@ -10,7 +10,7 @@ from zope.schema import getFieldsInOrder, getFieldNames
 from zope.schema.interfaces import IObject, IList
 
 from z3c.form.browser.object import ObjectWidget
-from z3c.form.object import SubformAdapter, ObjectSubForm
+
 from z3c.form.error import MultipleErrors
 
 
@@ -26,6 +26,16 @@ from z3c.form.validator import SimpleFieldValidator
 
 from interfaces import IDataGridField
 
+try:
+    # support plone.autoform directives within the row schema
+    import plone.autoform
+    from autoform import AutoExtensibleSubForm as ObjectSubForm
+    from autoform import AutoExtensibleSubformAdapter as SubformAdapter
+except ImportError:
+    # Plain z3c ObjectSubForm support
+    from z3c.form.object import ObjectSubForm
+    from z3c.form.object import SubformAdapter
+
 
 #------------[ Main Widget ]-----------------------------------------------
 
@@ -39,6 +49,13 @@ class DataGridField(MultiWidget):
     allow_delete = True
     allow_reorder = False
     auto_append = True
+
+    # You can give data-extra attribute
+    # for the widget to allow there some custom
+    # JSON payload concerning all rows
+    extra = None
+
+    # Define all possible template backends
 
     def setField(self, value):
         """
@@ -63,11 +80,15 @@ class DataGridField(MultiWidget):
 
     field = property(getField, setField)
 
-    def getWidget(self, idx):
-        """Create the object widget. This is used to avoid looking up
-        the widget.
+    def createObjectWidget(self, idx):
         """
+        Create the widget which handles individual rows.
+
+        Allow row-widget overriding for more specific use cases.
+        """
+
         valueType = self.field.value_type
+
         if IObject.providedBy(valueType):
             widget = DataGridFieldObjectFactory(valueType, self.request)
             if idx in ['TT', 'AA']:
@@ -77,6 +98,17 @@ class DataGridField(MultiWidget):
         else:
             widget = zope.component.getMultiAdapter((valueType, self.request),
                 interfaces.IFieldWidget)
+
+        return widget
+
+    def getWidget(self, idx):
+        """Create the object widget. This is used to avoid looking up
+        the widget.
+        """
+
+        widget = self.createObjectWidget(idx)
+
+        # widgets.line1 -> form-widgets-address-0-widgets-line1
         self.setName(widget, idx)
 
         widget.__parent__ = self
@@ -100,6 +132,7 @@ class DataGridField(MultiWidget):
     def updateWidgets(self):
         # if the field has configuration data set - copy it
         super(DataGridField, self).updateWidgets()
+
         if self.mode == INPUT_MODE:
             if self.auto_append:
                 # If we are doing 'auto-append', then a blank row
@@ -221,7 +254,9 @@ class DataGridFieldObject(ObjectWidget):
                         try:
                             converter = interfaces.IDataConverter(widget)
                             value[name] = converter.toFieldValue(widget_value)
-                        except (FormatterValidationError, ValueError):
+                        except (FormatterValidationError,
+                                zope.schema.interfaces.ValidationError,
+                                ValueError):
                             value[name] = widget_value
                 return value
 
@@ -249,6 +284,7 @@ def DataGridFieldObjectFactory(field, request):
 
 
 #------------[ Form to draw the line ]-----------------------------------------
+
 
 class DataGridFieldObjectSubForm(ObjectSubForm):
     """Local class of subform - this is intended to all configuration

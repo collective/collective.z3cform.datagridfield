@@ -1,8 +1,54 @@
 Changelog
 =========
 
-0.10 (unreleased)
+0.13 (unreleased)
 -----------------
+
+- Fix to expect ``zope.schema.interfaces.ValidationError`` to work better
+  with *TooLong* and *TooShort* exceptions. [datakurre]
+
+- Fix IE7 failing on `<label>` for manipulation [miohtama]
+
+- Deal with situations where there is zero rows on DGF and no auto-append row available [miohtama]
+
+- Correctly bind DGF events on DOM content loaded, not when Javascript is parsed [miohtama]
+
+- Don't display movement handles if the row cannot be moved [miohtama]
+
+- Changed move up and down handlers to stay in fixed positions to make cells stay in the same width regardless of moving [miohtama]
+
+- Fixed checkbox saving, was broken by nested DGF support [miohtama]
+
+- Added block edit mode [miohtama]
+
+- "use strict;" and ECMAScript 5 compatible Javascript clean-up [miohtama]
+
+- Added *afterrowmoved* JS event [miohtama]
+
+0.12 (2012-10-30)
+--------------------
+
+* Updated empty row selection. [jstegle]
+
+* Nested DataGridField support (yo dawg...) [miohtama]
+
+* Support plone.autoform and grok'ed row schemas [miohtama]
+
+* Added ``DataGridField.extra`` parameter, so you can pass out
+  application specific data to Javascript [miohtama]
+
+0.11 (2012-05-16)
+-----------------
+
+* be able to use with plone.app.registry
+  [vangheem]
+
+
+0.10 (2012-02-12)
+-----------------
+
+* Fix bug with moving the last row up.
+  [m-martinez]
 
 0.9 (2011-10-27)
 ----------------
@@ -12,7 +58,7 @@ Changelog
   [anthonygerrard]
 
 * Reindex more indexed attributes of cloned row
-  [anthonygerrard] 
+  [anthonygerrard]
 
 0.8 (2011-09-24)
 ----------------
@@ -34,15 +80,15 @@ Changelog
   [davidjb]
 
 * During auto-insert, add our new row into the document first, before reindexing
-  it and changing its elements' IDs. This allows Javascript that depends on 
-  these IDs (such as plone.formwidget.autocomplete) to pick up the correct 
+  it and changing its elements' IDs. This allows Javascript that depends on
+  these IDs (such as plone.formwidget.autocomplete) to pick up the correct
   fields.
   [davidjb]
 
 * Tidying up and reducing complexity of auto-insert functionality
   [davidjb]
 
-* Removing unnecessary auto-insert bind and unbind as this is already covered 
+* Removing unnecessary auto-insert bind and unbind as this is already covered
   by jQuery's `live()` function against the `auto-append` class. Adding/removing
   this class against rows automatically does this.
   [davidjb]
@@ -110,7 +156,7 @@ Changelog
   - Row 1 widgets renamed 2
   - Both sets of input:radio share the same name, one deselected
   - Row 2 widgets renamed 3
-  - . . . 
+  - . . .
   [lentinj]
 
 * Use jQuery to clone rows, and clone the jQuery events on the rows.

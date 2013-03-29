@@ -7,8 +7,11 @@ from zope.schema.interfaces import WrongContainedType
 from zope.schema import Object, Field
 from zope.schema import getFields
 
+from z3c.form.interfaces import NO_VALUE
+
 from interfaces import IRow
 from interfaces import AttributeNotFoundError
+
 
 class DictRow(Object):
     __doc__ = IRow.__doc__
@@ -19,12 +22,15 @@ class DictRow(Object):
         super(DictRow, self).__init__(schema, **kw)
 
     def _validate(self, value):
-        #HACK: Can't call the super, since it'll check to see if we provide DictRow.
-        #We're only a dict, so we can't.
+        # XXX HACK: Can't call the super, since it'll check to
+        # XXX see if we provide DictRow.
+        # We're only a dict, so we can't.
         # super(DictRow, self)._validate(value)
 
         # Validate the dict against the schema
         # Pass 1 - ensure fields are present
+        if value is NO_VALUE:
+            return
         errors = []
         for field_name in getFields(self.schema).keys():
             if field_name not in value:
@@ -40,4 +46,3 @@ class DictRow(Object):
     def set(self, object, value):
         # Override Object field logic
         Field.set(self, object, value)
-

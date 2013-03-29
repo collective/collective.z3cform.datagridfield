@@ -1,143 +1,244 @@
-dataGridField2Functions = new Object();
+/*global window, console*/
 
 jQuery(function($) {
 
+    // No globals, dude!
+    "use strict";
+
+    // Local singleton object containing our functions
+    var dataGridField2Functions = {};
+
+    /**
+     * Get edit mode of the DGF instance
+     *
+     * @return {String} "row" or "block"
+     */
+    dataGridField2Functions.getMode = function(node) {
+         var dgf = $(dataGridField2Functions.getParentByClass(node, "datagridwidget-table-view"));
+         return dgf.attr("data-mode");
+    };
+
     dataGridField2Functions.getInputOrSelect = function(node) {
         /* Get the (first) input or select form element under the given node */
-        
+
         var inputs = node.getElementsByTagName("input");
         if(inputs.length > 0) {
             return inputs[0];
         }
-        
+
         var selects = node.getElementsByTagName("select");
         if(selects.length > 0) {
             return selects[0];
         }
 
         return null;
-    }
+    };
 
     dataGridField2Functions.getWidgetRows = function(currnode) {
         /* Return primary nodes with class of datagridwidget-row,
            they can be any tag: tr, div, etc. */
-        tbody = this.getParentByClass(currnode, "datagridwidget-body");
+        var tbody = this.getParentByClass(currnode, "datagridwidget-body");
         return this.getRows(tbody);
-    }
+    };
 
     dataGridField2Functions.getRows = function(tbody) {
         /* Return primary nodes with class of datagridwidget-row,
            they can be any tag: tr, div, etc. */
-        
-        var rows = new Array()
-        
-        rows = $(tbody).find('.datagridwidget-row');
-                      
-        return rows;   
-    } 
 
-    dataGridField2Functions.autoInsertRow = function(e) {
-        /* Add a new row when changing the last row 
-           (i.e. the infamous auto insert feature)
-        
-         */
+        var rows = $(tbody).children('.datagridwidget-row');
+
+        return rows;
+    };
+
+
+    /**
+     * Get all visible rows of DGF
+     *
+     * Incl. normal rows + AA row
+     */
+    dataGridField2Functions.getVisibleRows = function(tbody) {
+
+        var rows = this.getRows(tbody);
+        // We rape jQuery.filter here, because of
+        // IE8 Array.filter http://kangax.github.com/es5-compat-table/
+
+        // Consider "real" rows only
+        var filteredRows = $(rows).filter(function() {
+            var $tr = $(this);
+            return !$tr.hasClass("datagridwidget-empty-row");
+        });
+
+        return filteredRows;
+    };
+
+    /**
+     * Handle auto insert events by auto append
+     */
+    dataGridField2Functions.onInsert = function(e) {
         var currnode = window.event ? window.event.srcElement : e.currentTarget;
+        this.autoInsertRow(currnode);
+    },
 
-        // fetch required data structure   
+    /**
+     * Add a new row when changing the last row
+     *
+     * @param {Boolean} ensureMinimumRows we insert a special minimum row so the widget is not empty
+     */
+    dataGridField2Functions.autoInsertRow = function(currnode, ensureMinimumRows) {
+
+        // fetch required data structure
+        var dgf = $(dataGridField2Functions.getParentByClass(currnode, "datagridwidget-table-view"));
         var tbody = dataGridField2Functions.getParentByClass(currnode, "datagridwidget-body");
-        var thisRow = dataGridField2Functions.getParentRow(currnode);
+        var thisRow = dataGridField2Functions.getParentRow(currnode); // The new row we are working on
+        var $thisRow = $(thisRow);
 
-        // Remove the auto-append functionality from the row
-        $('.auto-append > .datagridwidget-cell').unbind('change');
-        $(thisRow).removeClass('auto-append');
-        
+        var autoAppendMode = $(tbody).data("auto-append");
+
+        if($thisRow.hasClass("minimum-row")) {
+            // The change event was not triggered on real AA row,
+            // but on a minimum ensured row (row 0).
+            // 1. Don't add new row
+            // 2. Make widget to "normal" state now as the user has edited the empty row so we assume it's a real row
+            this.supressEnsureMinimum(tbody);
+            return;
+        }
+
+        // Remove the auto-append functionality from the all rows in this widget
+        var autoAppendHandlers = dgf.find('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell');
+        autoAppendHandlers.unbind('change.dgf');
+        $thisRow.removeClass('auto-append');
+
         // Create a new row
-        var newtr = dataGridField2Functions.createNewRow(thisRow);
+        var newtr = dataGridField2Functions.createNewRow(thisRow), $newtr = $(newtr);
         // Add auto-append functionality to our new row
-        $(newtr).addClass('auto-append');
-                                                            
-        /* Put new row to DOM tree after our current row.  Do this before 
-         * reindexing to ensure that any Javascript we insert that depends on 
+        $newtr.addClass('auto-append');
+
+        /* Put new row to DOM tree after our current row.  Do this before
+         * reindexing to ensure that any Javascript we insert that depends on
          * DOM element IDs (such as plone.formwidget.autocomplete) will
-         * pick up this row before any IDs get changed.  At this point, 
+         * pick up this row before any IDs get changed.  At this point,
          * we techinically have duplicate TT IDs in our document
-         * (one for this new row, one for the hidden row), but jQuery 
+         * (one for this new row, one for the hidden row), but jQuery
          * selectors will pick up elements in this new row first.
          */
-        $(newtr).insertAfter(thisRow);
-        $('.auto-append > .datagridwidget-cell').change(dataGridField2Functions.autoInsertRow);
 
-        dataGridField2Functions.reindexRow(tbody, newtr, 'AA'); 
-        
+        dgf.trigger("beforeaddrowauto", [dgf, newtr]);
+
+        if(ensureMinimumRows) {
+            // Add a special class so we can later deal with it
+            $newtr.addClass("minimum-row");
+            $newtr.insertBefore(thisRow);
+        } else {
+            $newtr.insertAfter(thisRow);
+        }
+
+        // Re-enable auto-append change handler feature on the new auto-appended row
+        if(autoAppendMode) {
+            $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
+        }
+
+        dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
+
         // Update order index to give rows correct values
-        dataGridField2Functions.updateOrderIndex(tbody,true);
-    }
+        dataGridField2Functions.updateOrderIndex(tbody, true, ensureMinimumRows);
 
+        dgf.trigger("afteraddrowauto", [dgf, newtr]);
+    };
+
+    /**
+     * Creates a new row after the the target row.
+     *
+     * @param {Object} currnode DOM <tr>
+     */
     dataGridField2Functions.addRowAfter = function(currnode) {
-        /*
-            Creates a new row after the clicked row
-        */
-        
+
         // fetch required data structure
-        var tbody = this.getParentByClass(currnode, "datagridwidget-body"); 
-        var thisRow = this.getParentRow(currnode); 
+        var tbody = this.getParentByClass(currnode, "datagridwidget-body");
+        var dgf = $(dataGridField2Functions.getParentByClass(currnode, "datagridwidget-table-view"));
+
+        var thisRow = this.getParentRow(currnode);
 
         var newtr = this.createNewRow(thisRow);
-        if (thisRow.hasClass('auto-append') == true) {
+
+        dgf.trigger("beforeaddrow", [dgf, newtr]);
+
+        var filteredRows = this.getVisibleRows(currnode);
+
+        // If using auto-append we add the "real" row before AA
+        // We have a special case when there is only one visible in the gid
+        if (thisRow.hasClass('auto-append') && !thisRow.hasClass("minimum-row")) {
             $(newtr).insertBefore(thisRow);
         } else {
             $(newtr).insertAfter(thisRow);
         }
-        
-        // update orderindex hidden fields
-        this.updateOrderIndex(tbody,true);
-      
-    }
 
-    dataGridField2Functions.createNewRow = function(node) { 
-        /* Creates a new row 
-               
-           @param node A row in a table where we'll be adding the new row
-        */
-        var tbody = this.getParentByClass(node, "datagridwidget-body");   
-        
-        // hidden template row 
-        var emptyRow = $(tbody).find('.datagridwidget-empty-row');
-        
-        var markup = $(emptyRow).clone(true);
-        
-        var newTr = $(markup).attr("class","datagridwidget-row");
-        
-        return newTr[0]
-    }    
+        // Ensure minimum special behavior is no longer needed as we have now at least 2 rows
+        if(thisRow.hasClass("minimum-row")) {
+            this.supressEnsureMinimum(tbody);
+        }
+
+        // update orderindex hidden fields
+        this.updateOrderIndex(tbody, true);
+
+        dgf.trigger("afteraddrow", [dgf, newtr]);
+
+    };
+
+    /**
+     * Creates a new row.
+     *
+     * The row is not inserted to the table, but is returned.
+     *
+     * @param {Object} <tr> or <tbody> DOM node in a table where we'll be adding the new row
+     */
+    dataGridField2Functions.createNewRow = function(node) {
+
+        var tbody = this.getParentByClass(node, "datagridwidget-body");
+
+        // hidden template row
+        var emptyRow = $(tbody).children('.datagridwidget-empty-row');
+
+        if(emptyRow.size() === 0) {
+            // Ghetto assert()
+            throw new Error("Could not locate empty template row in DGF");
+        }
+
+        var markup = emptyRow.clone(true);
+
+        var newTr = markup.attr("class","datagridwidget-row");
+
+        return newTr[0];
+    };
 
 
     dataGridField2Functions.removeFieldRow = function(node) {
         /* Remove the row in which the given node is found */
-        var tbody = this.getParentByClass(node, "datagridwidget-body"); 
+        var tbody = this.getParentByClass(node, "datagridwidget-body");
         var row = this.getParentRow(node);
         $(row).remove();
         this.updateOrderIndex(tbody,false);
-    }
-    
+    };
+
     dataGridField2Functions.moveRow = function(currnode, direction){
         /* Move the given row down one */
-               
-        var tbody = this.getParentByClass(currnode, "datagridwidget-body");    
-        
+        var nextRow;
+
+        var dgf = $(dataGridField2Functions.getParentByClass(currnode, "datagridwidget-table-view"));
+
+        var tbody = this.getParentByClass(currnode, "datagridwidget-body");
+
         var rows = this.getWidgetRows(currnode);
-        
-        var row = this.getParentRow(currnode);      
-        if(row == null) {
-            alert("Couldn't find DataGridWidget row");
-            return;
+
+        var row = this.getParentRow(currnode);
+        if(!row) {
+            throw new Error("Couldn't find DataGridWidget row");
         }
-        
+
         var idx = null;
-        
+
         // We can't use nextSibling because of blank text nodes in some browsers
         // Need to find the index of the row
-        
+
         rows.each(function (i) {
             if (this == row[0]) {
                 idx = i;
@@ -145,83 +246,142 @@ jQuery(function($) {
         });
 
         // Abort if the current row wasn't found
-        if(idx == null)
+        if(!idx)
             return;
-                
-            
-        // The up and down should cycle through the rows, excluding the auto-append and 
+
+
+        // The up and down should cycle through the rows, excluding the auto-append and
         // empty-row rows.
         var validrows = 0;
         rows.each(function (i) {
-            if ($(this).hasClass('datagridwidget-empty-row') != true && $(this).hasClass('auto-append') != true) {
+            if (!$(this).hasClass('datagridwidget-empty-row') && !$(this).hasClass('auto-append')) {
                 validrows+=1;
             }
         });
-        
+
         if (idx+1 == validrows) {
-            if (direction = "down") {
+            if (direction == "down") {
                 this.moveRowToTop(row);
             } else {
                 nextRow = rows[idx-1];
-                this.shiftRow(row, nextRow);
+                this.shiftRow(nextRow, row);
             }
-            
-        } else if (idx == 0) {
+
+        } else if (idx === 0) {
             if (direction == "up") {
                 this.moveRowToBottom(row);
             } else {
-                nextRow = rows[parseInt(idx+1)];
+                nextRow = rows[parseInt(idx+1, 10)];
                 this.shiftRow(row, nextRow);
             }
-            
+
         } else {
             if (direction == "up") {
                 nextRow = rows[idx-1];
                 this.shiftRow(nextRow, row);
             } else {
-                nextRow = rows[parseInt(idx+1)];
+                nextRow = rows[parseInt(idx+1, 10)];
                 this.shiftRow(row, nextRow);
             }
         }
+
         this.updateOrderIndex(tbody);
-    }
-    
+
+        dgf.trigger("aftermoverow", [dgf]);
+    };
+
     dataGridField2Functions.moveRowDown = function(currnode){
         this.moveRow(currnode, "down");
-    }
+    };
 
     dataGridField2Functions.moveRowUp = function(currnode){
         this.moveRow(currnode, "up");
-    }
+    };
 
     dataGridField2Functions.shiftRow = function(bottom, top){
         /* Put node top before node bottom */
-        $(top).insertBefore(bottom);   
-    }
-    
+        $(top).insertBefore(bottom);
+    };
+
     dataGridField2Functions.moveRowToTop = function (row) {
-        rows = this.getWidgetRows(row);
+        var rows = this.getWidgetRows(row);
         $(row).insertBefore(rows[0]);
-    }
-    
+    };
+
     dataGridField2Functions.moveRowToBottom = function (row) {
-        rows = this.getWidgetRows(row);
-        
+        var rows = this.getWidgetRows(row);
+
         // make sure we insert the directly above any auto appended rows
         var insert_after = 0;
         rows.each(function (i) {
-            if ($(this).hasClass('datagridwidget-empty-row') != true && $(this).hasClass('auto-append') != true) {
+            if (!$(this).hasClass('datagridwidget-empty-row')  && !$(this).hasClass('auto-append')) {
                 insert_after = i;
             }
         });
         $(row).insertAfter(rows[insert_after]);
-    }
+    };
 
+    /**
+     * Rename <input> controls so that each control has unique name
+     * based on the row its on. On the server side, the
+     * DGF logic will rebuild rows based on this information.
+     *
+     * If indexing for some reasons fails you'll get double
+     * input values and Zope converts inputs to list, failing
+     * in funny ways.
+     *
+     * @param  {DOM} tbody
+     * @param  {DOM} row
+     * @param  {Number} newindex
+     */
     dataGridField2Functions.reindexRow = function (tbody, row, newindex) {
         var name_prefix = $(tbody).attr('data-name_prefix') + '.';
         var id_prefix = $(tbody).attr('data-id_prefix') + '-';
+        var cells;
+        var hidden = null;
 
-        $(row).find('[name^="' + name_prefix +'"]').each(function(){
+        // console.log("Reindexing row " + newindex);
+        //
+
+        // Expand jQuery z3c.form widget selection to cover checkbox <input>s
+        function expandAllZ3CFormInputs(sel) {
+            var checkboxes = sel.children(".option");
+            sel = sel.add(checkboxes);
+
+            var datetimedropdowns = sel.children(".datetimepicker_input").find("select").parent();
+            sel = sel.add(datetimedropdowns);
+
+            return sel;
+        }
+
+        // We need to select
+        // - all direct children inputs in row mode
+        // - all direct children inputs in block mode
+        // - but not nested inputs, as it would break nested datagridfields
+        var mode = this.getMode(tbody);
+
+        if(mode == "row") {
+            // Select normal inputs, checkboxes
+            cells = $(row).children("td");
+            cells = expandAllZ3CFormInputs(cells);
+        }  else if(mode == "block") {
+            // We need to update hidden data rows also which are not rendered as blocks
+            cells = $(row).children("td").children(".datagridwidget-block");
+            // Checkboxes
+            cells = expandAllZ3CFormInputs(cells);
+            hidden = $(row).children(".datagridwidget-hidden-data");
+            cells = cells.add(hidden); // AA and TT row stuff
+        } else {
+            throw new Error("Unknown DGF mode:" + mode);
+        }
+
+
+        // Math all <input> by name on the row which fields' names we update
+        var inputs = cells.children('[name^="' + name_prefix +'"]');
+
+        inputs.each(function(){
+
+            //console.log("Got: " + this.name);
             var oldname = this.name.substr(name_prefix.length);
             var oldindex1 = oldname.split('.', 1)[0];
             var oldindex2 = oldname.split('-', 1)[0];
@@ -235,37 +395,139 @@ jQuery(function($) {
             }
             this.name = name_prefix + newindex + oldname.substr(oldindex.length);
         });
-        $(row).find('[id*="' + id_prefix +'"]').each(function(){
-            var regexp = new RegExp(id_prefix + ".*?-")
+
+        cells.children('[id*="' + id_prefix +'"]').each(function(){
+            var regexp = new RegExp(id_prefix + ".*?-");
             this.id = this.id.replace(regexp, id_prefix + newindex + "-");
         });
-        $(row).find('[for*="' + id_prefix +'"]').each(function(){
-            var regexp = new RegExp(id_prefix + ".*?-")
-            this.setAttribute('for', this.getAttribute('for').replace(regexp, id_prefix + newindex + "-"));
+
+        cells.children('[for*="' + id_prefix +'"]').each(function(){
+
+            var regexp = new RegExp(id_prefix + ".*?-");
+            // IE7 I love you
+            // It's Friday and I need to fix some shit
+            // in some shit piece of software which was released
+            // when I still had hair and happy life ahead
+            // MICROSOFT YOU HAVE F*CKING ruined my life
+            // http://webbugtrack.blogspot.com.br/2007/08/bug-217-getattribute-doesnt-always-work.html
+            // getAttribute() does not work all the time
+            var forrrr = this.attributes['for'].nodeValue;
+
+            var newvalue = id_prefix + newindex + "-";
+            forrrr = forrrr.replace(regexp, newvalue);
+            this.setAttribute('for', forrrr);
         });
-        $(row).find('[class*="' + name_prefix +'"]').each(function(){
-            var regexp = new RegExp(name_prefix + ".*?\\.")
+
+
+        cells.children('[class*="' + name_prefix +'"]').each(function(){
+            var regexp = new RegExp(name_prefix + ".*?\\.");
             this.className = this.className.replace(regexp, name_prefix + newindex + ".");
         });
-    }
+    };
+
+    /**
+     * Stop ensure miminum special behavior.
+     *
+     * The caller is responsible to check there was one and only one minimum-row in the table.
+     *
+     * Call when data is edited for the first time or a row added.
+     */
+    dataGridField2Functions.supressEnsureMinimum = function(tbody) {
+
+        var autoAppendHandlers = $(tbody).find('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell');
+        autoAppendHandlers.unbind('change.dgf');
+
+        tbody.children().removeClass("auto-append");
+        tbody.children().removeClass("minimum-row");
 
 
-    dataGridField2Functions.updateOrderIndex = function (tbody, backwards) {
+        dataGridField2Functions.updateOrderIndex(tbody, true, false);
+    };
 
-        /* Split from the dataGridField2 approach here - and just re-do
-         * the numbers produced by z3c.form
-         */
-        var name_prefix = $(tbody).attr('data-name_prefix') + '.';
+    /**
+     * Update all row indexes on a DGF table.
+     *
+     * Each <tr> and input widget has recalculated row index number in its name,
+     * so that the server can then parsit the submitted data in the correct order.
+     *
+     * @param  {Object} tbody     DOM of DGF <tbody>
+     * @param  {Boolean} backwards iterate rows backwards
+     * @param  {Boolean} ensureMinimumRows We have inserted a special auto-append row
+     */
+    dataGridField2Functions.updateOrderIndex = function (tbody, backwards, ensureMinimumRows) {
 
-        var rows = this.getRows(tbody); 
-        for (var i=0; i<rows.length; i++) {
-            var idx = backwards ? rows.length-i-1 : i;
-            var row = rows[idx];
-            if ($(row).hasClass('datagridwidget-empty-row') || $(row).hasClass('auto-append')) {
-                continue
+        var $tbody = $(tbody);
+        var name_prefix = $tbody.attr('data-name_prefix') + '.';
+        var i, idx, row, $row, $nextRow;
+
+        // Was this auto-append table
+        var autoAppend = false;
+
+        var rows = this.getRows(tbody);
+        for (i=0; i<rows.length; i++) {
+            idx = backwards ? rows.length-i-1 : i;
+            row = rows[idx], $row = $(row);
+
+            if ($row.hasClass('datagridwidget-empty-row')) {
+                continue;
             }
-            dataGridField2Functions.reindexRow(tbody, row, idx);
+
+            if($row.hasClass('auto-append')) {
+                autoAppend = true;
+            }
+
+            this.reindexRow(tbody, row, idx);
         }
+
+        // Handle a special case where
+        // 1. Widget is empty
+        // 2. We don't have AA mode turned on
+        // 3. We need to have minimum editable row count of 1
+        if(ensureMinimumRows) {
+            this.reindexRow(tbody, rows[0], "AA");
+            autoAppend = true;
+        }
+
+        // Add a special first and class row classes
+        // to hide manipulation handles
+        // AA handling is different once again
+        var visibleRows = this.getVisibleRows(tbody);
+
+        for (i=0; i<visibleRows.length; i++) {
+            row = visibleRows[i], $row = $(row);
+
+            if(i<visibleRows.length-2) {
+                $nextRow = $(visibleRows[i+1]);
+            }
+
+            if(i===0) {
+                $row.addClass("datagridfield-first-filled-row");
+            } else {
+                $row.removeClass("datagridfield-first-filled-row");
+            }
+
+            // Last visible before AA
+            if(autoAppend) {
+                if($nextRow && $nextRow.hasClass("auto-append")) {
+                    $row.addClass("datagridfield-last-filled-row");
+                } else {
+                    $row.removeClass("datagridfield-last-filled-row");
+                }
+            } else {
+                if(i==visibleRows.length-1) {
+                    $row.addClass("datagridfield-last-filled-row");
+                } else {
+                    $row.removeClass("datagridfield-last-filled-row");
+                }
+            }
+        }
+
+
+        // Set total visible row counts and such and hint CSS
+        var vis = this.getVisibleRows(tbody).length;
+        $tbody.attr("data-count", this.getRows(tbody).length);
+        $tbody.attr("data-visible-count", this.getVisibleRows(tbody).length);
+        $tbody.attr("data-many-rows", vis >= 2 ? "true" : "false");
 
         $(document).find('input[name="' + name_prefix + 'count"]').each(function(){
             // do not include the TT and the AA rows in the count
@@ -278,7 +540,7 @@ jQuery(function($) {
             }
             this.value = count;
         });
-    }
+    };
 
     dataGridField2Functions.getParentElement = function(currnode, tagname) {
         /* Find the first parent node with the given tag name */
@@ -289,58 +551,146 @@ jQuery(function($) {
         while(parent.tagName.toUpperCase() != tagname) {
             parent = parent.parentNode;
             // Next line is a safety belt
-            if(parent.tagName.toUpperCase() == "BODY") 
+            if(parent.tagName.toUpperCase() == "BODY")
                 return null;
         }
 
         return parent;
-    }
-    
+    };
+
     dataGridField2Functions.getParentRow = function (node) {
-        return this.getParentByClass(node, 'datagridwidget-row')
-    }
-    
+        return this.getParentByClass(node, 'datagridwidget-row');
+    };
+
     dataGridField2Functions.getParentByClass = function(node, klass) {
         var parent = $(node).closest("." + klass);
-        
+
         if (parent.length) {
             return parent;
         }
-        
-        return null;
-    }
 
+        return null;
+    };
+
+    /**
+     * Find the first parent node with the given id
+     *
+     * Id is partially matched: the beginning of
+     * an element id matches parameter id string.
+     *
+     * @param  {DOM} currnode Node where ascending in DOM tree beings
+     * @param  {String} id       Id string to look for.
+     * @return {DOM} Found node or null
+     */
     dataGridField2Functions.getParentElementById = function(currnode, id) {
-        /* Find the first parent node with the given id 
-        
-            Id is partially matched: the beginning of
-            an element id matches parameter id string.
-        
-            Currnode: Node where ascending in DOM tree beings
-            Id: Id string to look for. 
-                    
+        /*
         */
-        
+
         id = id.toLowerCase();
         var parent = currnode.parentNode;
 
         while(true) {
-           
+
             var parentId = parent.getAttribute("id");
-            if(parentId != null) {    	
+            if(parentId) {
                  if(parentId.toLowerCase().substring(0, id.length) == id) break;
             }
-                
+
             parent = parent.parentNode;
             // Next line is a safety belt
-            if(parent.tagName.toUpperCase() == "BODY") 
+            if(parent.tagName.toUpperCase() == "BODY")
                 return null;
         }
 
         return parent;
-    }
+    };
 
-    /* Bind the handlers to the auto append rows */
-    $('.auto-append > .datagridwidget-cell').change(dataGridField2Functions.autoInsertRow);
+
+    /**
+     * Make sure there is at least one visible row available in DGF
+     * to edit in all the time.
+     *
+     * We need a lot of special logic for the case where
+     * we have empty datagridfield and need to have one OPTIONAL
+     * row present there for the editing when the user opens
+     * the form for the first time.
+     *
+     * There are cases where one doesn't want to have the count of DGF
+     * rows to go down to zero. Otherwise there no insert handle left
+     * on the edit mode and the user cannot add any more rows.
+     *
+     * One should case is when
+     *
+     * - DGF is empty on new form
+     *
+     * - Auto append is set to false (initial row is not visible)
+     *
+     * We fix this situation by checking the available rows
+     * and generating one empty AA row if needed.
+     *
+     * ... or simply when the user removes all the rows
+     *
+     * @param {Object} tbody DOM object of <tbody>
+     */
+    dataGridField2Functions.ensureMinimumRows = function(tbody) {
+        var rows = this.getRows(tbody);
+        var filteredRows = this.getVisibleRows(tbody);
+        var self = this;
+
+        // Rows = 0 -> make one AA row available
+        if(filteredRows.length === 0) {
+            // XXX: make the function call signatures more sane
+            var child = rows[0];
+            this.autoInsertRow(child, true);
+
+        }
+    },
+
+
+    /**
+     * When DOM model is ready execute this actions to wire up page logic.
+     */
+    dataGridField2Functions.init = function() {
+
+        // Reindex all rows to get proper row classes on them
+        $(".datagridwidget-body").each(function() {
+
+            // Initialize widget data on <tbody>
+            // We keep some mode attributes around
+            var $this = $(this);
+            var aa;
+
+            // Check if this widget is in auto-append mode
+            // and store for later usage
+            aa = $this.children(".auto-append").size() > 0;
+            $this.data("auto-append", aa);
+
+            // Hint CSS
+            if(aa) {
+                $this.addClass("datagridwidget-body-auto-append");
+            } else {
+                $this.addClass("datagridwidget-body-non-auto-append");
+            }
+
+            dataGridField2Functions.updateOrderIndex(this, false);
+
+            if(!aa) {
+                dataGridField2Functions.ensureMinimumRows(this);
+            }
+        });
+
+        // Bind the handlers to the auto append rows
+        // Use namespaced jQuery events to avoid unbind() conflicts later on
+        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
+
+        $(document).trigger("afterdatagridfieldinit");
+    };
+
+
+    $(document).ready(dataGridField2Functions.init);
+
+    // Export module for customizers to mess around
+    window.dataGridField2Functions = dataGridField2Functions;
+
 
 });
