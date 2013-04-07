@@ -583,9 +583,6 @@ jQuery(function($) {
      * @return {DOM} Found node or null
      */
     dataGridField2Functions.getParentElementById = function(currnode, id) {
-        /*
-        */
-
         id = id.toLowerCase();
         var parent = currnode.parentNode;
 
@@ -691,6 +688,4 @@ jQuery(function($) {
 
     // Export module for customizers to mess around
     window.dataGridField2Functions = dataGridField2Functions;
-
-
 });
