@@ -8,6 +8,7 @@ from Products.PloneTestCase import PloneTestCase as ptc
 from collective.testcaselayer.ptc import BasePTCLayer, ptc_layer
 
 ptc.setupPloneSite()
+import plone.app.relationfield
 
 
 class Layer(BasePTCLayer):
@@ -15,7 +16,8 @@ class Layer(BasePTCLayer):
     def afterSetUp(self):
         # Install the example.conference product
         fiveconfigure.debug_mode = True
-        self.addProfile('plone.app.dexterity:default')
+        self.loadZCML('configure.zcml', package=plone.app.relationfield)
+        self.addProfile('plone.app.relationfield:default')
         self.addProfile('collective.z3cform.datagridfield:default')
         fiveconfigure.debug_mode = False
 
@@ -41,7 +43,7 @@ from zope.interface import implements
 from plone.app.z3cform.interfaces import IPloneFormLayer
 from Products.Five.utilities.marker import mark
 from plone.z3cform.interfaces import IWrappedForm
-from collective.z3cform.datagridfield_demo.testdata import EditForm, IPerson
+from collective.z3cform.datagridfield_demo.browser.simple import EditForm, IPerson
 from zope.annotation.interfaces import IAttributeAnnotatable
 from z3c.relationfield import RelationValue
 
@@ -53,7 +55,7 @@ class RelationsTestCase(ptc.PloneTestCase):
         pass
 
     def test_relationchoice(self):
-        
+
         assert not hasattr(self.portal.aq_base, 'address')
 
         request = TestRequest(form={'form.widgets.mytitle': 'This is my title',
@@ -66,13 +68,13 @@ class RelationsTestCase(ptc.PloneTestCase):
         alsoProvides(request, IPloneFormLayer)
         alsoProvides(request, IAttributeAnnotatable)
         alsoProvides(self.portal, IPerson)
-        
+
         form = EditForm(self.portal, request)
         mark(form, IWrappedForm)
 
         form.update()
         form.render()
-        
+
         # Fake submitting. Plone redirects after a successful save.
         data, errors = form.extractData()
         form.applyChanges(data)
@@ -85,7 +87,7 @@ class RelationsTestCase(ptc.PloneTestCase):
             assert isinstance(f['link'], RelationValue)
 
     def test_relationlist(self):
-        
+
         assert not hasattr(self.portal.aq_base, 'address')
 
         request = TestRequest(form={'form.widgets.mytitle': 'This is my title',
@@ -98,13 +100,13 @@ class RelationsTestCase(ptc.PloneTestCase):
         alsoProvides(request, IPloneFormLayer)
         alsoProvides(request, IAttributeAnnotatable)
         alsoProvides(self.portal, IPerson)
-        
+
         form = EditForm(self.portal, request)
         mark(form, IWrappedForm)
 
         form.update()
         form.render()
-        
+
         # Fake submitting. Plone redirects after a successful save.
         data, errors = form.extractData()
         form.applyChanges(data)

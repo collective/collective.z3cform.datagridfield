@@ -34,6 +34,7 @@ setup(name='collective.z3cform.datagridfield',
               'Products.PloneTestCase',
               'collective.testcaselayer',
               'collective.z3cform.datagridfield_demo',
+              'plone.app.relationfield',
           ]
       },
       entry_points="""
