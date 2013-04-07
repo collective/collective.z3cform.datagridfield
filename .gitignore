@@ -36,4 +36,4 @@ dist
 .DS_Store
 venv
 bin
-
+src

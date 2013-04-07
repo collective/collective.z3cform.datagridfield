@@ -188,11 +188,32 @@ class GridDataConverter(BaseDataConverter):
     zope.component.adapts(zope.schema.interfaces.IList, IDataGridField)
 
     def toWidgetValue(self, value):
-        """Simply pass the data through with no change"""
-        return value
+        if value == [interfaces.NO_VALUE]:
+            return value
+
+        retval = []
+        for row in value:
+            retrow = {}
+            for name in zope.schema.getFieldNames(self.field.value_type.schema):
+                dm = zope.component.getMultiAdapter(
+                    (row, self.field.value_type.schema[name]), interfaces.IDataManager)
+                retrow[name] = dm.query(value)
+            retval.append(retrow)
+        return retval
 
     def toFieldValue(self, value):
-        return value
+        if value == [interfaces.NO_VALUE]:
+            return self.field.missing_value
+
+        retval = []
+        for row in value:
+            retrow = {}
+            for name in zope.schema.getFieldNames(self.field.value_type.schema):
+                dm = zope.component.getMultiAdapter(
+                    (retrow, self.field.value_type.schema[name]), interfaces.IDataManager)
+                dm.set(row[name])
+            retval.append(retrow)
+        return retval
 
 
 #------------[ Support for each line ]-----------------------------------------
@@ -248,8 +269,9 @@ class DataGridFieldObject(ObjectWidget):
                 active_names = self.subform.fields.keys()
                 for name in getFieldNames(self.field.schema):
                     if name in active_names:
-                        self.applyValue(self.subform.widgets[name],
-                                    value.get(name, interfaces.NO_VALUE))
+                        val = value.get(name, interfaces.NO_VALUE)
+                        if val != interfaces.NO_VALUE:
+                            self.applyValue(self.subform.widgets[name], val)
 
         return property(get, set)
 
