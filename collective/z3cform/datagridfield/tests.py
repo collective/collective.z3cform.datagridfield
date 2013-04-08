@@ -1,38 +1,22 @@
-import unittest
+import doctest
+import unittest2 as unittest
+import pprint
+from plone.testing import layered
+from collective.z3cform.datagridfield.testing import FUNCTIONAL_TESTING
 
-from Testing import ZopeTestCase as ztc
-
-from Products.Five import fiveconfigure
-from Products.PloneTestCase import PloneTestCase as ptc
-
-from collective.testcaselayer.ptc import BasePTCLayer, ptc_layer
-
-ptc.setupPloneSite()
-
-
-class Layer(BasePTCLayer):
-
-    def afterSetUp(self):
-        # Install the example.conference product
-        fiveconfigure.debug_mode = True
-        self.addProfile('collective.z3cform.datagridfield:default')
-        fiveconfigure.debug_mode = False
-
-layer = Layer([ptc_layer])
-
-
-class TestCase(ptc.PloneTestCase):
-    layer = layer
+OPTIONFLAGS = (doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE | doctest.REPORT_ONLY_FIRST_FAILURE)
 
 
 def test_suite():
-    return unittest.TestSuite([
-
-        ztc.FunctionalDocFileSuite(
-            'browser.txt', package='collective.z3cform.datagridfield',
-            test_class=TestCase),
-
-        ])
+    suite = unittest.TestSuite()
+    suite.addTests([
+        layered(doctest.DocFileSuite('browser.txt',
+                                     optionflags=OPTIONFLAGS,
+                                     globs={'pprint': pprint.pprint,
+                                            }
+                                     ),
+                layer=FUNCTIONAL_TESTING)])
+    return suite
 
 if __name__ == '__main__':
     unittest.main(defaultTest='test_suite')
