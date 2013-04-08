@@ -1,45 +1,14 @@
-import unittest
+import doctest
+import unittest2 as unittest
+import pprint
+from plone.testing import layered
+from collective.z3cform.datagridfield.testing import FUNCTIONAL_TESTING
 
-from Testing import ZopeTestCase as ztc
-
-from Products.Five import fiveconfigure
-from Products.PloneTestCase import PloneTestCase as ptc
-
-from collective.testcaselayer.ptc import BasePTCLayer, ptc_layer
-
-ptc.setupPloneSite()
-import plone.app.relationfield
-
-
-class Layer(BasePTCLayer):
-
-    def afterSetUp(self):
-        # Install the example.conference product
-        fiveconfigure.debug_mode = True
-        self.loadZCML('configure.zcml', package=plone.app.relationfield)
-        self.addProfile('plone.app.relationfield:default')
-        self.addProfile('collective.z3cform.datagridfield:default')
-        fiveconfigure.debug_mode = False
-
-        from zope.intid.interfaces import IIntIds
-        from zope.component import getUtility
-
-        intids = getUtility(IIntIds)
-        intids.register(self.portal.news)
-        intids.register(self.portal['front-page'])
-
-
-
-layer = Layer([ptc_layer])
-
-
-class TestCase(ptc.PloneTestCase):
-    layer = layer
+OPTIONFLAGS = (doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE | doctest.REPORT_ONLY_FIRST_FAILURE)
 
 
 from zope.publisher.browser import TestRequest
 from zope.interface import alsoProvides
-from zope.interface import implements
 from plone.app.z3cform.interfaces import IPloneFormLayer
 from Products.Five.utilities.marker import mark
 from plone.z3cform.interfaces import IWrappedForm
@@ -48,11 +17,16 @@ from zope.annotation.interfaces import IAttributeAnnotatable
 from z3c.relationfield import RelationValue
 
 
-class RelationsTestCase(ptc.PloneTestCase):
-    layer = layer
+class RelationsTestCase(unittest.TestCase):
+    layer = FUNCTIONAL_TESTING
 
     def afterSetUp(self):
-        pass
+        from zope.intid.interfaces import IIntIds
+        from zope.component import getUtility
+
+        intids = getUtility(IIntIds)
+        intids.register(self.portal.news)
+        intids.register(self.portal['front-page'])
 
     def test_relationchoice(self):
 
@@ -121,17 +95,17 @@ class RelationsTestCase(ptc.PloneTestCase):
                 assert isinstance(l, RelationValue)
 
 
-
 def test_suite():
-    return unittest.TestSuite([
-
-        ztc.FunctionalDocFileSuite(
-            'browser.txt', package='collective.z3cform.datagridfield',
-            test_class=TestCase),
-
-        unittest.makeSuite(RelationsTestCase),
-
-        ])
+    suite = unittest.TestSuite()
+    suite.addTests([
+        layered(doctest.DocFileSuite('browser.txt',
+                                     optionflags=OPTIONFLAGS,
+                                     globs={'pprint': pprint.pprint,
+                                            }
+                                     ),
+                layer=FUNCTIONAL_TESTING),
+        unittest.makeSuite(RelationsTestCase)])
+    return suite
 
 if __name__ == '__main__':
     unittest.main(defaultTest='test_suite')

@@ -31,8 +31,7 @@ setup(name='collective.z3cform.datagridfield',
       ],
       extras_require={
           'test': [
-              'Products.PloneTestCase',
-              'collective.testcaselayer',
+              'plone.app.testing',
               'collective.z3cform.datagridfield_demo',
               'plone.app.relationfield',
           ]
