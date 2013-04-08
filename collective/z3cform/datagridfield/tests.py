@@ -21,16 +21,18 @@ class RelationsTestCase(unittest.TestCase):
     layer = FUNCTIONAL_TESTING
 
     def afterSetUp(self):
+        portal = self.layer['portal']
         from zope.intid.interfaces import IIntIds
         from zope.component import getUtility
 
         intids = getUtility(IIntIds)
-        intids.register(self.portal.news)
-        intids.register(self.portal['front-page'])
+        intids.register(portal.news)
+        intids.register(portal['front-page'])
 
     def test_relationchoice(self):
+        portal = self.layer['portal']
 
-        assert not hasattr(self.portal.aq_base, 'address')
+        assert not hasattr(portal.aq_base, 'address')
 
         request = TestRequest(form={'form.widgets.mytitle': 'This is my title',
                                     'form.widgets.address.0-empty-marker': '1',
@@ -41,9 +43,9 @@ class RelationsTestCase(unittest.TestCase):
                                     })
         alsoProvides(request, IPloneFormLayer)
         alsoProvides(request, IAttributeAnnotatable)
-        alsoProvides(self.portal, IPerson)
+        alsoProvides(portal, IPerson)
 
-        form = EditForm(self.portal, request)
+        form = EditForm(portal, request)
         mark(form, IWrappedForm)
 
         form.update()
@@ -54,15 +56,16 @@ class RelationsTestCase(unittest.TestCase):
         form.applyChanges(data)
 
         # address should be a list of dicts, each containing a RelationValue for the link
-        assert hasattr(self.portal.aq_base, 'address')
-        assert isinstance(self.portal.address, list)
-        assert len(self.portal.address) > 0
-        for f in self.portal.address:
+        assert hasattr(portal.aq_base, 'address')
+        assert isinstance(portal.address, list)
+        assert len(portal.address) > 0
+        for f in portal.address:
             assert isinstance(f['link'], RelationValue)
 
     def test_relationlist(self):
+        portal = self.layer['portal']
 
-        assert not hasattr(self.portal.aq_base, 'address')
+        assert not hasattr(portal.aq_base, 'address')
 
         request = TestRequest(form={'form.widgets.mytitle': 'This is my title',
                                     'form.widgets.address.0-empty-marker': '1',
@@ -73,9 +76,9 @@ class RelationsTestCase(unittest.TestCase):
                                     })
         alsoProvides(request, IPloneFormLayer)
         alsoProvides(request, IAttributeAnnotatable)
-        alsoProvides(self.portal, IPerson)
+        alsoProvides(portal, IPerson)
 
-        form = EditForm(self.portal, request)
+        form = EditForm(portal, request)
         mark(form, IWrappedForm)
 
         form.update()
@@ -86,10 +89,10 @@ class RelationsTestCase(unittest.TestCase):
         form.applyChanges(data)
 
         # address should be a list of dicts, each containing a RelationValue for the link
-        assert hasattr(self.portal.aq_base, 'address')
-        assert isinstance(self.portal.address, list)
-        assert len(self.portal.address) > 0
-        for f in self.portal.address:
+        assert hasattr(portal.aq_base, 'address')
+        assert isinstance(portal.address, list)
+        assert len(portal.address) > 0
+        for f in portal.address:
             assert len(f['links']) > 0
             for l in f['links']:
                 assert isinstance(l, RelationValue)
