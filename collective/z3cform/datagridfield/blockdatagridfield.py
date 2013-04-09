@@ -2,7 +2,10 @@ import zope.interface
 import zope.component
 import zope.schema.interfaces
 from zope.schema.interfaces import IObject
-from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
+try:
+    from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
+except ImportError:
+    from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 
 from z3c.form import interfaces
 from z3c.form.widget import FieldWidget

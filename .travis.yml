@@ -3,7 +3,6 @@ python:
   - 2.6
   - 2.7
 env:
-  - PLONE=4.0
   - PLONE=4.1
   - PLONE=4.2
   - PLONE=4.3
