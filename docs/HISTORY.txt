@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.13 (unreleased)
+0.13 (2013-04-09)
 -----------------
 
 - Fix to expect ``zope.schema.interfaces.ValidationError`` to work better

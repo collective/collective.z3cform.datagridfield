@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.13.dev0'
+version = '0.13'
 
 setup(name='collective.z3cform.datagridfield',
       version=version,
