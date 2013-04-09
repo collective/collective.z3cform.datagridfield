@@ -1,10 +1,11 @@
 Functional Tests
 
-    >>> from Products.Five.testbrowser import Browser
-    >>> browser = Browser()
+    >>> portal = layer['portal']
+    >>> from plone.testing.z2 import Browser
+    >>> browser = Browser(layer['app'])
     >>> browser.handleErrors = False
-    >>> portal_url = self.portal.absolute_url()
-    >>> self.portal.error_log._ignored_exceptions = ()
+    >>> portal_url = portal.absolute_url()
+    >>> portal.error_log._ignored_exceptions = ()
 
 Open the demo simple edit form. This form  has a number of lines
 
@@ -65,4 +66,3 @@ Plone/Zope are the root of the domain.
 
     >>> '"/++resource++collective.z3cform.datagridfield' not in browser.contents
     True
-    
