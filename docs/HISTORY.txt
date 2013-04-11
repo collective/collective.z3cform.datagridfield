@@ -6,6 +6,7 @@ Changelog
 
 - Fixed wrong template in display mode when set editing to block edit mode [miohtama]
 
+- Added CSS classes (widget.klass attribute) for DataGridField, to separate it from other MultiWidgets [miohtama]
 
 0.13 (2013-04-09)
 -----------------

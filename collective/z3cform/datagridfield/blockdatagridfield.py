@@ -15,6 +15,8 @@ class BlockDataGridField(DataGridField):
     Render edit mode widgets in blocks (vertical) instead of cells (horizontal).
     """
 
+    klass = "blockdatagridfield"
+
     def createObjectWidget(self, idx):
         """
         """

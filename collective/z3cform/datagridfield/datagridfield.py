@@ -50,6 +50,8 @@ class DataGridField(MultiWidget):
     allow_reorder = False
     auto_append = True
 
+    klass = "datagridfield"
+
     # You can give data-extra attribute
     # for the widget to allow there some custom
     # JSON payload concerning all rows
