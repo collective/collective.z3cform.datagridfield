@@ -10,6 +10,9 @@ Changelog
 
 0.13 (2013-04-09)
 -----------------
+- Add travis-ci configs [jaroel]
+
+- Convert tests to plone.app.testing [jaroel]
 
 - Fix to expect ``zope.schema.interfaces.ValidationError`` to work better
   with *TooLong* and *TooShort* exceptions. [datakurre]
