@@ -2,10 +2,6 @@ import zope.interface
 import zope.component
 import zope.schema.interfaces
 from zope.schema.interfaces import IObject
-try:
-    from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
-except ImportError:
-    from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 
 from z3c.form import interfaces
 from z3c.form.widget import FieldWidget
@@ -31,8 +27,7 @@ class BlockDataGridField(DataGridField):
             else:
                 widget.setErrors = True
         else:
-            widget = zope.component.getMultiAdapter((valueType, self.request),
-                interfaces.IFieldWidget)
+            widget = zope.component.getMultiAdapter((valueType, self.request), interfaces.IFieldWidget)
 
         return widget
 
@@ -59,8 +54,4 @@ def BlockDataGridFieldObjectFactory(field, request):
 
     # Create a normal DataGridFieldObject widget
     widget = FieldWidget(field, DataGridFieldObject(request))
-    # Then customize its template
-    widget.template = ViewPageTemplateFile("datagridfieldobject_input_block.pt")
     return widget
-
-

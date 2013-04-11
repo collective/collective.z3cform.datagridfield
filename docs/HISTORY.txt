@@ -4,7 +4,7 @@ Changelog
 0.14 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Fixed wrong template in display mode when set editing to block edit mode [miohtama]
 
 
 0.13 (2013-04-09)
