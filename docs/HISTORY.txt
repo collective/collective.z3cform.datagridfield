@@ -4,6 +4,9 @@ Changelog
 0.14 (unreleased)
 -----------------
 
+- Add new V1 ``bootstrap.py``.
+  [saily]
+
 - Added CSS classes to tbody rows (``row-(1...n)``) and thead columns
   (``cell-(1...m)``) to allow more styling in edit forms.
   [saily]
