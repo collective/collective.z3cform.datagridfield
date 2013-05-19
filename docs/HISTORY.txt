@@ -4,9 +4,14 @@ Changelog
 0.14 (unreleased)
 -----------------
 
+- Added CSS classes to tbody rows (``row-(1...n)``) and thead columns
+  (``cell-(1...m)``) to allow more styling in edit forms.
+  [saily]
+
 - Fixed wrong template in display mode when set editing to block edit mode [miohtama]
 
 - Added CSS classes (widget.klass attribute) for DataGridField, to separate it from other MultiWidgets [miohtama]
+
 
 0.13 (2013-04-09)
 -----------------
