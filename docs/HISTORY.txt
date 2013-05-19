@@ -4,6 +4,9 @@ Changelog
 0.14 (unreleased)
 -----------------
 
+- Align travis setup to other packages.
+  [saily]
+
 - Add new V1 ``bootstrap.py``.
   [saily]
 
