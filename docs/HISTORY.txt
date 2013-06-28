@@ -4,7 +4,9 @@ Changelog
 0.15 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added possibility to define the CSS class for the main table when the field is displayed.
+  This way, you can use common Plone existing classes (like 'listing').
+  [gbastien]
 
 
 0.14 (2013-05-24)
@@ -229,4 +231,3 @@ Changelog
 
 * Fixed the restructured text of the main README.txt so that it will show
   more friendly in PyPI.
-
