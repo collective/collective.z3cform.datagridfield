@@ -49,6 +49,7 @@ class DataGridField(MultiWidget):
     allow_delete = True
     allow_reorder = False
     auto_append = True
+    display_table_css_class = "datagridwidget-table-view"
 
     klass = "datagridfield"
 

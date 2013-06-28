@@ -91,6 +91,7 @@ The widget can be customised via the updateWidgets method.
         self.widgets['table'].allow_delete = False # Enable/Disable the delete button on the right
         self.widgets['table'].auto_append = False  # Enable/Disable the auto-append feature
         self.widgets['table'].allow_reorder = False  # Enable/Disable the re-order rows feature
+        self.widgets['table'].main_table_css_class = 'my_custom_class'  # Change the class applied on the main table when the field is displayed
 
 The widget contains an attribute 'columns' which is manipulated to hide column
 titles.
