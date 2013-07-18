@@ -134,7 +134,8 @@ jQuery(function($) {
 
         // Re-enable auto-append change handler feature on the new auto-appended row
         if(autoAppendMode) {
-            $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
+            //$('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
+	    $(dgf).find('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));	
         }
 
         dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
