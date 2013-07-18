@@ -8,7 +8,10 @@ Changelog
   This way, you can use common Plone existing classes (like 'listing').
   [gbastien]
 
-
+- Fixed auto-append bug when there is more than one datagrid field in page auto-appending one field binds
+  "change.dgf" to another field also. added "$(dgf).find(.." in datagridfield.js line 138 so it binds to right element only.
+  [tareqalam]
+  
 0.14 (2013-05-24)
 -----------------
 
