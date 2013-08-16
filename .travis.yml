@@ -19,6 +19,6 @@ matrix:
       env: PLONE=4.3
 install:
   - mkdir -p buildout-cache/downloads
-  - python bootstrap.py -c test-$PLONE.x.cfg
-  - bin/buildout -N -t 5 -c test-$PLONE.x.cfg
+  - python bootstrap.py -c travis-$PLONE.x.cfg
+  - bin/buildout -N -t 5 -c travis-$PLONE.x.cfg
 script: bin/test
