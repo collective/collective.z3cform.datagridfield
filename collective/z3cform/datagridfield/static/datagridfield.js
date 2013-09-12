@@ -104,7 +104,7 @@ jQuery(function($) {
         }
 
         // Remove the auto-append functionality from the all rows in this widget
-        var autoAppendHandlers = dgf.find('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell');
+        var autoAppendHandlers = dgf.find('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell');
         autoAppendHandlers.unbind('change.dgf');
         $thisRow.removeClass('auto-append');
 
@@ -134,8 +134,7 @@ jQuery(function($) {
 
         // Re-enable auto-append change handler feature on the new auto-appended row
         if(autoAppendMode) {
-            //$('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
-	    $(dgf).find('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));	
+            $(dgf).find('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
         }
 
         dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
@@ -362,9 +361,9 @@ jQuery(function($) {
         var mode = this.getMode(tbody);
 
         if(mode == "row") {
-            cells = $(row).children("td");
+            cells = $(row).find(".datagridwidget-cell");
         }  else if(mode == "block") {
-            cells = $(row).children("td").children(".datagridwidget-block");
+            cells = $(row).find(".datagridwidget-block");
         } else {
             throw new Error("Unknown DGF mode:" + mode);
         }
@@ -378,7 +377,7 @@ jQuery(function($) {
 
 
         // Math all <input> by name on the row which fields' names we update
-        var inputs = cells.children('[name^="' + name_prefix +'"]');
+        var inputs = cells.find('[name^="' + name_prefix +'"]');
 
         inputs.each(function(){
 
@@ -397,12 +396,12 @@ jQuery(function($) {
             this.name = name_prefix + newindex + oldname.substr(oldindex.length);
         });
 
-        cells.children('[id*="' + id_prefix +'"]').each(function(){
+        cells.find('[id*="' + id_prefix +'"]').each(function(){
             var regexp = new RegExp(id_prefix + ".*?-");
             this.id = this.id.replace(regexp, id_prefix + newindex + "-");
         });
 
-        cells.children('[for*="' + id_prefix +'"]').each(function(){
+        cells.find('[for*="' + id_prefix +'"]').each(function(){
 
             var regexp = new RegExp(id_prefix + ".*?-");
             // IE7 I love you
@@ -420,7 +419,7 @@ jQuery(function($) {
         });
 
 
-        cells.children('[class*="' + name_prefix +'"]').each(function(){
+        cells.find('[class*="' + name_prefix +'"]').each(function(){
             var regexp = new RegExp(name_prefix + ".*?\\.");
             this.className = this.className.replace(regexp, name_prefix + newindex + ".");
         });
@@ -435,7 +434,7 @@ jQuery(function($) {
      */
     dataGridField2Functions.supressEnsureMinimum = function(tbody) {
 
-        var autoAppendHandlers = $(tbody).find('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell');
+        var autoAppendHandlers = $(tbody).find('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell');
         autoAppendHandlers.unbind('change.dgf');
 
         tbody.children().removeClass("auto-append");
@@ -682,7 +681,7 @@ jQuery(function($) {
 
         // Bind the handlers to the auto append rows
         // Use namespaced jQuery events to avoid unbind() conflicts later on
-        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
+        $('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
 
         $(document).trigger("afterdatagridfieldinit");
     };

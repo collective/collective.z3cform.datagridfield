@@ -17,6 +17,10 @@ Changelog
 
 - Also update hidden data rows when reindexing in row mode. This fix was previously somehow only done for block mode.
   [gaudenz]
+
+- Relax requirements for markup, don't assume inputs are direct childs of table cells. This makes useing custom
+  templates much easier.
+  [gaudenz]
   
 0.14 (2013-05-24)
 -----------------
