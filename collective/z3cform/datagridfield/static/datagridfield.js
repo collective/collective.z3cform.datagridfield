@@ -247,7 +247,7 @@ jQuery(function($) {
         });
 
         // Abort if the current row wasn't found
-        if(!idx)
+        if (idx == null)
             return;
 
 

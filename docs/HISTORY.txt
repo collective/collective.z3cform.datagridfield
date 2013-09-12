@@ -11,6 +11,9 @@ Changelog
 - Fixed auto-append bug when there is more than one datagrid field in page auto-appending one field binds
   "change.dgf" to another field also. added "$(dgf).find(.." in datagridfield.js line 138 so it binds to right element only.
   [tareqalam]
+
+- Only abort moveRow if the row is really not found and not if the row idx just happens to be 0.
+  [gaudenz]
   
 0.14 (2013-05-24)
 -----------------
