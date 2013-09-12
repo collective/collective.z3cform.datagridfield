@@ -14,6 +14,9 @@ Changelog
 
 - Only abort moveRow if the row is really not found and not if the row idx just happens to be 0.
   [gaudenz]
+
+- Also update hidden data rows when reindexing in row mode. This fix was previously somehow only done for block mode.
+  [gaudenz]
   
 0.14 (2013-05-24)
 -----------------

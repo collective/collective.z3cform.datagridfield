@@ -362,19 +362,19 @@ jQuery(function($) {
         var mode = this.getMode(tbody);
 
         if(mode == "row") {
-            // Select normal inputs, checkboxes
             cells = $(row).children("td");
-            cells = expandAllZ3CFormInputs(cells);
         }  else if(mode == "block") {
-            // We need to update hidden data rows also which are not rendered as blocks
             cells = $(row).children("td").children(".datagridwidget-block");
-            // Checkboxes
-            cells = expandAllZ3CFormInputs(cells);
-            hidden = $(row).children(".datagridwidget-hidden-data");
-            cells = cells.add(hidden); // AA and TT row stuff
         } else {
             throw new Error("Unknown DGF mode:" + mode);
         }
+
+        // Checkboxes
+        cells = expandAllZ3CFormInputs(cells);
+
+        // We need to update hidden data rows also which are not rendered as blocks
+        hidden = $(row).find(".datagridwidget-hidden-data");
+        cells = cells.add(hidden); // AA and TT row stuff
 
 
         // Math all <input> by name on the row which fields' names we update
