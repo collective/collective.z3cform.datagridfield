@@ -21,6 +21,9 @@ Changelog
 - Relax requirements for markup, don't assume inputs are direct childs of table cells. This makes useing custom
   templates much easier.
   [gaudenz]
+
+- Fix validate function signature for IValidator API. The API requires a "force" argument.
+  [gaudenz]
   
 0.14 (2013-05-24)
 -----------------

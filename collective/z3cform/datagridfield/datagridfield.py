@@ -352,7 +352,7 @@ class DataGridValidator(SimpleFieldValidator):
               IList,                     # field
               DataGridField)             # widget
 
-    def validate(self, value):
+    def validate(self, value, force=False):
         """
             Don't validate the table - however, if there is a cell
             error, make sure that the table widget shows it.
