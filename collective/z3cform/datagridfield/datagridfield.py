@@ -23,6 +23,7 @@ from z3c.form.converter import BaseDataConverter
 from z3c.form.converter import FormatterValidationError
 from z3c.form.validator import SimpleFieldValidator
 
+from plone.app.z3cform.interfaces import IPloneFormLayer
 
 from interfaces import IDataGridField
 
@@ -327,7 +328,7 @@ class DataGridFieldSubformAdapter(SubformAdapter):
 
     zope.interface.implements(interfaces.ISubformFactory)
     zope.component.adapts(zope.interface.Interface,  # widget value
-                          interfaces.IFormLayer,     # request
+                          IPloneFormLayer,           # request
                           zope.interface.Interface,  # widget context
                           zope.interface.Interface,  # form
                           DataGridFieldObject,       # widget
