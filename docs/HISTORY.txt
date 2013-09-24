@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.15 (unreleased)
+0.15 (2013-09-24)
 -----------------
 
 - Added possibility to define the CSS class for the main table when the field is displayed.
