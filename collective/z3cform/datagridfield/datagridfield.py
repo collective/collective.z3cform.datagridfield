@@ -197,7 +197,7 @@ class GridDataConverter(BaseDataConverter):
             for name in zope.schema.getFieldNames(self.field.value_type.schema):
                 dm = zope.component.getMultiAdapter(
                     (row, self.field.value_type.schema[name]), interfaces.IDataManager)
-                retrow[name] = dm.query(value)
+                retrow[name] = dm.query()
             retval.append(retrow)
         return retval
 
