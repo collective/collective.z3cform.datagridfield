@@ -4,7 +4,8 @@ Changelog
 0.16 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Fix package dependencies.
+  [hvelarde]
 
 
 0.15 (2013-09-24)
