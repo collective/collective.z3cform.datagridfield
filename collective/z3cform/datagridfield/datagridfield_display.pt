@@ -6,7 +6,7 @@
 
 <table class="datagridwidget-table-view"
 	   tal:attributes="class view/display_table_css_class;
-	                   id ${view/id_prefix}">
+	                   id view/id_prefix">
 <thead>
   <tr>
     <tal:block repeat="column view/columns">
