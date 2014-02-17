@@ -7,6 +7,8 @@ Changelog
 - Fix package dependencies.
   [hvelarde]
 
+- Use BlockDataGridFieldObject for rows in a BlockDataGridField.
+  [gaudenz]
 
 0.15 (2013-09-24)
 -----------------

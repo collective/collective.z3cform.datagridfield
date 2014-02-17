@@ -55,5 +55,5 @@ def BlockDataGridFieldObjectFactory(field, request):
     """IFieldWidget factory for DataGridField."""
 
     # Create a normal DataGridFieldObject widget
-    widget = FieldWidget(field, DataGridFieldObject(request))
+    widget = FieldWidget(field, BlockDataGridFieldObject(request))
     return widget
