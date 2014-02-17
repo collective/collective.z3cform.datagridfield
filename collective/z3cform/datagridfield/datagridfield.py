@@ -134,6 +134,15 @@ class DataGridField(MultiWidget):
         return self.prefix.replace('.', '-')
 
     def updateWidgets(self):
+
+        if self.mode == INPUT_MODE:
+            # filter out any auto append or template rows
+            # these are not "real" elements of the MultiWidget
+            # and confuse updateWidgets method if len(self.widgets) changes
+            # This is relevant for nested datagridfields.
+            self.widgets = [ w for w in self.widgets
+                             if not (w.id.endswith('AA') or w.id.endswith('TT')) ]
+
         # if the field has configuration data set - copy it
         super(DataGridField, self).updateWidgets()
 

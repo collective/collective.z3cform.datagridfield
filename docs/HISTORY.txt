@@ -10,6 +10,9 @@ Changelog
 - Use BlockDataGridFieldObject for rows in a BlockDataGridField.
   [gaudenz]
 
+- Filter out any auto append or template rows in updateWidgets.
+  [gaudenz]
+
 0.15 (2013-09-24)
 -----------------
 
