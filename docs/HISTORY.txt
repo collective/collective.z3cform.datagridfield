@@ -13,6 +13,9 @@ Changelog
 - Filter out any auto append or template rows in updateWidgets.
   [gaudenz]
 
+- Add row parameter to aftermoverow JS event
+  [gaudenz]
+
 0.15 (2013-09-24)
 -----------------
 

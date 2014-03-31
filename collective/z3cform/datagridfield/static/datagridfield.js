@@ -287,7 +287,7 @@ jQuery(function($) {
 
         this.updateOrderIndex(tbody);
 
-        dgf.trigger("aftermoverow", [dgf]);
+        dgf.trigger("aftermoverow", [dgf, row]);
     };
 
     dataGridField2Functions.moveRowDown = function(currnode){
