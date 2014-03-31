@@ -19,6 +19,11 @@ Changelog
 - Don't reset class attribute on cloned template rows
   [gaudenz]
 
+- Replace row index in all template row elements, not just input elements.
+  Replace the index in id, name, for, href and data-fieldname attributes
+  when cloning the template row.
+  [gaudenz]
+
 0.15 (2013-09-24)
 -----------------
 
