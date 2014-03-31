@@ -196,18 +196,16 @@ jQuery(function($) {
         var tbody = this.getParentByClass(node, "datagridwidget-body");
 
         // hidden template row
-        var emptyRow = $(tbody).children('.datagridwidget-empty-row');
+        var emptyRow = $(tbody).children('.datagridwidget-empty-row').first();
 
         if(emptyRow.size() === 0) {
             // Ghetto assert()
             throw new Error("Could not locate empty template row in DGF");
         }
 
-        var markup = emptyRow.clone(true);
+        var new_row = emptyRow.clone(true).removeClass('datagridwidget-empty-row');
 
-        var newTr = markup.attr("class","datagridwidget-row");
-
-        return newTr[0];
+        return new_row;
     };
 
 

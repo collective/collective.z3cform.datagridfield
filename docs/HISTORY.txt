@@ -16,6 +16,9 @@ Changelog
 - Add row parameter to aftermoverow JS event
   [gaudenz]
 
+- Don't reset class attribute on cloned template rows
+  [gaudenz]
+
 0.15 (2013-09-24)
 -----------------
 
