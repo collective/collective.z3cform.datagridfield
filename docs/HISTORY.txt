@@ -24,6 +24,7 @@ Changelog
   when cloning the template row.
   [gaudenz]
 
+
 0.15 (2013-09-24)
 -----------------
 
@@ -51,7 +52,8 @@ Changelog
 - Register the SubformAdapter for IPloneForm layer to avoid that the Adapter from plone.app.z3cform 
   takes precedence.
   [gaudenz]
-  
+
+
 0.14 (2013-05-24)
 -----------------
 
@@ -72,6 +74,7 @@ Changelog
 
 0.13 (2013-04-09)
 -----------------
+
 - Add travis-ci configs [jaroel]
 
 - Convert tests to plone.app.testing [jaroel]
@@ -97,75 +100,79 @@ Changelog
 
 - Added *afterrowmoved* JS event [miohtama]
 
+
 0.12 (2012-10-30)
 --------------------
 
-* Updated empty row selection. [jstegle]
+- Updated empty row selection. [jstegle]
 
-* Nested DataGridField support (yo dawg...) [miohtama]
+- Nested DataGridField support (yo dawg...) [miohtama]
 
-* Support plone.autoform and grok'ed row schemas [miohtama]
+- Support plone.autoform and grok'ed row schemas [miohtama]
 
-* Added ``DataGridField.extra`` parameter, so you can pass out
+- Added ``DataGridField.extra`` parameter, so you can pass out
   application specific data to Javascript [miohtama]
+
 
 0.11 (2012-05-16)
 -----------------
 
-* be able to use with plone.app.registry
+- be able to use with plone.app.registry
   [vangheem]
 
 
 0.10 (2012-02-12)
 -----------------
 
-* Fix bug with moving the last row up.
+- Fix bug with moving the last row up.
   [m-martinez]
+
 
 0.9 (2011-10-27)
 ----------------
 
-* Clone events when adding new row - fixes bug where browse button of
+- Clone events when adding new row - fixes bug where browse button of
   plone.formwidget.contenttree did nothing for new rows
   [anthonygerrard]
 
-* Reindex more indexed attributes of cloned row
+- Reindex more indexed attributes of cloned row
   [anthonygerrard]
+
 
 0.8 (2011-09-24)
 ----------------
 
-* Avoid using the "row" CSS class.
+- Avoid using the "row" CSS class.
   [davisagli]
 
-* Fixes to work with jQuery 1.3.x (use .remove() instead of .detach(), fetch data
+- Fixes to work with jQuery 1.3.x (use .remove() instead of .detach(), fetch data
   attributes a different way, and avoid live binding the change event).
   [davisagli]
 
-* Don't error out when getting a ``FormatterValidationError``, pass
+- Don't error out when getting a ``FormatterValidationError``, pass
   it on to z3c.form instead.
   [claytron]
 
-* Give manipulator images a relative src rather than absolute. This
+- Give manipulator images a relative src rather than absolute. This
   previously meant the widget didn't work on sites without Plone/Zope at the
   root of the domain.
   [davidjb]
 
-* During auto-insert, add our new row into the document first, before reindexing
+- During auto-insert, add our new row into the document first, before reindexing
   it and changing its elements' IDs. This allows Javascript that depends on
   these IDs (such as plone.formwidget.autocomplete) to pick up the correct
   fields.
   [davidjb]
 
-* Tidying up and reducing complexity of auto-insert functionality
+- Tidying up and reducing complexity of auto-insert functionality
   [davidjb]
 
-* Removing unnecessary auto-insert bind and unbind as this is already covered
+- Removing unnecessary auto-insert bind and unbind as this is already covered
   by jQuery's `live()` function against the `auto-append` class. Adding/removing
   this class against rows automatically does this.
   [davidjb]
 
-* Resolved issue with auto-insert functionality not working by removing
+- Resolved issue with auto-insert functionality not working by removing
   table-specific check in Javascript.
   [davidjb]
 
@@ -173,55 +180,56 @@ Changelog
 0.7 (2011-07-01)
 ----------------
 
-* Changed markup/javascript to prevent duplicate HTML id attributes. Changed
+- Changed markup/javascript to prevent duplicate HTML id attributes. Changed
   Javascript to allow for datagrid page templates that don't use tables.
   [dextermilo]
 
-* Improve spacing in CSS.
+- Improve spacing in CSS.
   [davisagli]
 
-* Revert my fix to ensure that blank rows are added, because it duplicated
+- Revert my fix to ensure that blank rows are added, because it duplicated
   a fix in z3c.form resulting in extra rows.
   [davisagli]
+
 
 0.6 (2011-05-17)
 ----------------
 
-* Search for datagridInitialise and datagridUpdateWidgets on the
+- Search for datagridInitialise and datagridUpdateWidgets on the
   parent form, also when in a fieldset.
   [maurits]
 
-* Register templates on plone.app.z3cform.interfaces.IPloneFormLayer to
+- Register templates on plone.app.z3cform.interfaces.IPloneFormLayer to
   take precedence over that packages list widget templates.
   [elro]
 
-* Make sure that updateWidgets is called to add blank rows even if the
+- Make sure that updateWidgets is called to add blank rows even if the
   widget has no value.
   [davisagli]
 
-* When extracting a row value fails due to a validation error, convert
+- When extracting a row value fails due to a validation error, convert
   widget values to field values so the value can be successfully applied
   to the grid widget.
   [davisagli]
 
-* Register a plone.supermodel handler for the DictRow so it can be used
+- Register a plone.supermodel handler for the DictRow so it can be used
   in supermodel models.
   [davisagli]
 
-* Depend on collective.z3cform.datagridfield_demo as a test extra;
+- Depend on collective.z3cform.datagridfield_demo as a test extra;
   use the browser view from this package in the tests.
   [maurits]
 
-* _validate still used when import/exporting, fix up code so it works
+- _validate still used when import/exporting, fix up code so it works
   [lentinj]
 
-* Add a DictRow serializer for transmogrify.dexterity
+- Add a DictRow serializer for transmogrify.dexterity
   [lentinj]
 
-* Only use width:100% on input cells that are the only element in the cell
+- Only use width:100% on input cells that are the only element in the cell
   [lentinj]
 
-* Reorder row indices backwards when adding rows. This means that adjacent
+- Reorder row indices backwards when adding rows. This means that adjacent
   rows don't share the same index temporarily, for example:-
   - Row 1 and 2 contain input:radio based widgets
   - Row 0 added, row renumbering starts
@@ -231,46 +239,49 @@ Changelog
   - . . .
   [lentinj]
 
-* Use jQuery to clone rows, and clone the jQuery events on the rows.
+- Use jQuery to clone rows, and clone the jQuery events on the rows.
   [lentinj]
 
-* Implemented reorder functionality
+- Implemented reorder functionality
+
 
 0.5 (2011-02-08)
 ----------------
 
-* Put in the DictRow class (tks Martin Aspeli)
+- Put in the DictRow class (tks Martin Aspeli)
 
-* Moved the demo code out to a separate package collective.z3cform.datagridfield_demo
+- Moved the demo code out to a separate package collective.z3cform.datagridfield_demo
   (tks Laurence Rowe).
 
-* Removed superfluous lines from setup.py (tks Laurence Rowe).
+- Removed superfluous lines from setup.py (tks Laurence Rowe).
 
-* Removed unnessary dependency on dexterity (tks Laurence Rowe).
+- Removed unnessary dependency on dexterity (tks Laurence Rowe).
 
-* Removed unnessary dependency on grok (tks Laurence Rowe).
+- Removed unnessary dependency on grok (tks Laurence Rowe).
+
 
 0.4 (2011-02-06)
 ----------------
 
-* Renamed the demo pages. The starting point is now @@demo-collective.z3cform.datagrid .
+- Renamed the demo pages. The starting point is now @@demo-collective.z3cform.datagrid .
 
-* The widget can now be configured via the updateWidgets method. It
+- The widget can now be configured via the updateWidgets method. It
   is no longer necessary to create a custom factory.
 
-* The columns can now be omitted.
+- The columns can now be omitted.
 
-* Provide a set of demo views for Object access.
+- Provide a set of demo views for Object access.
+
 
 0.3 (2011-02-04)
 ----------------
 
-* The auto-append functionality did not bind correctly for popup forms.
+- The auto-append functionality did not bind correctly for popup forms.
   I switched to using jQuery.live() instead of binding at document load time.
 
-* Added a menu to the demo pages
+- Added a menu to the demo pages
 
-* Added a display only form option.
+- Added a display only form option.
 
-* Fixed the restructured text of the main README.txt so that it will show
+- Fixed the restructured text of the main README.txt so that it will show
   more friendly in PyPI.
