@@ -4,6 +4,9 @@ Changelog
 0.16 (unreleased)
 -----------------
 
+- Add 'form-widgets-field_id' as widget css id (consistency with other widgets).
+  [thomasdesvenain]
+
 - Fix package dependencies.
   [hvelarde]
 
@@ -49,7 +52,7 @@ Changelog
 - Fix validate function signature for IValidator API. The API requires a "force" argument.
   [gaudenz]
 
-- Register the SubformAdapter for IPloneForm layer to avoid that the Adapter from plone.app.z3cform 
+- Register the SubformAdapter for IPloneForm layer to avoid that the Adapter from plone.app.z3cform
   takes precedence.
   [gaudenz]
 
