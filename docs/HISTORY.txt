@@ -1,8 +1,8 @@
 Changelog
 =========
 
-0.16 (unreleased)
------------------
+1.0 (2014-06-02)
+----------------
 
 - Add 'form-widgets-field_id' as widget css id (consistency with other widgets).
   [thomasdesvenain]
