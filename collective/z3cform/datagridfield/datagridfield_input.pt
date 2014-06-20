@@ -4,11 +4,13 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       tal:omit-tag="">
 
-<table class="datagridwidget-table-view" data-mode="row" tal:attributes="data-extra view/extra">
+<table class="datagridwidget-table-view" data-mode="row"
+       tal:attributes="data-extra view/extra; id view/id_prefix">
 <thead>
   <tr>
     <tal:block repeat="column view/columns">
       <th class="header"
+          tal:attributes="class string:header cell-${repeat/column/number}"
          tal:condition="python:column['mode'] != 'hidden'">
             <span i18n:translate=""
                 tal:content="column/label">title</span>
@@ -24,7 +26,8 @@
 </thead>
 <tbody class="datagridwidget-body" tal:attributes="data-name_prefix view/name_prefix; data-id_prefix view/id_prefix">
   <tal:block repeat="widget view/widgets">
-    <tr tal:attributes="class python:'%s%s' % (widget.klass, widget.mode=='hidden' and ' hidden' or '')"
+    <tr tal:attributes="class python:'%s row-%d%s' % (widget.klass, repeat['widget'].number(), widget.mode=='hidden' and ' hidden' or '');
+                        data-index python:widget.name.split('.')[-1];"
         tal:condition="python:view._includeRow(widget.name)">
       <metal:block define-macro="widget-row">
           <div tal:replace="structure widget/render"></div>

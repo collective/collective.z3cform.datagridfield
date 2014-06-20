@@ -2,7 +2,6 @@ import zope.interface
 import zope.component
 import zope.schema.interfaces
 from zope.schema.interfaces import IObject
-from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
 
 from z3c.form import interfaces
 from z3c.form.widget import FieldWidget
@@ -16,6 +15,8 @@ class BlockDataGridField(DataGridField):
     Render edit mode widgets in blocks (vertical) instead of cells (horizontal).
     """
 
+    klass = "blockdatagridfield"
+
     def createObjectWidget(self, idx):
         """
         """
@@ -28,8 +29,7 @@ class BlockDataGridField(DataGridField):
             else:
                 widget.setErrors = True
         else:
-            widget = zope.component.getMultiAdapter((valueType, self.request),
-                interfaces.IFieldWidget)
+            widget = zope.component.getMultiAdapter((valueType, self.request), interfaces.IFieldWidget)
 
         return widget
 
@@ -55,9 +55,5 @@ def BlockDataGridFieldObjectFactory(field, request):
     """IFieldWidget factory for DataGridField."""
 
     # Create a normal DataGridFieldObject widget
-    widget = FieldWidget(field, DataGridFieldObject(request))
-    # Then customize its template
-    widget.template = ViewPageTemplateFile("datagridfieldobject_input_block.pt")
+    widget = FieldWidget(field, BlockDataGridFieldObject(request))
     return widget
-
-

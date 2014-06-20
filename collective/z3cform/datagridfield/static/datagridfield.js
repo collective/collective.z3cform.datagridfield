@@ -8,16 +8,6 @@ jQuery(function($) {
     // Local singleton object containing our functions
     var dataGridField2Functions = {};
 
-    /**
-     * Get edit mode of the DGF instance
-     *
-     * @return {String} "row" or "block"
-     */
-    dataGridField2Functions.getMode = function(node) {
-         var dgf = $(dataGridField2Functions.getParentByClass(node, "datagridwidget-table-view"));
-         return dgf.attr("data-mode");
-    };
-
     dataGridField2Functions.getInputOrSelect = function(node) {
         /* Get the (first) input or select form element under the given node */
 
@@ -104,7 +94,7 @@ jQuery(function($) {
         }
 
         // Remove the auto-append functionality from the all rows in this widget
-        var autoAppendHandlers = dgf.find('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell');
+        var autoAppendHandlers = dgf.find('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell');
         autoAppendHandlers.unbind('change.dgf');
         $thisRow.removeClass('auto-append');
 
@@ -134,7 +124,7 @@ jQuery(function($) {
 
         // Re-enable auto-append change handler feature on the new auto-appended row
         if(autoAppendMode) {
-            $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
+            $(dgf).find('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
         }
 
         dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
@@ -196,18 +186,16 @@ jQuery(function($) {
         var tbody = this.getParentByClass(node, "datagridwidget-body");
 
         // hidden template row
-        var emptyRow = $(tbody).children('.datagridwidget-empty-row');
+        var emptyRow = $(tbody).children('.datagridwidget-empty-row').first();
 
         if(emptyRow.size() === 0) {
             // Ghetto assert()
             throw new Error("Could not locate empty template row in DGF");
         }
 
-        var markup = emptyRow.clone(true);
+        var new_row = emptyRow.clone(true).removeClass('datagridwidget-empty-row');
 
-        var newTr = markup.attr("class","datagridwidget-row");
-
-        return newTr[0];
+        return new_row;
     };
 
 
@@ -246,7 +234,7 @@ jQuery(function($) {
         });
 
         // Abort if the current row wasn't found
-        if(!idx)
+        if (idx == null)
             return;
 
 
@@ -287,7 +275,7 @@ jQuery(function($) {
 
         this.updateOrderIndex(tbody);
 
-        dgf.trigger("aftermoverow", [dgf]);
+        dgf.trigger("aftermoverow", [dgf, row]);
     };
 
     dataGridField2Functions.moveRowDown = function(currnode){
@@ -322,9 +310,16 @@ jQuery(function($) {
     };
 
     /**
-     * Rename <input> controls so that each control has unique name
-     * based on the row its on. On the server side, the
-     * DGF logic will rebuild rows based on this information.
+     * Fixup all attributes on all child elements that contain
+     * the row index. The following attributes are scanned:
+     * - name
+     * - id
+     * - for
+     * - href
+     * - data-fieldname
+     *
+     * On the server side, the DGF logic will rebuild rows based
+     * on this information.
      *
      * If indexing for some reasons fails you'll get double
      * input values and Zope converts inputs to list, failing
@@ -335,93 +330,50 @@ jQuery(function($) {
      * @param  {Number} newindex
      */
     dataGridField2Functions.reindexRow = function (tbody, row, newindex) {
-        var name_prefix = $(tbody).attr('data-name_prefix') + '.';
-        var id_prefix = $(tbody).attr('data-id_prefix') + '-';
-        var cells;
-        var hidden = null;
+        var name_prefix = $(tbody).data('name_prefix') + '.';
+        var id_prefix = $(tbody).data('id_prefix') + '-';
+        var $row = $(row);
+        var oldindex = $row.data('index');
 
-        // console.log("Reindexing row " + newindex);
-        //
-
-        // Expand jQuery z3c.form widget selection to cover checkbox <input>s
-        function expandAllZ3CFormInputs(sel) {
-            var checkboxes = sel.children(".option");
-            sel = sel.add(checkboxes);
-
-            var datetimedropdowns = sel.children(".datetimepicker_input").find("select").parent();
-            sel = sel.add(datetimedropdowns);
-
-            return sel;
-        }
-
-        // We need to select
-        // - all direct children inputs in row mode
-        // - all direct children inputs in block mode
-        // - but not nested inputs, as it would break nested datagridfields
-        var mode = this.getMode(tbody);
-
-        if(mode == "row") {
-            // Select normal inputs, checkboxes
-            cells = $(row).children("td");
-            cells = expandAllZ3CFormInputs(cells);
-        }  else if(mode == "block") {
-            // We need to update hidden data rows also which are not rendered as blocks
-            cells = $(row).children("td").children(".datagridwidget-block");
-            // Checkboxes
-            cells = expandAllZ3CFormInputs(cells);
-            hidden = $(row).children(".datagridwidget-hidden-data");
-            cells = cells.add(hidden); // AA and TT row stuff
-        } else {
-            throw new Error("Unknown DGF mode:" + mode);
-        }
-
-
-        // Math all <input> by name on the row which fields' names we update
-        var inputs = cells.children('[name^="' + name_prefix +'"]');
-
-        inputs.each(function(){
-
-            //console.log("Got: " + this.name);
-            var oldname = this.name.substr(name_prefix.length);
-            var oldindex1 = oldname.split('.', 1)[0];
-            var oldindex2 = oldname.split('-', 1)[0];
-            /* Name fields can have '-' for empty values */
-            var oldindex = 0;
-            if (oldindex1.length < oldindex2.length)
-            {
-                oldindex = oldindex1;
-            } else {
-                oldindex = oldindex2;
+        function replaceIndex(el, attr, prefix) {
+            if (el.attr(attr)) {
+                var val = el.attr(attr);
+                var pattern = new RegExp('^' + prefix + oldindex);
+                el.attr(attr, val.replace(pattern, prefix + newindex));
+                if (attr.startsWith('data-')) {
+                    var key = attr.substr(5);
+                    var data = el.data(key);
+                    el.data(key, data.replace(pattern, prefix + newindex));
+                }
             }
-            this.name = name_prefix + newindex + oldname.substr(oldindex.length);
+        }
+
+        // update index data
+        $row.data('index', newindex);
+        $row.attr('data-index', newindex);
+
+        $row.find('[id^="formfield-' + id_prefix + '"]').each(function(i, el) {
+            replaceIndex($(el), 'id', 'formfield-' + id_prefix);
         });
 
-        cells.children('[id*="' + id_prefix +'"]').each(function(){
-            var regexp = new RegExp(id_prefix + ".*?-");
-            this.id = this.id.replace(regexp, id_prefix + newindex + "-");
+        $row.find('[name^="' + name_prefix +'"]').each(function(i, el) {
+            replaceIndex($(el), 'name', name_prefix);
         });
 
-        cells.children('[for*="' + id_prefix +'"]').each(function(){
-
-            var regexp = new RegExp(id_prefix + ".*?-");
-            // IE7 I love you
-            // It's Friday and I need to fix some shit
-            // in some shit piece of software which was released
-            // when I still had hair and happy life ahead
-            // MICROSOFT YOU HAVE F*CKING ruined my life
-            // http://webbugtrack.blogspot.com.br/2007/08/bug-217-getattribute-doesnt-always-work.html
-            // getAttribute() does not work all the time
-            var forrrr = this.attributes['for'].nodeValue;
-
-            var newvalue = id_prefix + newindex + "-";
-            forrrr = forrrr.replace(regexp, newvalue);
-            this.setAttribute('for', forrrr);
+        $row.find('[id^="' + id_prefix +'"]').each(function(i, el) {
+            replaceIndex($(el), 'id', id_prefix);
         });
 
+        $row.find('[for^="' + id_prefix +'"]').each(function(i, el) {
+            replaceIndex($(el), 'for', id_prefix);
+        });
 
-        cells.children('[class*="' + name_prefix +'"]').each(function(){
-            var regexp = new RegExp(name_prefix + ".*?\\.");
-            this.className = this.className.replace(regexp, name_prefix + newindex + ".");
+        $row.find('[href*="#' + id_prefix +'"]').each(function(i, el){
+            replaceIndex($(el), 'href', '#' + id_prefix);
+        });
+
+        $row.find('[data-fieldname^="' + name_prefix + '"]').each(function(i, el) {
+            replaceIndex($(el), 'data-fieldname', name_prefix);
         });
     };
 
@@ -434,7 +386,7 @@ jQuery(function($) {
      */
     dataGridField2Functions.supressEnsureMinimum = function(tbody) {
 
-        var autoAppendHandlers = $(tbody).find('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell');
+        var autoAppendHandlers = $(tbody).find('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell');
         autoAppendHandlers.unbind('change.dgf');
 
         tbody.children().removeClass("auto-append");
@@ -678,7 +630,7 @@ jQuery(function($) {
 
         // Bind the handlers to the auto append rows
         // Use namespaced jQuery events to avoid unbind() conflicts later on
-        $('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
+        $('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
 
         $(document).trigger("afterdatagridfieldinit");
     };

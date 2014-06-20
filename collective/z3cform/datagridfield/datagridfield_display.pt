@@ -4,7 +4,9 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       tal:omit-tag="">
 
-<table class="datagridwidget-table-view">
+<table class="datagridwidget-table-view"
+	   tal:attributes="class view/display_table_css_class;
+	                   id view/id_prefix">
 <thead>
   <tr>
     <tal:block repeat="column view/columns">
@@ -31,4 +33,3 @@
 </table>
 <input type="hidden" tal:replace="structure view/counterMarker" />
 </html>
-

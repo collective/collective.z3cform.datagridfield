@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.13.dev0'
+version = '1.1.dev0'
 
 setup(name='collective.z3cform.datagridfield',
       version=version,
@@ -24,10 +24,15 @@ setup(name='collective.z3cform.datagridfield',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'setuptools',
-          # -*- Extra requirements: -*-
+          'five.grok',
           'plone.app.z3cform',
-          'z3c.form >= 2.4.3dev',
+          'plone.directives.form',
+          'setuptools',
+          'z3c.form >=2.4.3dev',
+          'zope.component',
+          'zope.i18nmessageid',
+          'zope.interface',
+          'zope.schema',
       ],
       extras_require={
           'test': [

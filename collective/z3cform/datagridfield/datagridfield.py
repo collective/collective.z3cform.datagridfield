@@ -23,6 +23,7 @@ from z3c.form.converter import BaseDataConverter
 from z3c.form.converter import FormatterValidationError
 from z3c.form.validator import SimpleFieldValidator
 
+from plone.app.z3cform.interfaces import IPloneFormLayer
 
 from interfaces import IDataGridField
 
@@ -49,6 +50,9 @@ class DataGridField(MultiWidget):
     allow_delete = True
     allow_reorder = False
     auto_append = True
+    display_table_css_class = "datagridwidget-table-view"
+
+    klass = "datagridfield"
 
     # You can give data-extra attribute
     # for the widget to allow there some custom
@@ -130,6 +134,15 @@ class DataGridField(MultiWidget):
         return self.prefix.replace('.', '-')
 
     def updateWidgets(self):
+
+        if self.mode == INPUT_MODE:
+            # filter out any auto append or template rows
+            # these are not "real" elements of the MultiWidget
+            # and confuse updateWidgets method if len(self.widgets) changes
+            # This is relevant for nested datagridfields.
+            self.widgets = [ w for w in self.widgets
+                             if not (w.id.endswith('AA') or w.id.endswith('TT')) ]
+
         # if the field has configuration data set - copy it
         super(DataGridField, self).updateWidgets()
 
@@ -346,7 +359,7 @@ class DataGridFieldSubformAdapter(SubformAdapter):
 
     zope.interface.implements(interfaces.ISubformFactory)
     zope.component.adapts(zope.interface.Interface,  # widget value
-                          interfaces.IFormLayer,     # request
+                          IPloneFormLayer,           # request
                           zope.interface.Interface,  # widget context
                           zope.interface.Interface,  # form
                           DataGridFieldObject,       # widget
@@ -371,7 +384,7 @@ class DataGridValidator(SimpleFieldValidator):
               IList,                     # field
               DataGridField)             # widget
 
-    def validate(self, value):
+    def validate(self, value, force=False):
         """
             Don't validate the table - however, if there is a cell
             error, make sure that the table widget shows it.
