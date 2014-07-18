@@ -340,7 +340,7 @@ jQuery(function($) {
                 var val = el.attr(attr);
                 var pattern = new RegExp('^' + prefix + oldindex);
                 el.attr(attr, val.replace(pattern, prefix + newindex));
-                if (attr.startsWith('data-')) {
+                if (attr.indexOf('data-') === 0) {
                     var key = attr.substr(5);
                     var data = el.data(key);
                     el.data(key, data.replace(pattern, prefix + newindex));
