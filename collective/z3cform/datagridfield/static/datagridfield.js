@@ -193,7 +193,7 @@ jQuery(function($) {
             throw new Error("Could not locate empty template row in DGF");
         }
 
-        var new_row = emptyRow.clone(true).removeClass('datagridwidget-empty-row');
+        var new_row = emptyRow.clone().removeClass('datagridwidget-empty-row');
 
         return new_row;
     };
