@@ -65,7 +65,7 @@ jQuery(function($) {
      * Handle auto insert events by auto append
      */
     dataGridField2Functions.onInsert = function(e) {
-        var currnode = window.event ? window.event.srcElement : e.currentTarget;
+        var currnode = e.currentTarget;
         this.autoInsertRow(currnode);
     },
 
