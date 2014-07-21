@@ -4,7 +4,9 @@ Changelog
 1.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Stopped referencing the 'event' element when creating a new row as the even
+  that triggered the content of an input changing may have been from another element.
+  [neilferreira]
 
 
 1.0 (2014-06-02)
