@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.1 (unreleased)
+1.1 (2014-07-25)
 ----------------
 
 - Removed JS code that relies on firefox being used.
