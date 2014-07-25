@@ -4,7 +4,10 @@ Changelog
 1.1 (unreleased)
 ----------------
 
-- Stopped referencing the 'event' element when creating a new row as the even
+- Removed JS code that relies on firefox being used.
+  [neilferreira]
+
+- Stopped referencing the 'event' element when creating a new row as the event
   that triggered the content of an input changing may have been from another element.
   [neilferreira]
 
