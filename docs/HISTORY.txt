@@ -4,7 +4,8 @@ Changelog
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Allow deletion of last row in non-auto-append mode.
+  [gaudenz]
 
 
 1.1 (2014-07-25)
