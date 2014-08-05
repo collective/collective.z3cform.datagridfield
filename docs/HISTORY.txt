@@ -1,10 +1,22 @@
 Changelog
 =========
 
-1.1 (unreleased)
+1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Allow deletion of last row in non-auto-append mode.
+  [gaudenz]
+
+
+1.1 (2014-07-25)
+----------------
+
+- Removed JS code that relies on firefox being used.
+  [neilferreira]
+
+- Stopped referencing the 'event' element when creating a new row as the event
+  that triggered the content of an input changing may have been from another element.
+  [neilferreira]
 
 
 1.0 (2014-06-02)

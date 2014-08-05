@@ -81,13 +81,6 @@
     display: block;
 }
 
-/* LAST ROW handling.. no delete, no move */
-.datagridwidget-body-non-auto-append[data-visible-count = "1"] .datagridwidget-manipulator.delete-row img,
-.datagridwidget-body-non-auto-append[data-visible-count = "1"] .datagridwidget-manipulator.move-down img,
-.datagridwidget-body-non-auto-append[data-visible-count = "1"] .datagridwidget-manipulator.move-up img {
-    display: none;
-}
-
 /* Cannot move up out of the grid */
 .datagridfield-first-filled-row > .datagridwidget-manipulator.move-up img {
     display: none !important;

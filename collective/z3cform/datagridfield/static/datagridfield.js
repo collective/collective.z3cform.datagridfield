@@ -65,7 +65,7 @@ jQuery(function($) {
      * Handle auto insert events by auto append
      */
     dataGridField2Functions.onInsert = function(e) {
-        var currnode = window.event ? window.event.srcElement : e.currentTarget;
+        var currnode = e.currentTarget;
         this.autoInsertRow(currnode);
     },
 
@@ -123,9 +123,7 @@ jQuery(function($) {
         }
 
         // Re-enable auto-append change handler feature on the new auto-appended row
-        if(autoAppendMode) {
-            $(dgf).find('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
-        }
+        $(dgf).find('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
 
         dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
 
@@ -204,7 +202,11 @@ jQuery(function($) {
         var tbody = this.getParentByClass(node, "datagridwidget-body");
         var row = this.getParentRow(node);
         $(row).remove();
-        this.updateOrderIndex(tbody,false);
+        // ensure minimum rows in non-auto-append mode, reindex if no
+        // minimal row was added, otherwise reindexing is done by ensureMinimumRows
+        if ($(tbody).data("auto-append") || !this.ensureMinimumRows(tbody)) {
+            this.updateOrderIndex(tbody, false);
+        }
     };
 
     dataGridField2Functions.moveRow = function(currnode, direction){
@@ -340,7 +342,7 @@ jQuery(function($) {
                 var val = el.attr(attr);
                 var pattern = new RegExp('^' + prefix + oldindex);
                 el.attr(attr, val.replace(pattern, prefix + newindex));
-                if (attr.startsWith('data-')) {
+                if (attr.indexOf('data-') === 0) {
                     var key = attr.substr(5);
                     var data = el.data(key);
                     el.data(key, data.replace(pattern, prefix + newindex));
@@ -591,8 +593,9 @@ jQuery(function($) {
             // XXX: make the function call signatures more sane
             var child = rows[0];
             this.autoInsertRow(child, true);
-
+            return true;
         }
+        return false;
     },
 
 
@@ -627,10 +630,6 @@ jQuery(function($) {
                 dataGridField2Functions.ensureMinimumRows(this);
             }
         });
-
-        // Bind the handlers to the auto append rows
-        // Use namespaced jQuery events to avoid unbind() conflicts later on
-        $('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
 
         $(document).trigger("afterdatagridfieldinit");
     };
