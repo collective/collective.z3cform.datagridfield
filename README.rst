@@ -212,14 +212,14 @@ The following events are currently fired against ``table.datagridwidget-table-vi
 
 Example usage::
 
-    handleDGFInsert : function(event, dgf, row) {
+    var handleDGFInsert = function(event, dgf, row) {
         row = $(row);
         console.log("Got new row:");
         console.log(row);
-    },
+    };
 
     // Bind all DGF handlers on the page
-    $(document.body).delegate(".datagridwidget-table-view", "beforeaddrow beforeaddrowauto", handleDGFInsert);
+    $(document).on('beforeaddrow beforeaddrowauto', '.datagridwidget-table-view', handleDGFInsert);
 
 
 Demo
