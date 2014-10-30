@@ -634,6 +634,10 @@ jQuery(function($) {
             }
         });
 
+        // Bind the handlers to the auto append rows
+        // Use namespaced jQuery events to avoid unbind() conflicts later on
+        $('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
+
         $(document).trigger("afterdatagridfieldinit");
     };
 
