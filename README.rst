@@ -70,6 +70,17 @@ You can also use grok'ed forms where you subclass the schema
 from ``plone.directives.form.SchemaForm`` and declare
 widgets witin the schema using ``form.widget()``.
 
+Also it can be used from a supermodel xml::
+
+    <field name="table" type="zope.schema.List">
+      <description/>
+      <title>Table</title>
+      <value_type type="collective.z3cform.datagridfield.DictRow">
+        <schema>your.package.interfaces.ITableRowSchema</schema>
+      </value_type>
+      <form:widget type="collective.z3cform.datagridfield.DataGridFieldFactory"/>
+    </field>
+
 
 Storage
 =======
@@ -212,14 +223,14 @@ The following events are currently fired against ``table.datagridwidget-table-vi
 
 Example usage::
 
-    handleDGFInsert : function(event, dgf, row) {
+    var handleDGFInsert = function(event, dgf, row) {
         row = $(row);
         console.log("Got new row:");
         console.log(row);
-    },
+    };
 
     // Bind all DGF handlers on the page
-    $(document.body).delegate(".datagridwidget-table-view", "beforeaddrow beforeaddrowauto", handleDGFInsert);
+    $(document).on('beforeaddrow beforeaddrowauto', '.datagridwidget-table-view', handleDGFInsert);
 
 
 Demo
