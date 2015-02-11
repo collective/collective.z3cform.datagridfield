@@ -3,7 +3,7 @@ Changelog
 
 1.2 (unreleased)
 ----------------
-
+- Fix bug for widget.klass is NonType in the block view when defining the class for the field. 
 - Allow deletion of last row in non-auto-append mode.
   [gaudenz]
 

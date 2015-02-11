@@ -8,7 +8,7 @@
     <td class="datagridwidget-block-edit-cell">
         <tal:block tal:repeat="widget view/subform/widgets/values">
 
-            <div tal:attributes="class python:'datagridwidget-block-' + widget.id + ' ' + widget.klass + ' datagridwidget-widget-' + widget.field.__name__ + ' ' + (widget.mode == 'hidden' and 'datagridwidget-hidden-data' or 'datagridwidget-block')">
+            <div tal:define="klass python: widget.klass or ''" tal:attributes="class python:'datagridwidget-block-' + widget.id + ' ' + klass + ' datagridwidget-widget-' + widget.field.__name__ + ' ' + (widget.mode == 'hidden' and 'datagridwidget-hidden-data' or 'datagridwidget-block')">
                 <div class="label">
                     <label tal:attributes="for widget/id">
                         <span i18n:translate=""
