@@ -1,5 +1,4 @@
-/* jslint browser: true */
-/* global jQuery */
+/*global window, console*/
 
 jQuery(function($) {
 
@@ -13,12 +12,12 @@ jQuery(function($) {
         /* Get the (first) input or select form element under the given node */
 
         var inputs = node.getElementsByTagName("input");
-        if (inputs.length > 0) {
+        if(inputs.length > 0) {
             return inputs[0];
         }
 
         var selects = node.getElementsByTagName("select");
-        if (selects.length > 0) {
+        if(selects.length > 0) {
             return selects[0];
         }
 
@@ -85,7 +84,7 @@ jQuery(function($) {
 
         var autoAppendMode = $(tbody).data("auto-append");
 
-        if ($thisRow.hasClass("minimum-row")) {
+        if($thisRow.hasClass("minimum-row")) {
             // The change event was not triggered on real AA row,
             // but on a minimum ensured row (row 0).
             // 1. Don't add new row
@@ -115,7 +114,7 @@ jQuery(function($) {
 
         dgf.trigger("beforeaddrowauto", [dgf, newtr]);
 
-        if (ensureMinimumRows) {
+        if(ensureMinimumRows) {
             // Add a special class so we can later deal with it
             $newtr.addClass("minimum-row");
             $newtr.insertBefore(thisRow);
@@ -124,8 +123,7 @@ jQuery(function($) {
         }
 
         // Re-enable auto-append change handler feature on the new auto-appended row
-        $(dgf).find('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell')
-            .bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
+        $(dgf).find('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
 
         dataGridField2Functions.reindexRow(tbody, newtr, 'AA');
 
@@ -144,8 +142,7 @@ jQuery(function($) {
 
         // fetch required data structure
         var tbody = this.getParentByClass(currnode, "datagridwidget-body");
-        var dgf = $(dataGridField2Functions.getParentByClass(currnode,
-            "datagridwidget-table-view"));
+        var dgf = $(dataGridField2Functions.getParentByClass(currnode, "datagridwidget-table-view"));
 
         var thisRow = this.getParentRow(currnode);
 
@@ -164,7 +161,7 @@ jQuery(function($) {
         }
 
         // Ensure minimum special behavior is no longer needed as we have now at least 2 rows
-        if (thisRow.hasClass("minimum-row")) {
+        if(thisRow.hasClass("minimum-row")) {
             this.supressEnsureMinimum(tbody);
         }
 
@@ -189,7 +186,7 @@ jQuery(function($) {
         // hidden template row
         var emptyRow = $(tbody).children('.datagridwidget-empty-row').first();
 
-        if (emptyRow.size() === 0) {
+        if(emptyRow.size() === 0) {
             // Ghetto assert()
             throw new Error("Could not locate empty template row in DGF");
         }
@@ -212,14 +209,18 @@ jQuery(function($) {
         }
     };
 
-    dataGridField2Functions.moveRow = function(currnode, direction) {
+    dataGridField2Functions.moveRow = function(currnode, direction){
         /* Move the given row down one */
         var nextRow;
+
         var dgf = $(dataGridField2Functions.getParentByClass(currnode, "datagridwidget-table-view"));
+
         var tbody = this.getParentByClass(currnode, "datagridwidget-body");
+
         var rows = this.getWidgetRows(currnode);
+
         var row = this.getParentRow(currnode);
-        if (!row) {
+        if(!row) {
             throw new Error("Couldn't find DataGridWidget row");
         }
 
@@ -228,49 +229,48 @@ jQuery(function($) {
         // We can't use nextSibling because of blank text nodes in some browsers
         // Need to find the index of the row
 
-        rows.each(function(i) {
-            if (this === row[0]) {
+        rows.each(function (i) {
+            if (this == row[0]) {
                 idx = i;
             }
         });
 
         // Abort if the current row wasn't found
-        if (idx === null) {
+        if (idx == null)
             return;
-        }
+
 
         // The up and down should cycle through the rows, excluding the auto-append and
         // empty-row rows.
         var validrows = 0;
-        rows.each(function(i) {
-            if (!$(this).hasClass('datagridwidget-empty-row') && !$(
-                this).hasClass('auto-append')) {
-                validrows += 1;
+        rows.each(function (i) {
+            if (!$(this).hasClass('datagridwidget-empty-row') && !$(this).hasClass('auto-append')) {
+                validrows+=1;
             }
         });
 
-        if (idx + 1 === validrows) {
-            if (direction === "down") {
+        if (idx+1 == validrows) {
+            if (direction == "down") {
                 this.moveRowToTop(row);
             } else {
-                nextRow = rows[idx - 1];
+                nextRow = rows[idx-1];
                 this.shiftRow(nextRow, row);
             }
 
         } else if (idx === 0) {
-            if (direction === "up") {
+            if (direction == "up") {
                 this.moveRowToBottom(row);
             } else {
-                nextRow = rows[parseInt(idx + 1, 10)];
+                nextRow = rows[parseInt(idx+1, 10)];
                 this.shiftRow(row, nextRow);
             }
 
         } else {
-            if (direction === "up") {
-                nextRow = rows[idx - 1];
+            if (direction == "up") {
+                nextRow = rows[idx-1];
                 this.shiftRow(nextRow, row);
             } else {
-                nextRow = rows[parseInt(idx + 1, 10)];
+                nextRow = rows[parseInt(idx+1, 10)];
                 this.shiftRow(row, nextRow);
             }
         }
@@ -280,32 +280,31 @@ jQuery(function($) {
         dgf.trigger("aftermoverow", [dgf, row]);
     };
 
-    dataGridField2Functions.moveRowDown = function(currnode) {
+    dataGridField2Functions.moveRowDown = function(currnode){
         this.moveRow(currnode, "down");
     };
 
-    dataGridField2Functions.moveRowUp = function(currnode) {
+    dataGridField2Functions.moveRowUp = function(currnode){
         this.moveRow(currnode, "up");
     };
 
-    dataGridField2Functions.shiftRow = function(bottom, top) {
+    dataGridField2Functions.shiftRow = function(bottom, top){
         /* Put node top before node bottom */
         $(top).insertBefore(bottom);
     };
 
-    dataGridField2Functions.moveRowToTop = function(row) {
+    dataGridField2Functions.moveRowToTop = function (row) {
         var rows = this.getWidgetRows(row);
         $(row).insertBefore(rows[0]);
     };
 
-    dataGridField2Functions.moveRowToBottom = function(row) {
+    dataGridField2Functions.moveRowToBottom = function (row) {
         var rows = this.getWidgetRows(row);
 
         // make sure we insert the directly above any auto appended rows
         var insert_after = 0;
-        rows.each(function(i) {
-            if (!$(this).hasClass('datagridwidget-empty-row') && !$(
-                this).hasClass('auto-append')) {
+        rows.each(function (i) {
+            if (!$(this).hasClass('datagridwidget-empty-row')  && !$(this).hasClass('auto-append')) {
                 insert_after = i;
             }
         });
@@ -332,7 +331,7 @@ jQuery(function($) {
      * @param  {DOM} row
      * @param  {Number} newindex
      */
-    dataGridField2Functions.reindexRow = function(tbody, row, newindex) {
+    dataGridField2Functions.reindexRow = function (tbody, row, newindex) {
         var name_prefix = $(tbody).data('name_prefix') + '.';
         var id_prefix = $(tbody).data('id_prefix') + '-';
         var $row = $(row);
@@ -359,19 +358,19 @@ jQuery(function($) {
             replaceIndex($(el), 'id', 'formfield-' + id_prefix);
         });
 
-        $row.find('[name^="' + name_prefix + '"]').each(function(i, el) {
+        $row.find('[name^="' + name_prefix +'"]').each(function(i, el) {
             replaceIndex($(el), 'name', name_prefix);
         });
 
-        $row.find('[id^="' + id_prefix + '"]').each(function(i, el) {
+        $row.find('[id^="' + id_prefix +'"]').each(function(i, el) {
             replaceIndex($(el), 'id', id_prefix);
         });
 
-        $row.find('[for^="' + id_prefix + '"]').each(function(i, el) {
+        $row.find('[for^="' + id_prefix +'"]').each(function(i, el) {
             replaceIndex($(el), 'for', id_prefix);
         });
 
-        $row.find('[href*="#' + id_prefix + '"]').each(function(i, el) {
+        $row.find('[href*="#' + id_prefix +'"]').each(function(i, el){
             replaceIndex($(el), 'href', '#' + id_prefix);
         });
 
@@ -389,9 +388,7 @@ jQuery(function($) {
      */
     dataGridField2Functions.supressEnsureMinimum = function(tbody) {
 
-        var autoAppendHandlers = $(tbody).find(
-            '.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell'
-        );
+        var autoAppendHandlers = $(tbody).find('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell');
         autoAppendHandlers.unbind('change.dgf');
 
         tbody.children().removeClass("auto-append");
@@ -411,8 +408,7 @@ jQuery(function($) {
      * @param  {Boolean} backwards iterate rows backwards
      * @param  {Boolean} ensureMinimumRows We have inserted a special auto-append row
      */
-    dataGridField2Functions.updateOrderIndex = function(tbody, backwards,
-        ensureMinimumRows) {
+    dataGridField2Functions.updateOrderIndex = function (tbody, backwards, ensureMinimumRows) {
 
         var $tbody = $(tbody);
         var name_prefix = $tbody.attr('data-name_prefix') + '.';
@@ -422,16 +418,15 @@ jQuery(function($) {
         var autoAppend = false;
 
         var rows = this.getRows(tbody);
-        for (i = 0; i < rows.length; i++) {
-            idx = backwards ? rows.length - i - 1 : i;
-            row = rows[idx],
-            $row = $(row);
+        for (i=0; i<rows.length; i++) {
+            idx = backwards ? rows.length-i-1 : i;
+            row = rows[idx], $row = $(row);
 
             if ($row.hasClass('datagridwidget-empty-row')) {
                 continue;
             }
 
-            if ($row.hasClass('auto-append')) {
+            if($row.hasClass('auto-append')) {
                 autoAppend = true;
             }
 
@@ -442,7 +437,7 @@ jQuery(function($) {
         // 1. Widget is empty
         // 2. We don't have AA mode turned on
         // 3. We need to have minimum editable row count of 1
-        if (ensureMinimumRows) {
+        if(ensureMinimumRows) {
             this.reindexRow(tbody, rows[0], "AA");
             autoAppend = true;
         }
@@ -452,29 +447,28 @@ jQuery(function($) {
         // AA handling is different once again
         var visibleRows = this.getVisibleRows(tbody);
 
-        for (i = 0; i < visibleRows.length; i++) {
-            row = visibleRows[i],
-            $row = $(row);
+        for (i=0; i<visibleRows.length; i++) {
+            row = visibleRows[i], $row = $(row);
 
-            if (i < visibleRows.length - 2) {
-                $nextRow = $(visibleRows[i + 1]);
+            if(i<visibleRows.length-2) {
+                $nextRow = $(visibleRows[i+1]);
             }
 
-            if (i === 0) {
+            if(i===0) {
                 $row.addClass("datagridfield-first-filled-row");
             } else {
                 $row.removeClass("datagridfield-first-filled-row");
             }
 
             // Last visible before AA
-            if (autoAppend) {
-                if ($nextRow && $nextRow.hasClass("auto-append")) {
+            if(autoAppend) {
+                if($nextRow && $nextRow.hasClass("auto-append")) {
                     $row.addClass("datagridfield-last-filled-row");
                 } else {
                     $row.removeClass("datagridfield-last-filled-row");
                 }
             } else {
-                if (i === visibleRows.length - 1) {
+                if(i==visibleRows.length-1) {
                     $row.addClass("datagridfield-last-filled-row");
                 } else {
                     $row.removeClass("datagridfield-last-filled-row");
@@ -489,18 +483,17 @@ jQuery(function($) {
         $tbody.attr("data-visible-count", this.getVisibleRows(tbody).length);
         $tbody.attr("data-many-rows", vis >= 2 ? "true" : "false");
 
-        $(document).find('input[name="' + name_prefix + 'count"]').each(
-            function() {
-                // do not include the TT and the AA rows in the count
-                var count = rows.length;
-                if ($(rows[count - 1]).hasClass('datagridwidget-empty-row')) {
-                    count--;
-                }
-                if ($(rows[count - 1]).hasClass('auto-append')) {
-                    count--;
-                }
-                this.value = count;
-            });
+        $(document).find('input[name="' + name_prefix + 'count"]').each(function(){
+            // do not include the TT and the AA rows in the count
+            var count = rows.length;
+            if ($(rows[count-1]).hasClass('datagridwidget-empty-row')) {
+                count--;
+            }
+            if ($(rows[count-1]).hasClass('auto-append')) {
+                count--;
+            }
+            this.value = count;
+        });
     };
 
     dataGridField2Functions.getParentElement = function(currnode, tagname) {
@@ -509,18 +502,17 @@ jQuery(function($) {
         tagname = tagname.toUpperCase();
         var parent = currnode.parentNode;
 
-        while (parent.tagName.toUpperCase() !== tagname) {
+        while(parent.tagName.toUpperCase() != tagname) {
             parent = parent.parentNode;
             // Next line is a safety belt
-            if (parent.tagName.toUpperCase() === "BODY") {
+            if(parent.tagName.toUpperCase() == "BODY")
                 return null;
-            }
         }
 
         return parent;
     };
 
-    dataGridField2Functions.getParentRow = function(node) {
+    dataGridField2Functions.getParentRow = function (node) {
         return this.getParentByClass(node, 'datagridwidget-row');
     };
 
@@ -546,25 +538,22 @@ jQuery(function($) {
      */
     dataGridField2Functions.getParentElementById = function(currnode, id) {
         /*
-         */
+        */
 
         id = id.toLowerCase();
         var parent = currnode.parentNode;
 
-        while (true) {
+        while(true) {
 
             var parentId = parent.getAttribute("id");
-            if (parentId) {
-                if (parentId.toLowerCase().substring(0, id.length) === id) {
-                    break;
-                }
+            if(parentId) {
+                 if(parentId.toLowerCase().substring(0, id.length) == id) break;
             }
 
             parent = parent.parentNode;
             // Next line is a safety belt
-            if (parent.tagName.toUpperCase() === "BODY") {
+            if(parent.tagName.toUpperCase() == "BODY")
                 return null;
-            }
         }
 
         return parent;
@@ -600,9 +589,10 @@ jQuery(function($) {
     dataGridField2Functions.ensureMinimumRows = function(tbody) {
         var rows = this.getRows(tbody);
         var filteredRows = this.getVisibleRows(tbody);
+        var self = this;
 
         // Rows = 0 -> make one AA row available
-        if (filteredRows.length === 0) {
+        if(filteredRows.length === 0) {
             // XXX: make the function call signatures more sane
             var child = rows[0];
             this.autoInsertRow(child, true);
@@ -631,7 +621,7 @@ jQuery(function($) {
             $this.data("auto-append", aa);
 
             // Hint CSS
-            if (aa) {
+            if(aa) {
                 $this.addClass("datagridwidget-body-auto-append");
             } else {
                 $this.addClass("datagridwidget-body-non-auto-append");
@@ -639,17 +629,14 @@ jQuery(function($) {
 
             dataGridField2Functions.updateOrderIndex(this, false);
 
-            if (!aa) {
+            if(!aa) {
                 dataGridField2Functions.ensureMinimumRows(this);
             }
         });
 
         // Bind the handlers to the auto append rows
         // Use namespaced jQuery events to avoid unbind() conflicts later on
-        $(
-            '.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell'
-        ).bind("change.dgf", $.proxy(dataGridField2Functions.onInsert,
-            dataGridField2Functions));
+        $('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
 
         $(document).trigger("afterdatagridfieldinit");
     };
@@ -659,4 +646,6 @@ jQuery(function($) {
 
     // Export module for customizers to mess around
     window.dataGridField2Functions = dataGridField2Functions;
+
+
 });
