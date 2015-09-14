@@ -192,6 +192,17 @@ jQuery(function($) {
         }
 
         var new_row = emptyRow.clone(true).removeClass('datagridwidget-empty-row');
+        
+        // Verifies if there's select2 fields to clone
+        $(new_row.find('.select2-container')).each(function() {
+            var data = $(this).data('select2');
+            if (data != undefined) {
+                var element = data.opts.element.clone(false);
+                data.opts.element = element;
+                $(this).attr("id", "");
+                $(this).select2(data.opts);
+            }
+        });
 
         return new_row;
     };
