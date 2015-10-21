@@ -198,9 +198,21 @@ jQuery(function($) {
             var data = $(this).data('select2');
             if (data != undefined) {
                 var element = data.opts.element.clone(false);
-                data.opts.element = element;
-                $(this).attr("id", "");
-                $(this).select2(data.opts);
+
+                // Switch between BlockDataGridField or DataGridField
+                var parent = $(this).parents('.datagridwidget-block');
+                if (!parent.length) {
+                    var parent = $(this).parents('.datagridwidget-cell');
+                }
+
+                // Do not include previous generated elements
+                parent.children().not('div.label').remove();
+                element.attr("value", "");
+                parent.append(element);
+
+
+                // Re-initialise widgets
+                $(document).trigger('init-widgets', [{element: parent}]);
             }
         });
 
