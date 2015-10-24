@@ -242,7 +242,7 @@ Examples are in the package `collective.z3cform.datagridfield_demo <https://gith
 See also
 ========
 
-* https://github.com/miohtama/collective.z3cform.dgftreeselect
+* https://github.com/collective/collective.z3cform.dgftreeselect
 
 * https://github.com/collective/collective.z3cform.widgets/
 
