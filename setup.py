@@ -38,6 +38,7 @@ setup(name='collective.z3cform.datagridfield',
           'test': [
               'plone.app.testing',
               'collective.z3cform.datagridfield_demo',
+              'unittest2',
           ]
       },
       entry_points="""
