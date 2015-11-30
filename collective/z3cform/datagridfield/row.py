@@ -3,7 +3,7 @@
 """
 
 from zope.interface import implements
-from zope.schema.interfaces import WrongContainedType
+from zope.schema.interfaces import WrongContainedType, IChoice
 from zope.schema import Object, Field
 from zope.schema import getFields
 
@@ -41,7 +41,13 @@ class DictRow(Object):
 
         # Pass 2 - Ensure fields are valid
         for field_name, field_type in getFields(self.schema).items():
-            field_type.validate(value[field_name])
+            if IChoice.providedBy(field_type):
+                # Choice must be bound before validation otherwise
+                # IContextSourceBinder is not iterable in validation
+                bound = field_type.bind(value)
+                bound.validate(value[field_name])
+            else:
+                field_type.validate(value[field_name])
 
     def set(self, object, value):
         # Override Object field logic
