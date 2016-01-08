@@ -9,7 +9,7 @@
 
 # from five import grok
 
-from zope.interface import Interface
+from zope.interface import Interface, implements
 from zope.component import adapts
 import zope.interface
 
@@ -66,18 +66,18 @@ class AutoExtensibleSubForm(AutoExtensibleForm, ObjectSubForm):
         super(AutoExtensibleSubForm, self).updateFields()
 
 
-@zope.interface.implementer(ISubformFactory)
 class AutoExtensibleSubformAdapter(object):
     """Most basic-default subform factory adapter"""
-    zope.component.adapts(Interface, #widget value
-                          IFormLayer,    #request
-                          Interface, #widget context
-                          IAutoExtensibleForm, #form
-                          IObjectWidget, #widget
-                          Interface, #field
-                          Interface) #field.schema
+    adapts(Interface,   # widget value
+           IFormLayer,  # request
+           Interface,   # widget context
+           IAutoExtensibleForm,  # form
+           IObjectWidget,  # widget
+           Interface,   # field
+           Interface)   # field.schema
+    implements(ISubformFactory)
 
-    factory = AutoExtensibleForm
+    factory = AutoExtensibleSubForm
 
 
 # XXX: The following controversial and may have side effects.
