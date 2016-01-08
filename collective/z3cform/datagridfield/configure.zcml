@@ -96,4 +96,13 @@
         />
   </configure>
 
+  <adapter
+      factory=".autoform.AutoExtensibleSubformAdapter"
+      />
+  <adapter
+      factory=".autoform.MultipleErrorViewSnippetWithMessage"
+      trusted="True"
+      permission="zope.Public"
+      />
+
 </configure>

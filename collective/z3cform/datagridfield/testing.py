@@ -10,9 +10,9 @@ class Fixture(PloneSandboxLayer):
 
     def setUpZope(self, app, configurationContext):
 
-        import five.grok
-        xmlconfig.file('meta.zcml', five.grok,
-                       context=configurationContext)
+        # import five.grok
+        # xmlconfig.file('meta.zcml', five.grok,
+        #                context=configurationContext)
 
         import collective.z3cform.datagridfield
         xmlconfig.file(
