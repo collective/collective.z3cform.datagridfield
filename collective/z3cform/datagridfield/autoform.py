@@ -66,7 +66,7 @@ class AutoExtensibleSubForm(AutoExtensibleForm, ObjectSubForm):
         super(AutoExtensibleSubForm, self).updateFields()
 
 
-class AutoExtensibleSubformAdapter(object):
+class AutoExtensibleSubformAdapter(SubformAdapter):
     """Most basic-default subform factory adapter"""
     adapts(Interface,   # widget value
            IFormLayer,  # request
