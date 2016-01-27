@@ -7,9 +7,11 @@
 """
 
 
-from five import grok
+# from five import grok
 
-from zope.interface import Interface
+from zope.interface import Interface, implements
+from zope.component import adapts
+import zope.interface
 
 from plone.autoform.interfaces import IAutoExtensibleForm
 from plone.autoform.form import AutoExtensibleForm
@@ -64,15 +66,17 @@ class AutoExtensibleSubForm(AutoExtensibleForm, ObjectSubForm):
         super(AutoExtensibleSubForm, self).updateFields()
 
 
-class AutoExtensibleSubformAdapter(SubformAdapter, grok.MultiAdapter):
-    grok.provides(ISubformFactory)
-    grok.adapts(Interface,   # widget value
-                IFormLayer,  # request
-                Interface,   # widget context
-                IAutoExtensibleForm,  # form
-                IObjectWidget,  # widget
-                Interface,   # field
-                Interface)   # field.schema
+class AutoExtensibleSubformAdapter(SubformAdapter):
+    """Most basic-default subform factory adapter"""
+    adapts(Interface,   # widget value
+           IFormLayer,  # request
+           Interface,   # widget context
+           IAutoExtensibleForm,  # form
+           IObjectWidget,  # widget
+           Interface,   # field
+           Interface)   # field.schema
+    implements(ISubformFactory)
+
     factory = AutoExtensibleSubForm
 
 
@@ -81,9 +85,10 @@ class AutoExtensibleSubformAdapter(SubformAdapter, grok.MultiAdapter):
 # error within a subform seem to be rendered both for
 # the subform and for the individual field.
 
-class MultipleErrorViewSnippetWithMessage(MultipleErrorViewSnippet,
-                                          grok.MultiAdapter):
-    grok.adapts(IMultipleErrors, None, None, None, IAutoExtensibleForm, None)
+
+class MultipleErrorViewSnippetWithMessage(MultipleErrorViewSnippet):
+    adapts(
+        IMultipleErrors, None, None, None, IAutoExtensibleForm, None)
 
     def render(self):
         return Message(u"There were some errors.", domain="z3c.form")

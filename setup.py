@@ -24,9 +24,9 @@ setup(name='collective.z3cform.datagridfield',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'five.grok',
+          #'five.grok',
           'plone.app.z3cform',
-          'plone.directives.form',
+          #'plone.directives.form',
           'setuptools',
           'z3c.form >=2.4.3dev',
           'zope.component',
@@ -37,7 +37,7 @@ setup(name='collective.z3cform.datagridfield',
       extras_require={
           'test': [
               'plone.app.testing',
-              'collective.z3cform.datagridfield_demo',
+              # 'collective.z3cform.datagridfield_demo',
               'unittest2',
           ]
       },
