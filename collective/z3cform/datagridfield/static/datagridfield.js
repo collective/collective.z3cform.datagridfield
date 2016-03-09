@@ -599,7 +599,7 @@ jQuery(function($) {
             return true;
         }
         return false;
-    },
+    };
 
 
     /**
@@ -647,5 +647,31 @@ jQuery(function($) {
     // Export module for customizers to mess around
     window.dataGridField2Functions = dataGridField2Functions;
 
+    /* Mockup and patternslib integration */
+    if (window.require !== undefined) {
+        var addRowHandlers = function(registry) {
+            $(document).on('afteraddrow afteraddrowauto', '.datagridwidget-table-view', function (ev, dgf, row) {
+                var $disabled_pat_widgets = row.find('[class*="pat-disabled-"]');
+                $.each($disabled_pat_widgets, function(i, $el) {
+                    $el = $($el);
+                    $.each($el.attr('class').split(' '), function(j, className) {
+                        if (className.indexOf('pat-disabled-') === 0) {
+                            var activated_class = className.replace(/-disabled/, '');
+                            $el.removeClass(className).addClass(activated_class);
+                            var pattern_options = $el.attr('data-' + className);
+                            $el.attr('data-' + activated_class, pattern_options);
+                            $el.attr('data-' + className, '');
+                        }
+                    });
+                });
+                registry.scan(row);
+            });
+        };
+        require(['pat-registry'], addRowHandlers,
+            function (err) {
+                require(['mockup-registry'], addRowHandlers);
+            }
+        );
+    }
 
 });

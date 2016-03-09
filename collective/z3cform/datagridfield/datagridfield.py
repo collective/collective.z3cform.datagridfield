@@ -125,6 +125,14 @@ class DataGridField(MultiWidget):
             zope.interface.alsoProvides(
                 widget, interfaces.IFormAware)
         widget.update()
+        if idx == 'TT' and getattr(widget, 'subform', None):
+            # Disable pattern scanning on any pattern-based widgets
+            subform = widget.subform
+            for wname in subform.widgets:
+                subwidget = subform.widgets[wname]
+                if getattr(subwidget, 'pattern', None) is not None:
+                    subwidget.pattern = 'disabled-' + subwidget.pattern
+
         return widget
 
     def name_prefix(self):
