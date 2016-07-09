@@ -181,6 +181,20 @@ jQuery(function($) {
         // update orderindex hidden fields
         this.updateOrderIndex(tbody, true);
 
+        // check if row has any date picker with mockup pattern datepicker
+        // need special handling to load
+        if($(newtr).find('.pat-pickadate').length){
+            require([
+                'jquery',
+                'pat-registry'
+            ], function($, Registry) {
+                    Registry.scan($(newtr).find('.pat-pickadate'));
+
+            });
+        }
+        
+        
+
         dgf.trigger("afteraddrow", [dgf, newtr]);
 
     };
@@ -204,9 +218,11 @@ jQuery(function($) {
             throw new Error("Could not locate empty template row in DGF");
         }
 
-        var markup = emptyRow.clone(true);
+        var markup = emptyRow.clone();
 
         var newTr = markup.attr("class","datagridwidget-row");
+        jQuery(newTr).find('.pattern-pickadate-wrapper').remove();
+        jQuery(newTr).find('.pat-pickadate').attr('style', '');
 
         return newTr[0];
     };
