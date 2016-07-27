@@ -18,7 +18,9 @@ install:
   - mkdir -p buildout-cache/downloads
   - python bootstrap.py -c travis.cfg annotate
   - virtualenv .
-  - bin/pip install --upgrade pip setuptools zc.buildout
+  - export SETUPTOOLS_SPEC=`python bootstrap.py -c travis.cfg annotate | grep 'setuptools= ' | sed 's/= /==/'`
+  - export BUILDOUT_SPEC=`python bootstrap.py -c travis.cfg annotate | grep 'zc.buildout= ' | sed 's/= /==/'`
+  - bin/pip install --upgrade pip SETUPTOOLS_SPEC BUILDOUT_SPEC
   - bin/buildout -qNc travis.cfg
 before_script:
   - export DISPLAY=:99.0
