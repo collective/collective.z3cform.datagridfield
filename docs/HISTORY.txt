@@ -7,6 +7,7 @@ Changelog
 - Allow deletion of last row in non-auto-append mode.
   [gaudenz]
 - fixed binding for IChoice fields during validation [djay]
+- plone 5 compatibility
 
 
 1.1 (2014-07-25)

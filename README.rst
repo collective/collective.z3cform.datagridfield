@@ -2,7 +2,7 @@ Introduction
 ============
 
 This module provides a z3c.form version of the `Products.DataGridField <http://plone.org/products/datagridfield>`_ . This product
-was developed for use with Plone4 and Dexterity.
+was developed for use with Plone4/5 and Dexterity.
 
 .. image:: https://travis-ci.org/collective/collective.z3cform.datagridfield.png
    :target: http://travis-ci.org/collective/collective.z3cform.datagridfield
@@ -13,7 +13,7 @@ was developed for use with Plone4 and Dexterity.
 Requirements
 ============
 
-* Plone 4
+* Plone 4 or Plone 5
 * z3c.forms
 * A browser with javascript support
 * jquery 1.4.3 or later
