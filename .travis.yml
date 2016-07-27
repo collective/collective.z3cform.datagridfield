@@ -19,7 +19,7 @@ install:
   - python bootstrap.py -c travis.cfg annotate
   - virtualenv .
   - bin/pip install --upgrade pip setuptools zc.buildout
-  - bin/buildout -qNc -t 20 travis.cfg
+  - bin/buildout -qNc travis.cfg
 before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
