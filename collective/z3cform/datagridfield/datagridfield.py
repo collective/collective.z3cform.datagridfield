@@ -209,29 +209,6 @@ class GridDataConverter(BaseDataConverter):
 
 # ------------[ Support for each line ]-----------------------------------------
 
-class DataGridFieldObject(ObjectWidget):
-
-    def isInsertEnabled(self):
-        return self.__parent__.allow_insert
-
-    def isDeleteEnabled(self):
-        return self.__parent__.allow_delete
-
-    def isReorderEnabled(self):
-        return self.__parent__.allow_reorder
-
-    def portal_url(self):
-        return self.__parent__.context.portal_url()
-
-    @apply
-    def value():
-        """I have moved this code from z3c/form/object.py because I
-           want to allow a field to handle a sub-set of the schema. I
-           filter on the subform.fields
-        """
-        return property(datagrid_field_get, datagrid_field_set)
-
-
 def datagrid_field_get(self):
     # value (get) cannot raise an exception, then we return
     # insane values
@@ -266,6 +243,29 @@ def datagrid_field_set(self, value):
             if name in active_names:
                 self.applyValue(self.subform.widgets[name],
                                 value.get(name, interfaces.NO_VALUE))
+
+
+class DataGridFieldObject(ObjectWidget):
+
+    def isInsertEnabled(self):
+        return self.__parent__.allow_insert
+
+    def isDeleteEnabled(self):
+        return self.__parent__.allow_delete
+
+    def isReorderEnabled(self):
+        return self.__parent__.allow_reorder
+
+    def portal_url(self):
+        return self.__parent__.context.portal_url()
+
+    @apply
+    def value():
+        """I have moved this code from z3c/form/object.py because I
+           want to allow a field to handle a sub-set of the schema. I
+           filter on the subform.fields
+        """
+        return property(datagrid_field_get, datagrid_field_set)
 
 
 @zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
