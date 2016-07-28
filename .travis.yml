@@ -1,5 +1,10 @@
 language: python
 python: 2.7
+sudo: false
+cache:
+  pip: true
+  directories:
+    - $HOME/buildout-cache
 env:
   - PLONE_VERSION=4.2
   - PLONE_VERSION=4.3
@@ -15,12 +20,13 @@ matrix:
       env: PLONE_VERSION=4.0
 install:
   - sed -ie "s#travis-4.x.cfg#travis-$PLONE_VERSION.x.cfg#" travis.cfg
-  - mkdir -p buildout-cache/downloads
-  - python bootstrap.py -c travis.cfg annotate
+  - mkdir -p buildout-cache/{eggs,downloads}
   - virtualenv .
-  - export SETUPTOOLS_SPEC=`bin/python bootstrap.py -c travis.cfg annotate | grep 'setuptools= ' | sed 's/= /==/'`
-  - export BUILDOUT_SPEC=`bin/python bootstrap.py -c travis.cfg annotate | grep 'zc.buildout= ' | sed 's/= /==/'`
-  - bin/pip install --upgrade pip $SETUPTOOLS_SPEC $BUILDOUT_SPEC
+  - bin/pip install --upgrade pip zc.buildout
+  - bin/buildout -c travis.cfg annotate | grep -E 'setuptools= |zc.buildout= ' | sed 's/= /==/' > requirements.txt
+  - cat requirements.txt
+  - bin/pip install --upgrade -r requrements.txt
+  - bin/buildout bootstrap.py -c travis.cfg annotate
   - bin/buildout -qNc travis.cfg
 before_script:
   - export DISPLAY=:99.0
