@@ -25,7 +25,7 @@ install:
   - bin/pip install --upgrade pip zc.buildout
   - bin/buildout -c travis.cfg annotate | grep -E 'setuptools= |zc.buildout= ' | sed 's/= /==/' > requirements.txt
   - cat requirements.txt
-  - bin/pip install --upgrade -r requrements.txt
+  - bin/pip install --upgrade -r requirements.txt
   - bin/buildout bootstrap.py -c travis.cfg annotate
   - bin/buildout -qNc travis.cfg
 before_script:
