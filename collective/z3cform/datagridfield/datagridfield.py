@@ -29,8 +29,7 @@ from interfaces import IDataGridField
 
 try:
     # support plone.autoform directives within the row schema
-    import plone.autoform
-    from autoform import AutoExtensibleSubForm as ObjectSubForm
+    from pautoform import AutoExtensibleSubForm as ObjectSubForm
     from autoform import AutoExtensibleSubformAdapter as SubformAdapter
 except ImportError:
     # Plain z3c ObjectSubForm support
@@ -38,7 +37,7 @@ except ImportError:
     from z3c.form.object import SubformAdapter
 
 
-#------------[ Main Widget ]-----------------------------------------------
+# ------------[ Main Widget ]-----------------------------------------------
 
 class DataGridField(MultiWidget):
     """This grid should be applied to an schema.List item which has
@@ -101,7 +100,7 @@ class DataGridField(MultiWidget):
                 widget.setErrors = True
         else:
             widget = zope.component.getMultiAdapter((valueType, self.request),
-                interfaces.IFieldWidget)
+                                                    interfaces.IFieldWidget)
 
         return widget
 
@@ -119,7 +118,7 @@ class DataGridField(MultiWidget):
 
         widget.mode = self.mode
         widget.klass = 'datagridwidget-row'
-        #set widget.form (objectwidget needs this)
+        # set widget.form (objectwidget needs this)
         if interfaces.IFormAware.providedBy(self):
             widget.form = self.form
             zope.interface.alsoProvides(
@@ -140,8 +139,8 @@ class DataGridField(MultiWidget):
             # these are not "real" elements of the MultiWidget
             # and confuse updateWidgets method if len(self.widgets) changes
             # This is relevant for nested datagridfields.
-            self.widgets = [ w for w in self.widgets
-                             if not (w.id.endswith('AA') or w.id.endswith('TT')) ]
+            self.widgets = [w for w in self.widgets
+                            if not (w.id.endswith('AA') or w.id.endswith('TT'))]
 
         # if the field has configuration data set - copy it
         super(DataGridField, self).updateWidgets()
@@ -208,7 +207,7 @@ class GridDataConverter(BaseDataConverter):
         return value
 
 
-#------------[ Support for each line ]-----------------------------------------
+# ------------[ Support for each line ]-----------------------------------------
 
 class DataGridFieldObject(ObjectWidget):
 
@@ -230,41 +229,43 @@ class DataGridFieldObject(ObjectWidget):
            want to allow a field to handle a sub-set of the schema. I
            filter on the subform.fields
         """
+        return property(datagrid_field_get, datagrid_field_set)
 
-        def get(self):
-            # value (get) cannot raise an exception, then we return
-            # insane values
+
+def datagrid_field_get(self):
+    # value (get) cannot raise an exception, then we return
+    # insane values
+    try:
+        return self.extract()
+    except MultipleErrors:
+        value = {}
+        active_names = self.subform.fields.keys()
+        for name in getFieldNames(self.field.schema):
+            if name not in active_names:
+                continue
+            widget = self.subform.widgets[name]
+            widget_value = widget.value
             try:
-                return self.extract()
-            except MultipleErrors:
-                value = {}
-                active_names = self.subform.fields.keys()
-                for name in getFieldNames(self.field.schema):
-                    if name in active_names:
-                        widget = self.subform.widgets[name]
-                        widget_value = widget.value
-                        try:
-                            converter = interfaces.IDataConverter(widget)
-                            value[name] = converter.toFieldValue(widget_value)
-                        except (FormatterValidationError,
-                                zope.schema.interfaces.ValidationError,
-                                ValueError):
-                            value[name] = widget_value
-                return value
+                converter = interfaces.IDataConverter(widget)
+                value[name] = converter.toFieldValue(widget_value)
+            except (FormatterValidationError,
+                    zope.schema.interfaces.ValidationError,
+                    ValueError):
+                value[name] = widget_value
+    return value
 
-        def set(self, value):
-            self._value = value
-            self.updateWidgets()
 
-            # ensure that we apply our new values to the widgets
-            if value is not interfaces.NO_VALUE:
-                active_names = self.subform.fields.keys()
-                for name in getFieldNames(self.field.schema):
-                    if name in active_names:
-                        self.applyValue(self.subform.widgets[name],
-                                    value.get(name, interfaces.NO_VALUE))
+def datagrid_field_set(self, value):
+    self._value = value
+    self.updateWidgets()
 
-        return property(get, set)
+    # ensure that we apply our new values to the widgets
+    if value is not interfaces.NO_VALUE:
+        active_names = self.subform.fields.keys()
+        for name in getFieldNames(self.field.schema):
+            if name in active_names:
+                self.applyValue(self.subform.widgets[name],
+                                value.get(name, interfaces.NO_VALUE))
 
 
 @zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
@@ -274,7 +275,7 @@ def DataGridFieldObjectFactory(field, request):
     return FieldWidget(field, DataGridFieldObject(request))
 
 
-#------------[ Form to draw the line ]-----------------------------------------
+# ------------[ Form to draw the line ]-----------------------------------------
 
 
 class DataGridFieldObjectSubForm(ObjectSubForm):
@@ -356,11 +357,11 @@ class DataGridValidator(SimpleFieldValidator):
     """
     zope.interface.implements(IValidator)
     zope.component.adapts(
-              zope.interface.Interface,
-              zope.interface.Interface,
-              zope.interface.Interface,  # Form
-              IList,                     # field
-              DataGridField)             # widget
+        zope.interface.Interface,
+        zope.interface.Interface,
+        zope.interface.Interface,  # Form
+        IList,                     # field
+        DataGridField)             # widget
 
     def validate(self, value, force=False):
         """

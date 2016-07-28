@@ -36,7 +36,6 @@ class AutoExtensibleSubForm(AutoExtensibleForm, ObjectSubForm):
         pass
 
     def updateWidgets(self):
-        #AutoExtensibleForm.updateWidgets(self)
         ObjectSubForm.updateWidgets(self)
 
     def update(self):

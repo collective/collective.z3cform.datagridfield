@@ -1,4 +1,5 @@
-from transmogrify.dexterity.interfaces import ISerializer, IDeserializer
+from transmogrify.dexterity.converters import DefaultSerializer
+from transmogrify.dexterity.interfaces import ISerializer
 
 from zope.component import adapts
 from zope.interface import implements
@@ -6,6 +7,7 @@ from zope.interface import implements
 from row import DictRow
 
 from zope.schema import getFields
+
 
 class DictRowSerializer:
     """Serializer to allow transmogrify.dexterity to write the dict. A custom
@@ -17,8 +19,9 @@ class DictRowSerializer:
     def __init__(self, field):
         self.field = field
 
-    def _serializer(self,field_type):
-        if field_type is not None: return ISerializer(field_type)
+    def _serializer(self, field_type):
+        if field_type is not None:
+                return ISerializer(field_type)
         return DefaultSerializer()
 
     def __call__(self, value, filestore, extra=None):

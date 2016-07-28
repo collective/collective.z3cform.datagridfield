@@ -39,6 +39,7 @@ setup(name='collective.z3cform.datagridfield',
               'plone.app.testing',
               'collective.z3cform.datagridfield_demo',
               'unittest2',
+              'transmogrify.dexterity',
           ]
       },
       entry_points="""
