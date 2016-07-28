@@ -23,10 +23,10 @@ install:
   - mkdir -p buildout-cache/{eggs,downloads}
   - virtualenv .
   - bin/pip install --upgrade pip zc.buildout
-  - bin/buildout -c travis.cfg annotate | grep -E 'setuptools= |zc.buildout= ' | sed 's/= /==/' > requirements.txt
+  - bin/buildout -c travis.cfg annotate | tee annotate.txt | grep -E 'setuptools= |zc.buildout= ' | sed 's/= /==/' > requirements.txt
+  - cat annotate.txt
   - cat requirements.txt
   - bin/pip install --upgrade -r requirements.txt
-  - bin/buildout bootstrap.py -c travis.cfg annotate
   - bin/buildout -qNc travis.cfg
 before_script:
   - export DISPLAY=:99.0
