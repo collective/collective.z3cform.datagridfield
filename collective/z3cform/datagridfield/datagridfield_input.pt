@@ -34,6 +34,14 @@
   </tal:block>
 </tbody>
 </table>
+<script type="text/javascript">
+  jQuery(document).ready(function($) {
+    
+    if(jQuery('.plone-modal-content').length > 0){
+      dataGridField2Functions.init();
+    }
+  });
+</script>
 <input type="hidden" tal:replace="structure view/counterMarker" />
 </html>
 
