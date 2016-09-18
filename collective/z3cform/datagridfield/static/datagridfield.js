@@ -76,7 +76,8 @@ jQuery(function($) {
      */
     dataGridField2Functions.onInsert = function(e) {
         var currnode = window.event ? window.event.srcElement : e.currentTarget;
-        this.autoInsertRow(currnode);
+        // disabled auto insert totally
+        //this.autoInsertRow(currnode);
     },
 
     /**
