@@ -38,7 +38,7 @@
   jQuery(document).ready(function($) {
     
     if(jQuery('.plone-modal-content').length > 0){
-      dataGridField2Functions.init();
+      dataGridField2Functions.init_me('formfield-${view/id_prefix}');
     }
   });
 </script>

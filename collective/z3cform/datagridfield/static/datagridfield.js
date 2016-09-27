@@ -76,8 +76,8 @@ jQuery(function($) {
      */
     dataGridField2Functions.onInsert = function(e) {
         var currnode = window.event ? window.event.srcElement : e.currentTarget;
-        // disabled auto insert totally
-        //this.autoInsertRow(currnode);
+        this.autoInsertRow(currnode);
+        //console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaa')
     },
 
     /**
@@ -706,6 +706,48 @@ jQuery(function($) {
 
 
     $(document).ready(dataGridField2Functions.init);
+
+
+    /**
+     * When plone-modal-content is loaded it will trigger this function from the datagridfield_input.pt
+     */
+    dataGridField2Functions.init_me = function(fieldId) {
+
+        // Reindex all rows to get proper row classes on them
+
+        $("#"+fieldId + ' .datagridwidget-body').each(function() {
+
+            // Initialize widget data on <tbody>
+            // We keep some mode attributes around
+            var $this = $(this);
+            var aa;
+
+            // Check if this widget is in auto-append mode
+            // and store for later usage
+            aa = $this.children(".auto-append").size() > 0;
+            $this.data("auto-append", aa);
+
+            // Hint CSS
+            if(aa) {
+                $this.addClass("datagridwidget-body-auto-append");
+            } else {
+                $this.addClass("datagridwidget-body-non-auto-append");
+            }
+
+            dataGridField2Functions.updateOrderIndex(this, false);
+
+            if(!aa) {
+                dataGridField2Functions.ensureMinimumRows(this);
+            }
+            // Bind the handlers to the auto append rows
+            // Use namespaced jQuery events to avoid unbind() conflicts later on
+            $this.find('.auto-append > .datagridwidget-cell, .auto-append > .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
+
+        });
+
+      
+        //$(document).trigger("afterdatagridfieldinit");
+    };
 
     // Export module for customizers to mess around
     window.dataGridField2Functions = dataGridField2Functions;
