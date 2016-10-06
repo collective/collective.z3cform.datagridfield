@@ -31,6 +31,11 @@ class DictRow(Object):
         # Pass 1 - ensure fields are present
         if value is NO_VALUE:
             return
+        # Treat readonly fields
+        for field_name in getFields(self.schema).keys():
+            field = self.schema[field_name]
+            if field.readonly:
+                value[field_name] = field.default
         errors = []
         for field_name in getFields(self.schema).keys():
             if field_name not in value:
