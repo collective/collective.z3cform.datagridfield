@@ -28,11 +28,14 @@ from plone.app.z3cform.interfaces import IPloneFormLayer
 from interfaces import IDataGridField
 
 try:
-    # support plone.autoform directives within the row schema
-    from pautoform import AutoExtensibleSubForm as ObjectSubForm
-    from autoform import AutoExtensibleSubformAdapter as SubformAdapter
+    from plone import autoform as has_autoform  # noqa # pylint: disable=unused-import
 except ImportError:
-    # Plain z3c ObjectSubForm support
+    has_autoform = None
+if has_autoform:
+    # support plone.autoform directives within the row schema
+    from autoform import AutoExtensibleSubForm as ObjectSubForm
+    from autoform import AutoExtensibleSubformAdapter as SubformAdapter
+else:
     from z3c.form.object import ObjectSubForm
     from z3c.form.object import SubformAdapter
 
