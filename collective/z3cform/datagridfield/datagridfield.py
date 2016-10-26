@@ -29,7 +29,7 @@ from interfaces import IDataGridField
 
 try:
     # support plone.autoform directives within the row schema
-    from pautoform import AutoExtensibleSubForm as ObjectSubForm
+    from autoform import AutoExtensibleSubForm as ObjectSubForm
     from autoform import AutoExtensibleSubformAdapter as SubformAdapter
 except ImportError:
     # Plain z3c ObjectSubForm support
