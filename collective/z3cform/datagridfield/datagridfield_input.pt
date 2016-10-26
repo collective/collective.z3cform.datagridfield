@@ -37,5 +37,12 @@
 </tbody>
 </table>
 <input type="hidden" tal:replace="structure view/counterMarker" />
+
+<script type="text/javascript">
+    $().ready(function() {
+        dataGridField2Functions.init('${view/id_prefix}');
+    });
+</script>
+
 </html>
 

@@ -601,51 +601,33 @@ jQuery(function($) {
         return false;
     },
 
+    dataGridField2Functions.init = function(table_id) {
+        var $datagrid_tbody = $('#' + table_id).find('tbody');
+        var datagrid_tbody = $datagrid_tbody[0];
+        var auto_append = $datagrid_tbody.find(".auto-append").length > 0;
 
-    /**
-     * When DOM model is ready execute this actions to wire up page logic.
-     */
-    dataGridField2Functions.init = function() {
+        // Indicate to the data grid that auto append is enabled
+        $datagrid_tbody.data("auto-append", auto_append);
 
-        // Reindex all rows to get proper row classes on them
-        $(".datagridwidget-body").each(function() {
+        // Hint CSS
+        if(auto_append) {
+            $datagrid_tbody.addClass("datagridwidget-body-auto-append");
+        } else {
+            $datagrid_tbody.addClass("datagridwidget-body-non-auto-append");
+        }
 
-            // Initialize widget data on <tbody>
-            // We keep some mode attributes around
-            var $this = $(this);
-            var aa;
+        dataGridField2Functions.updateOrderIndex(datagrid_tbody, false);
 
-            // Check if this widget is in auto-append mode
-            // and store for later usage
-            aa = $this.children(".auto-append").size() > 0;
-            $this.data("auto-append", aa);
-
-            // Hint CSS
-            if(aa) {
-                $this.addClass("datagridwidget-body-auto-append");
-            } else {
-                $this.addClass("datagridwidget-body-non-auto-append");
-            }
-
-            dataGridField2Functions.updateOrderIndex(this, false);
-
-            if(!aa) {
-                dataGridField2Functions.ensureMinimumRows(this);
-            }
-        });
+        if(!auto_append) {
+            dataGridField2Functions.ensureMinimumRows(datagrid_tbody);
+        }
 
         // Bind the handlers to the auto append rows
         // Use namespaced jQuery events to avoid unbind() conflicts later on
-        $('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
-
-        $(document).trigger("afterdatagridfieldinit");
+        $datagrid_tbody.find('.auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell').bind("change.dgf", $.proxy(dataGridField2Functions.onInsert, dataGridField2Functions));
     };
-
-
-    $(document).ready(dataGridField2Functions.init);
 
     // Export module for customizers to mess around
     window.dataGridField2Functions = dataGridField2Functions;
-
 
 });
