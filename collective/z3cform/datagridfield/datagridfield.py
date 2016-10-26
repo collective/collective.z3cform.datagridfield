@@ -28,7 +28,7 @@ from plone.app.z3cform.interfaces import IPloneFormLayer
 from interfaces import IDataGridField
 
 try:
-    from plone import autoform as has_autoform  # noqa # pylint: disable=unused-import
+    from plone import autoform as has_autoform
 except ImportError:
     has_autoform = None
 if has_autoform:
