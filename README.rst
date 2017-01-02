@@ -35,40 +35,67 @@ Example usage
 This piece of code demonstrates a schema which has a table within it.
 The layout of the table is defined by a second schema.::
 
-    from zope import schema
-    from zope import interface
-    from plone.directives import form
-    from z3c.form.form import extends
-    from z3c.form import field
-
     from collective.z3cform.datagridfield import DataGridFieldFactory, DictRow
 
+    from plone.supermodel import model
+    from plone.autoform.form import AutoExtensibleForm
 
-    class ITableRowSchema(interface.Interface):
+    from zope import schema
+    from z3c.form import field, button, form
+
+
+    class ITableRowSchema(model.Schema):
         one = schema.TextLine(title=u"One")
         two = schema.TextLine(title=u"Two")
         three = schema.TextLine(title=u"Three")
 
 
-    class IFormSchema(interface.Interface):
+    class IFormSchema(model.Schema):
         four = schema.TextLine(title=u"Four")
-        table = schema.List(title=u"Table",
-            value_type=DictRow(title=u"tablerow", schema=ITableRowSchema))
+
+        table = schema.List(
+                title=u"Table",
+                default=[],
+                value_type=DictRow(
+                        title=u"Rows",
+                        schema=ITableRowSchema,
+                    ),
+                required=False,
+            )
 
 
-    class EditForm(form.EditForm):
-        extends(form.EditForm)
+    class MyForm(AutoExtensibleForm, form.Form):
+        """ Define Form handling
 
-        grok.context(IFormSchema)
-        grok.require('zope2.View')
+        This form can be accessed as http://yoursite/@@my-form
+
+        """
+        schema = IFormSchema
+        ignoreContext = True
+
         fields = field.Fields(IFormSchema)
-        label=u"Demo Usage of DataGridField"
-
         fields['table'].widgetFactory = DataGridFieldFactory
 
-You can also use grok'ed forms where you subclass the schema
-from ``plone.directives.form.SchemaForm`` and declare
-widgets witin the schema using ``form.widget()``.
+        label = u"Example"
+        description = u"Simple, sample form"
+
+        @button.buttonAndHandler(u'Ok')
+        def handleApply(self, action):
+            data, errors = self.extractData()
+            if errors:
+                self.status = self.formErrorsMessage
+                return
+
+            # Do something with valid data here
+
+            # Set status on this form page
+            # (this status message is not bind to the session and does not go thru redirects)
+            self.status = "Thank you very much!"
+
+        @button.buttonAndHandler(u"Cancel")
+        def handleCancel(self, action):
+            """User cancelled. Redirect back to the front page.
+            """
 
 Also it can be used from a supermodel xml::
 
@@ -106,7 +133,7 @@ The widget can be customised via the updateWidgets method.
 ::
 
     def updateWidgets(self):
-        super(EditForm, self).updateWidgets()
+        super(MyForm, self).updateWidgets()
         self.widgets['table'].allow_insert = False # Enable/Disable the insert button on the right
         self.widgets['table'].allow_delete = False # Enable/Disable the delete button on the right
         self.widgets['table'].auto_append = False  # Enable/Disable the auto-append feature
@@ -130,7 +157,7 @@ Example::
     class EditForm9(EditForm):
         label = u'Rendering widgets as blocks instead of cells'
 
-        grok.name('demo-collective.z3cform.datagrid-block-edit')
+        ...
 
         def update(self):
             # Set a custom widget for a field for this form instance only
@@ -163,9 +190,7 @@ Here is an example how one can customize per-field widgets for the data grid fie
     from zope import interface
     from Products.CMFCore.interfaces import ISiteRoot
 
-    from five import grok
-
-    from plone.directives import form
+    from plone.autoform import directives as form
 
     from collective.z3cform.datagridfield import DataGridFieldFactory, DictRow
     from .widget import DGFTreeSelectFieldWidget
@@ -173,10 +198,10 @@ Here is an example how one can customize per-field widgets for the data grid fie
 
     class ITableRowSchema(form.Schema):
 
-        form.widget(one=DGFTreeSelectFieldWidget)
+        form.widget('one', DGFTreeSelectFieldWidget)
         one = schema.TextLine(title=u"Level 1")
 
-        form.widget(two=DGFTreeSelectFieldWidget)
+        form.widget('two', DGFTreeSelectFieldWidget)
         two = schema.TextLine(title=u"Level 2")
 
         # Uses the default widget
