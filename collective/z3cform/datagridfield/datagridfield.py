@@ -8,6 +8,7 @@ import zope.component
 import zope.schema.interfaces
 from zope.schema import getFieldsInOrder, getFieldNames
 from zope.schema.interfaces import IObject, IList
+from Acquisition import aq_parent
 
 from z3c.form.browser.object import ObjectWidget
 
@@ -35,9 +36,11 @@ if has_autoform:
     # support plone.autoform directives within the row schema
     from autoform import AutoExtensibleSubForm as ObjectSubForm
     from autoform import AutoExtensibleSubformAdapter as SubformAdapter
+    from plone.autoform.interfaces import MODES_KEY
 else:
     from z3c.form.object import ObjectSubForm
     from z3c.form.object import SubformAdapter
+    MODES_KEY = None
 
 
 # ------------[ Main Widget ]-----------------------------------------------
@@ -70,14 +73,25 @@ class DataGridField(MultiWidget):
             definitions.
         """
         self._field = value
+        schema = self._field.value_type.schema
+
+        fieldmodes = {}
+        if MODES_KEY:
+            try:
+                modes_tags = schema.getTaggedValue(MODES_KEY)
+            except KeyError:
+                pass
+            else:
+                for __, fieldname, mode in modes_tags:
+                    fieldmodes[fieldname] = mode
 
         self.columns = []
-        for name, field in getFieldsInOrder(self._field.value_type.schema):
+        for name, field in getFieldsInOrder(schema):
             col = {
                 'name': name,
                 'label': field.title,
                 'required': field.required,
-                'mode': None,
+                'mode': fieldmodes.get(name, None),
             }
             self.columns.append(col)
 
@@ -273,6 +287,16 @@ class DataGridFieldObject(ObjectWidget):
            filter on the subform.fields
         """
         return property(datagrid_field_get, datagrid_field_set)
+
+    def updateWidgets(self, *args, **kwargs):
+        super(DataGridFieldObject, self).updateWidgets(*args, **kwargs)
+
+        # Tell the "cell"-widget the "mode" of it's column,
+        # so that plone.autoform.directives.mode works on the cell.
+        for column_info in aq_parent(self).columns:
+            if column_info['mode'] is None:
+                continue
+            self.subform.widgets[column_info['name']].mode = column_info['mode']
 
 
 @zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
