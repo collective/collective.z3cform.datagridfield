@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.2.1 (unreleased)
+------------------
+
+- Nothing changed yet.
+
+
 1.2 (2017-03-08)
 ----------------
 - Fix validation exception on readonly fields.
