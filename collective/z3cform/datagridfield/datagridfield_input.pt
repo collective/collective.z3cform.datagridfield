@@ -10,8 +10,9 @@
   <tr>
     <tal:block repeat="column view/columns">
       <th class="header"
-          tal:attributes="class string:header cell-${repeat/column/number}"
-         tal:condition="python:column['mode'] != 'hidden'">
+          tal:define="cssclass string:header cell-${repeat/column/number};
+                      cssclass python: cssclass + (column['mode'] == 'hidden' and ' datagridwidget-hidden-data' or '')"
+          tal:attributes="class cssclass">
             <span i18n:translate=""
                 tal:content="column/label">title</span>
             <span class="required"
