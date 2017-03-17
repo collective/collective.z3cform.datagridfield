@@ -10,6 +10,9 @@ Changelog
 
 - Cleanup: utf8 headers, isort, code-style. [jensens]
 
+- Remove dependency on plone.directives.form in setup.py,
+  it was not used any longer. [jensens]
+
 
 1.2 (2017-03-08)
 ----------------

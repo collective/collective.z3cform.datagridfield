@@ -11,17 +11,20 @@ from z3c.form.browser.object import ObjectWidget
 from z3c.form.converter import BaseDataConverter
 from z3c.form.converter import FormatterValidationError
 from z3c.form.error import MultipleErrors
+from z3c.form.interfaces import IFormLayer
 from z3c.form.interfaces import INPUT_MODE
 from z3c.form.interfaces import IValidator
 from z3c.form.validator import SimpleFieldValidator
 from z3c.form.widget import FieldWidget
+from zope.component import adapter
+from zope.interface import alsoProvides
+from zope.interface import implementer
+from zope.interface import Interface
 from zope.schema import getFieldNames
 from zope.schema import getFieldsInOrder
 from zope.schema.interfaces import IList
 from zope.schema.interfaces import IObject
 
-import zope.component
-import zope.interface
 import zope.schema.interfaces
 
 
@@ -42,11 +45,10 @@ else:
 
 # ------------[ Main Widget ]-----------------------------------------------
 
+@implementer(IDataGridField)
 class DataGridField(MultiWidget):
     """This grid should be applied to an schema.List item which has
     schema.Object and an interface"""
-
-    zope.interface.implements(IDataGridField)
 
     allow_insert = True
     allow_delete = True
@@ -108,13 +110,12 @@ class DataGridField(MultiWidget):
 
         if IObject.providedBy(valueType):
             widget = DataGridFieldObjectFactory(valueType, self.request)
-            if idx in ['TT', 'AA']:
-                widget.setErrors = False
-            else:
-                widget.setErrors = True
+            widget.setErrors = idx not in ['TT', 'AA']
         else:
-            widget = zope.component.getMultiAdapter((valueType, self.request),
-                                                    interfaces.IFieldWidget)
+            widget = zope.component.getMultiAdapter(
+                (valueType, self.request),
+                interfaces.IFieldWidget
+            )
 
         return widget
 
@@ -135,8 +136,10 @@ class DataGridField(MultiWidget):
         # set widget.form (objectwidget needs this)
         if interfaces.IFormAware.providedBy(self):
             widget.form = self.form
-            zope.interface.alsoProvides(
-                widget, interfaces.IFormAware)
+            alsoProvides(
+                widget,
+                interfaces.IFormAware
+            )
         widget.update()
         return widget
 
@@ -153,8 +156,10 @@ class DataGridField(MultiWidget):
             # these are not "real" elements of the MultiWidget
             # and confuse updateWidgets method if len(self.widgets) changes
             # This is relevant for nested datagridfields.
-            self.widgets = [w for w in self.widgets
-                            if not (w.id.endswith('AA') or w.id.endswith('TT'))]
+            self.widgets = [
+                w for w in self.widgets
+                if not (w.id.endswith('AA') or w.id.endswith('TT'))
+            ]
 
         # if the field has configuration data set - copy it
         super(DataGridField, self).updateWidgets()
@@ -201,17 +206,16 @@ class DataGridField(MultiWidget):
             return not name.endswith('AA') and not name.endswith('TT')
 
 
-@zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
-@zope.interface.implementer(interfaces.IFieldWidget)
+@adapter(zope.schema.interfaces.IField, IFormLayer)
+@implementer(interfaces.IFieldWidget)
 def DataGridFieldFactory(field, request):
     """IFieldWidget factory for DataGridField."""
     return FieldWidget(field, DataGridField(request))
 
 
+@adapter(zope.schema.interfaces.IList, IDataGridField)
 class GridDataConverter(BaseDataConverter):
     """Convert between the context and the widget"""
-
-    zope.component.adapts(zope.schema.interfaces.IList, IDataGridField)
 
     def toWidgetValue(self, value):
         """Simply pass the data through with no change"""
@@ -221,7 +225,7 @@ class GridDataConverter(BaseDataConverter):
         return value
 
 
-# ------------[ Support for each line ]-----------------------------------------
+# ------------[ Support for each line ]---------------------------------------
 
 def datagrid_field_get(self):
     # value (get) cannot raise an exception, then we return
@@ -293,17 +297,19 @@ class DataGridFieldObject(ObjectWidget):
         for column_info in aq_parent(self).columns:
             if column_info['mode'] is None:
                 continue
-            self.subform.widgets[column_info['name']].mode = column_info['mode']
+            self.subform.widgets[
+                column_info['name']
+            ].mode = column_info['mode']
 
 
 @zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
-@zope.interface.implementer(interfaces.IFieldWidget)
+@implementer(interfaces.IFieldWidget)
 def DataGridFieldObjectFactory(field, request):
     """IFieldWidget factory for DataGridField."""
     return FieldWidget(field, DataGridFieldObject(request))
 
 
-# ------------[ Form to draw the line ]-----------------------------------------
+# ------------[ Form to draw the line ]---------------------------------------
 
 
 class DataGridFieldObjectSubForm(ObjectSubForm):
@@ -361,21 +367,30 @@ class DataGridFieldObjectSubForm(ObjectSubForm):
         return rv
 
 
+@adapter(
+    Interface,  # widget value
+    IPloneFormLayer,           # request
+    Interface,  # widget context
+    Interface,  # form
+    DataGridFieldObject,       # widget
+    Interface,  # field
+    Interface,  # field.schema
+)
+@implementer(interfaces.ISubformFactory)
 class DataGridFieldSubformAdapter(SubformAdapter):
     """Give it my local class of subform, rather than the default"""
-
-    zope.interface.implements(interfaces.ISubformFactory)
-    zope.component.adapts(zope.interface.Interface,  # widget value
-                          IPloneFormLayer,           # request
-                          zope.interface.Interface,  # widget context
-                          zope.interface.Interface,  # form
-                          DataGridFieldObject,       # widget
-                          zope.interface.Interface,  # field
-                          zope.interface.Interface)  # field.schema
 
     factory = DataGridFieldObjectSubForm
 
 
+@implementer(IValidator)
+@adapter(
+    Interface,
+    Interface,
+    Interface,  # Form
+    IList,                     # field
+    DataGridField,             # widgets
+)
 class DataGridValidator(SimpleFieldValidator):
     """
         I am crippling this validator - I return a list of
@@ -383,13 +398,6 @@ class DataGridValidator(SimpleFieldValidator):
         return type is not of the correct object type. For stronger
         typing replace both this and the converter
     """
-    zope.interface.implements(IValidator)
-    zope.component.adapts(
-        zope.interface.Interface,
-        zope.interface.Interface,
-        zope.interface.Interface,  # Form
-        IList,                     # field
-        DataGridField)             # widget
 
     def validate(self, value, force=False):
         """

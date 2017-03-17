@@ -2,17 +2,17 @@
 from row import DictRow
 from transmogrify.dexterity.converters import DefaultSerializer
 from transmogrify.dexterity.interfaces import ISerializer
-from zope.component import adapts
-from zope.interface import implements
+from zope.component import adapter
+from zope.interface import implementer
 from zope.schema import getFields
 
 
+@adapter(DictRow)
+@implementer(ISerializer)
 class DictRowSerializer:
     """Serializer to allow transmogrify.dexterity to write the dict. A custom
     deserializer doesn't seem to be necessary.
     """
-    implements(ISerializer)
-    adapts(DictRow)
 
     def __init__(self, field):
         self.field = field

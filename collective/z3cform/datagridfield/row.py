@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    Code an concept coutesy of Martin Aspeli
+    Code an concept courtesy of Martin Aspeli
 """
 from interfaces import AttributeNotFoundError
 from interfaces import IRow

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 
-    Taken from http://pydoc.net/jyu.formwidget.object/1.0b7/jyu.formwidget.object.autoform
+    Taken from
+    http://pydoc.net/jyu.formwidget.object/1.0b7/jyu.formwidget.object.autoform
 
-    Adds subform support for plone.autoform and plone.form.directives.
+    Adds subform support for plone.autoform.
 
 """
 from five import grok
