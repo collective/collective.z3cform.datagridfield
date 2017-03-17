@@ -1,32 +1,29 @@
+# -*- coding: utf-8 -*-
 """
     Implementation of the widget
 """
-
-
-import zope.interface
-import zope.component
-import zope.schema.interfaces
-from zope.schema import getFieldsInOrder, getFieldNames
-from zope.schema.interfaces import IObject, IList
 from Acquisition import aq_parent
-
-from z3c.form.browser.object import ObjectWidget
-
-from z3c.form.error import MultipleErrors
-
-
-from z3c.form.browser.multi import MultiWidget
+from interfaces import IDataGridField
+from plone.app.z3cform.interfaces import IPloneFormLayer
 from z3c.form import interfaces
-
-from z3c.form.interfaces import IValidator, INPUT_MODE
-from z3c.form.widget import FieldWidget
+from z3c.form.browser.multi import MultiWidget
+from z3c.form.browser.object import ObjectWidget
 from z3c.form.converter import BaseDataConverter
 from z3c.form.converter import FormatterValidationError
+from z3c.form.error import MultipleErrors
+from z3c.form.interfaces import INPUT_MODE
+from z3c.form.interfaces import IValidator
 from z3c.form.validator import SimpleFieldValidator
+from z3c.form.widget import FieldWidget
+from zope.schema import getFieldNames
+from zope.schema import getFieldsInOrder
+from zope.schema.interfaces import IList
+from zope.schema.interfaces import IObject
 
-from plone.app.z3cform.interfaces import IPloneFormLayer
+import zope.component
+import zope.interface
+import zope.schema.interfaces
 
-from interfaces import IDataGridField
 
 try:
     from plone import autoform as has_autoform

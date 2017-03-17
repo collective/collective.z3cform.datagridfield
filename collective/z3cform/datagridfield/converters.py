@@ -1,11 +1,9 @@
+# -*- coding: utf-8 -*-
+from row import DictRow
 from transmogrify.dexterity.converters import DefaultSerializer
 from transmogrify.dexterity.interfaces import ISerializer
-
 from zope.component import adapts
 from zope.interface import implements
-
-from row import DictRow
-
 from zope.schema import getFields
 
 
@@ -28,5 +26,11 @@ class DictRowSerializer:
         """Create a new dict with all the contents serialized"""
         rv = {}
         for field_name, field_type in getFields(self.field.schema).items():
-            rv[field_name] = self._serializer(field_type)(value.get(field_name), filestore, field_name)
+            rv[field_name] = self._serializer(
+                field_type
+            )(
+                value.get(field_name),
+                filestore,
+                field_name
+            )
         return rv

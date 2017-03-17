@@ -1,16 +1,16 @@
+# -*- coding: utf-8 -*-
 """
     Code an concept coutesy of Martin Aspeli
 """
-
-from zope.interface import implements
-from zope.schema.interfaces import WrongContainedType, IChoice
-from zope.schema import Object, Field
-from zope.schema import getFields
-
-from z3c.form.interfaces import NO_VALUE
-
-from interfaces import IRow
 from interfaces import AttributeNotFoundError
+from interfaces import IRow
+from z3c.form.interfaces import NO_VALUE
+from zope.interface import implements
+from zope.schema import Field
+from zope.schema import getFields
+from zope.schema import Object
+from zope.schema.interfaces import IChoice
+from zope.schema.interfaces import WrongContainedType
 
 
 class DictRow(Object):

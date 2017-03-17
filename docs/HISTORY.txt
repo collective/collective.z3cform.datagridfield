@@ -8,6 +8,8 @@ Changelog
 
 - Bugfix: do not try to update readonly fields. [jone]
 
+- Cleanup: utf8 headers, isort, code-style. [jensens]
+
 
 1.2 (2017-03-08)
 ----------------

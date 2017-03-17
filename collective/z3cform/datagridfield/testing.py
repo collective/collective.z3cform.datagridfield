@@ -1,6 +1,7 @@
-from plone.app.testing import PloneSandboxLayer
-from plone.app.testing import PLONE_FIXTURE
+# -*- coding: utf-8 -*-
 from plone.app.testing import FunctionalTesting
+from plone.app.testing import PLONE_FIXTURE
+from plone.app.testing import PloneSandboxLayer
 from zope.configuration import xmlconfig
 
 

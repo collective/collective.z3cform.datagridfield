@@ -1,13 +1,13 @@
-import zope.interface
-import zope.component
-import zope.schema.interfaces
-from zope.schema.interfaces import IObject
-
-from z3c.form import interfaces
-from z3c.form.widget import FieldWidget
-
+# -*- coding: utf-8 -*-
 from .datagridfield import DataGridField
 from .datagridfield import DataGridFieldObject
+from z3c.form import interfaces
+from z3c.form.widget import FieldWidget
+from zope.schema.interfaces import IObject
+
+import zope.component
+import zope.interface
+import zope.schema.interfaces
 
 
 class BlockDataGridField(DataGridField):

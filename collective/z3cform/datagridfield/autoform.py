@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 
     Taken from http://pydoc.net/jyu.formwidget.object/1.0b7/jyu.formwidget.object.autoform
@@ -5,22 +6,19 @@
     Adds subform support for plone.autoform and plone.form.directives.
 
 """
-
-
 from five import grok
-
-from zope.interface import Interface
-
-from plone.autoform.interfaces import IAutoExtensibleForm
 from plone.autoform.form import AutoExtensibleForm
-
+from plone.autoform.interfaces import IAutoExtensibleForm
 from z3c.form import action
-from z3c.form.interfaces import\
-    ISubformFactory, IFormLayer, IObjectWidget, IMultipleErrors
 from z3c.form.error import MultipleErrorViewSnippet
-from z3c.form.object import ObjectSubForm, SubformAdapter
-
+from z3c.form.interfaces import IFormLayer
+from z3c.form.interfaces import IMultipleErrors
+from z3c.form.interfaces import IObjectWidget
+from z3c.form.interfaces import ISubformFactory
+from z3c.form.object import ObjectSubForm
+from z3c.form.object import SubformAdapter
 from zope.i18nmessageid import Message
+from zope.interface import Interface
 
 
 class AutoExtensibleSubForm(AutoExtensibleForm, ObjectSubForm):
