@@ -16,7 +16,7 @@ install:
   - bin/buildout -Nc travis.cfg buildout:download-cache=downloads annotate | tee annotate.txt | grep -E 'setuptools= |zc.buildout= ' | sed 's/= /==/' > requirements.txt
   - cat annotate.txt
   - cat requirements.txt
-  - bin/pip install --upgrade -r requirements.txt
+  - pip install --upgrade -r requirements.txt
   - bin/buildout -qNc travis.cfg buildout:download-cache=downloads
 before_script:
   - export DISPLAY=:99.0
