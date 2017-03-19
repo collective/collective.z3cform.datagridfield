@@ -6,7 +6,7 @@
       >
 
     <tal:block tal:repeat="widget view/subform/widgets/values">
-      <td tal:attributes="class python:('cell-%d ' % repeat['widget'].number()) + (widget.mode == 'hidden' and 'datagridwidget-hidden-data' or 'datagridwidget-cell')">
+      <td tal:attributes="class python:('cell-%d ' % repeat['widget'].number()) + ('datagridwidget-hidden-data' if widget.mode == 'hidden' else 'datagridwidget-cell')">
         <div tal:condition="widget/error"
              tal:replace="structure widget/error/render">error</div>
         <div tal:replace="structure widget/render" />

@@ -25,8 +25,11 @@ from zope.schema import getFieldsInOrder
 from zope.schema.interfaces import IList
 from zope.schema.interfaces import IObject
 
+import logging
+import lxml
 import zope.schema.interfaces
 
+logger = logging.getLogger(__name__)
 
 try:
     from plone import autoform as has_autoform
@@ -267,6 +270,8 @@ def datagrid_field_set(self, value):
                                 value.get(name, interfaces.NO_VALUE))
 
 
+PAT_XPATH = "//*[contains(concat(' ', normalize-space(@class), ' '), ' pat-')]"
+
 class DataGridFieldObject(ObjectWidget):
 
     def isInsertEnabled(self):
@@ -301,8 +306,27 @@ class DataGridFieldObject(ObjectWidget):
                 column_info['name']
             ].mode = column_info['mode']
 
+    def render(self):
+        """See z3c.form.interfaces.IWidget."""
+        html = super(DataGridFieldObject, self).render()
+        if (
+            'datagridwidget-empty-row' in self.klass #or
+            #'auto-append' in  self.klass
+        ):
+            # deactivate patterns
+            fragments = lxml.html.fragments_fromstring(html)
+            html = ''
+            for tree in fragments:
+                for el in tree.xpath(PAT_XPATH):
+                    el.attrib['class'] = el.attrib['class'].replace(
+                        'pat-',
+                        'dgw-disabled-pat-'
+                    )
+                html += lxml.html.tostring(tree) + '\n'
+        return html
 
-@zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
+
+@adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
 @implementer(interfaces.IFieldWidget)
 def DataGridFieldObjectFactory(field, request):
     """IFieldWidget factory for DataGridField."""

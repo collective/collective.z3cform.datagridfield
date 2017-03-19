@@ -13,6 +13,9 @@ Changelog
 - Remove dependency on plone.directives.form in setup.py,
   it was not used any longer. [jensens]
 
+- Feature/Fix: Support widgets using patternslib in a DictRow.
+  [jensens]
+
 
 1.2 (2017-03-08)
 ----------------

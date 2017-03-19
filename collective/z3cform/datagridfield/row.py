@@ -5,7 +5,7 @@
 from interfaces import AttributeNotFoundError
 from interfaces import IRow
 from z3c.form.interfaces import NO_VALUE
-from zope.interface import implements
+from zope.interface import implementer
 from zope.schema import Field
 from zope.schema import getFields
 from zope.schema import Object
@@ -13,9 +13,9 @@ from zope.schema.interfaces import IChoice
 from zope.schema.interfaces import WrongContainedType
 
 
+@implementer(IRow)
 class DictRow(Object):
     __doc__ = IRow.__doc__
-    implements(IRow)
     _type = dict
 
     def __init__(self, schema, **kw):

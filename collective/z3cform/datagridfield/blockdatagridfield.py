@@ -12,7 +12,8 @@ import zope.schema.interfaces
 
 class BlockDataGridField(DataGridField):
     """
-    Render edit mode widgets in blocks (vertical) instead of cells (horizontal).
+    Render edit mode widgets in blocks (vertical) instead of cells
+    (horizontal).
     """
 
     klass = "blockdatagridfield"
@@ -29,7 +30,10 @@ class BlockDataGridField(DataGridField):
             else:
                 widget.setErrors = True
         else:
-            widget = zope.component.getMultiAdapter((valueType, self.request), interfaces.IFieldWidget)
+            widget = zope.component.getMultiAdapter(
+                (valueType, self.request),
+                interfaces.IFieldWidget
+            )
 
         return widget
 
