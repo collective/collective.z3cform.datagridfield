@@ -7,7 +7,7 @@ setup(name='collective.z3cform.datagridfield',
       version=version,
       description="Version of DataGridField for use with Dexterity / z3c.form",
       long_description=open("README.rst").read() + "\n" +
-                       open("CHANGES.rst")).read(),
+                       open("CHANGES.rst").read(),
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
