@@ -1,99 +1,81 @@
 <configure
+    i18n_domain="collective.z3cform.datagridfield"
     xmlns="http://namespaces.zope.org/zope"
-    xmlns:five="http://namespaces.zope.org/five"
-    xmlns:i18n="http://namespaces.zope.org/i18n"
-    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    xmlns:z3c="http://namespaces.zope.org/z3c"
     xmlns:browser="http://namespaces.zope.org/browser"
-    xmlns:zcml="http://namespaces.zope.org/zcml"
-    i18n_domain="collective.z3cform.datagridfield">
-
-    <!-- Include configuration for dependencies listed in setup.py -->
-    <includeDependencies package="." />
-
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:z3c="http://namespaces.zope.org/z3c"
+    xmlns:zcml="http://namespaces.zope.org/zcml">
+  <!-- Include configuration for dependencies listed in setup.py -->
+  <includeDependencies package="." />
   <genericsetup:registerProfile
-      name="default"
-      title="Data grid field for z3c.form"
-      directory="profiles/default"
       description=""
+      directory="profiles/default"
+      name="default"
       provides="Products.GenericSetup.interfaces.EXTENSION"
-      />
-
+      title="Data grid field for z3c.form"
+  />
   <!-- -*- extra stuff goes here -*- -->
   <class class=".datagridfield.DataGridField">
-        <require
-            permission="zope.Public"
-            interface=".datagridfield.IDataGridField"
-            />
+    <require
+        interface=".datagridfield.IDataGridField"
+        permission="zope.Public"
+    />
   </class>
-
   <browser:resourceDirectory
-        name="collective.z3cform.datagridfield"
-        directory="static"
-        />
-
+      directory="static"
+      name="collective.z3cform.datagridfield"
+  />
+  <adapter factory=".autoform.AutoExtensibleSubformAdapter" />
+  <adapter factory=".autoform.MultipleErrorViewSnippetWithMessage" />
+  <adapter factory=".datagridfield.GridDataConverter" />
+  <adapter factory=".datagridfield.DataGridFieldSubformAdapter" />
+  <adapter factory=".datagridfield.DataGridValidator" />
   <adapter
-        factory=".datagridfield.GridDataConverter"
-        />
-  <adapter
-        factory=".datagridfield.DataGridFieldSubformAdapter"
-        />
-  <adapter
-        factory=".datagridfield.DataGridValidator"
-        />
-
-  <adapter factory=".converters.DictRowSerializer"
-        zcml:condition="installed transmogrify.dexterity"
-        />
-
+      factory=".converters.DictRowSerializer"
+      zcml:condition="installed transmogrify.dexterity"
+  />
   <z3c:widgetTemplate
-        mode="input"
-        widget=".datagridfield.DataGridField"
-        layer="plone.app.z3cform.interfaces.IPloneFormLayer"
-        template="datagridfield_input.pt"
-        />
-
-  <z3c:widgetTemplate
-        mode="input"
-        widget=".blockdatagridfield.BlockDataGridField"
-        layer="plone.app.z3cform.interfaces.IPloneFormLayer"
-        template="datagridfield_input_block.pt"
-        />
-
-  <z3c:widgetTemplate
-      mode="input"
-      widget=".datagridfield.DataGridFieldObject"
       layer="plone.app.z3cform.interfaces.IPloneFormLayer"
+      mode="input"
+      template="datagridfield_input.pt"
+      widget=".datagridfield.DataGridField"
+  />
+  <z3c:widgetTemplate
+      layer="plone.app.z3cform.interfaces.IPloneFormLayer"
+      mode="input"
+      template="datagridfield_input_block.pt"
+      widget=".blockdatagridfield.BlockDataGridField"
+  />
+  <z3c:widgetTemplate
+      layer="plone.app.z3cform.interfaces.IPloneFormLayer"
+      mode="input"
       template="datagridfieldobject_input.pt"
-      />
-
-  <z3c:widgetTemplate
-      mode="input"
-      widget=".blockdatagridfield.BlockDataGridFieldObject"
-      layer="plone.app.z3cform.interfaces.IPloneFormLayer"
-      template="datagridfieldobject_input_block.pt"
-      />
-
-  <z3c:widgetTemplate
-        mode="display"
-        widget=".datagridfield.DataGridField"
-        layer="plone.app.z3cform.interfaces.IPloneFormLayer"
-        template="datagridfield_display.pt"
-        />
-
-  <z3c:widgetTemplate
-      mode="display"
       widget=".datagridfield.DataGridFieldObject"
+  />
+  <z3c:widgetTemplate
       layer="plone.app.z3cform.interfaces.IPloneFormLayer"
+      mode="input"
+      template="datagridfieldobject_input_block.pt"
+      widget=".blockdatagridfield.BlockDataGridFieldObject"
+  />
+  <z3c:widgetTemplate
+      layer="plone.app.z3cform.interfaces.IPloneFormLayer"
+      mode="display"
+      template="datagridfield_display.pt"
+      widget=".datagridfield.DataGridField"
+  />
+  <z3c:widgetTemplate
+      layer="plone.app.z3cform.interfaces.IPloneFormLayer"
+      mode="display"
       template="datagridfieldobject_display.pt"
-      />
-
-
+      widget=".datagridfield.DataGridFieldObject"
+  />
   <configure zcml:condition="installed plone.supermodel">
     <utility
         component=".supermodel.DictRowHandler"
         name="collective.z3cform.datagridfield.DictRow"
-        />
+    />
   </configure>
-
 </configure>

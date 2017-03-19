@@ -7,7 +7,6 @@
     Adds subform support for plone.autoform.
 
 """
-from five import grok
 from plone.autoform.form import AutoExtensibleForm
 from plone.autoform.interfaces import IAutoExtensibleForm
 from z3c.form import action
@@ -18,7 +17,9 @@ from z3c.form.interfaces import IObjectWidget
 from z3c.form.interfaces import ISubformFactory
 from z3c.form.object import ObjectSubForm
 from z3c.form.object import SubformAdapter
+from zope.component import adapter
 from zope.i18nmessageid import Message
+from zope.interface import implementer
 from zope.interface import Interface
 
 
@@ -46,8 +47,6 @@ class AutoExtensibleSubForm(AutoExtensibleForm, ObjectSubForm):
         # call chain work correctly with
         # both zope.interface.Interface schemas
         # and plone.directives.form.SchemaForm schemas.
-        # This might not be 100% but worked when tested with
-        # plain and grokked form.
         rowSchema = self.__parent__.field.schema
 
         if u'plone.autoform.widgets' in rowSchema.getTaggedValueTags():
@@ -62,15 +61,17 @@ class AutoExtensibleSubForm(AutoExtensibleForm, ObjectSubForm):
         super(AutoExtensibleSubForm, self).updateFields()
 
 
-class AutoExtensibleSubformAdapter(SubformAdapter, grok.MultiAdapter):
-    grok.provides(ISubformFactory)
-    grok.adapts(Interface,   # widget value
-                IFormLayer,  # request
-                Interface,   # widget context
-                IAutoExtensibleForm,  # form
-                IObjectWidget,  # widget
-                Interface,   # field
-                Interface)   # field.schema
+@adapter(
+    Interface,   # widget value
+    IFormLayer,  # request
+    Interface,   # widget context
+    IAutoExtensibleForm,  # form
+    IObjectWidget,  # widget
+    Interface,   # field
+    Interface    # field.schema
+)
+@implementer(ISubformFactory)
+class AutoExtensibleSubformAdapter(SubformAdapter):
     factory = AutoExtensibleSubForm
 
 
@@ -79,9 +80,7 @@ class AutoExtensibleSubformAdapter(SubformAdapter, grok.MultiAdapter):
 # error within a subform seem to be rendered both for
 # the subform and for the individual field.
 
-class MultipleErrorViewSnippetWithMessage(MultipleErrorViewSnippet,
-                                          grok.MultiAdapter):
-    grok.adapts(IMultipleErrors, None, None, None, IAutoExtensibleForm, None)
-
+@adapter(IMultipleErrors, None, None, None, IAutoExtensibleForm, None)
+class MultipleErrorViewSnippetWithMessage(MultipleErrorViewSnippet):
     def render(self):
         return Message(u"There were some errors.", domain="z3c.form")

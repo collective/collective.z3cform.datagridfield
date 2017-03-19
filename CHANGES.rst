@@ -16,6 +16,9 @@ Changelog
 - Feature/Fix: Support widgets using patternslib in a DictRow.
   [jensens]
 
+- Fix: #36 remove grok from all documentation since grok is no longer supported.
+  [jensens]
+
 
 1.2 (2017-03-08)
 ----------------
