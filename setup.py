@@ -13,7 +13,7 @@ setup(name='collective.z3cform.datagridfield',
       classifiers=[
         "Framework :: Plone",
         "Programming Language :: Python",
-        ],
+      ],
       keywords='Plone, Dexterity, z3c.form',
       author='Kevin Gill',
       author_email='kevin@movieextras.ie',

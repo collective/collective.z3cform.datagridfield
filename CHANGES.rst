@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.1 (unreleased)
+1.3.0 (unreleased)
 ------------------
 
 - Set widget mode on cell widget in order to support autoform mode directive. [jone]
@@ -17,6 +17,9 @@ Changelog
   [jensens]
 
 - Fix: #36 remove grok from all documentation since grok is no longer supported.
+  [jensens]
+
+- Copy relevant parts of ObjectSubform from z3c.form 3.2.10 over here, it was removed in later versions.
   [jensens]
 
 

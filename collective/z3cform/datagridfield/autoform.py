@@ -10,20 +10,19 @@
 from plone.autoform.form import AutoExtensibleForm
 from plone.autoform.interfaces import IAutoExtensibleForm
 from z3c.form import action
+from z3c.form import form
 from z3c.form.error import MultipleErrorViewSnippet
 from z3c.form.interfaces import IFormLayer
 from z3c.form.interfaces import IMultipleErrors
 from z3c.form.interfaces import IObjectWidget
 from z3c.form.interfaces import ISubformFactory
-from z3c.form.object import ObjectSubForm
-from z3c.form.object import SubformAdapter
 from zope.component import adapter
 from zope.i18nmessageid import Message
 from zope.interface import implementer
 from zope.interface import Interface
 
 
-class AutoExtensibleSubForm(AutoExtensibleForm, ObjectSubForm):
+class AutoExtensibleSubForm(AutoExtensibleForm, form.BaseForm):
 
     @property
     def schema(self):
@@ -36,7 +35,7 @@ class AutoExtensibleSubForm(AutoExtensibleForm, ObjectSubForm):
         pass
 
     def updateWidgets(self):
-        ObjectSubForm.updateWidgets(self)
+        form.BaseForm.updateWidgets(self)
 
     def update(self):
         """
@@ -54,7 +53,7 @@ class AutoExtensibleSubForm(AutoExtensibleForm, ObjectSubForm):
             self.setupFields()
         else:
             # zope.interface.Interface path
-            ObjectSubForm.update(self)
+            form.BaseForm.update(self)
 
     def updateFields(self):
         self.updateFieldsFromSchemata()
@@ -71,7 +70,7 @@ class AutoExtensibleSubForm(AutoExtensibleForm, ObjectSubForm):
     Interface    # field.schema
 )
 @implementer(ISubformFactory)
-class AutoExtensibleSubformAdapter(SubformAdapter):
+class AutoExtensibleSubformAdapter(object):
     factory = AutoExtensibleSubForm
 
 
