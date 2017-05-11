@@ -41,3 +41,5 @@ buildout-cache
 lib
 local
 include
+var
+buildout.cfg
