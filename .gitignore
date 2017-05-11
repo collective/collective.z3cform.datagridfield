@@ -38,3 +38,6 @@ venv
 bin
 src
 buildout-cache
+lib
+local
+include
