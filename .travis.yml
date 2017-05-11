@@ -13,7 +13,7 @@ env:
 install:
   - sed -ie "s#travis-5.x.cfg#travis-$PLONE_VERSION.x.cfg#" travis.cfg
   - pip install -r requirements.txt
-  - buildout -Nc travis.cfg buildout:download-cache=downloads annotate
+  - buildout -Nc travis.cfg buildout:download-cache=downloads
 before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
