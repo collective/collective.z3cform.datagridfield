@@ -12,7 +12,7 @@ env:
   - PLONE_VERSION=5.1
 install:
   - sed -ie "s#travis-5.x.cfg#travis-$PLONE_VERSION.x.cfg#" travis.cfg
-  - pip install --upgrade pip setuptools zc.buildout
+  - pip install -r requirements.txt
   - buildout -Nc travis.cfg buildout:download-cache=downloads annotate | tee annotate.txt | grep -E 'setuptools= |zc.buildout= ' | sed 's/= /==/' > requirements.txt
   - cat annotate.txt
   - cat requirements.txt
