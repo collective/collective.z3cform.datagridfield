@@ -3,9 +3,12 @@
     Implementation of the widget
 """
 from Acquisition import aq_parent
-from .interfaces import IDataGridField
+from collective.z3cform.datagridfield import AutoExtensibleSubformAdapter
+from collective.z3cform.datagridfield.autoform import AutoExtensibleSubForm
+from collective.z3cform.datagridfield.interfaces import IDataGridField
 from plone.app.z3cform.interfaces import IPloneFormLayer
 from plone.app.z3cform.utils import closest_content
+from plone.autoform.interfaces import MODES_KEY
 from z3c.form import interfaces
 from z3c.form.browser.multi import MultiWidget
 from z3c.form.browser.object import ObjectWidget
@@ -19,36 +22,23 @@ from z3c.form.interfaces import IValidator
 from z3c.form.validator import SimpleFieldValidator
 from z3c.form.widget import FieldWidget
 from zope.component import adapter
+from zope.component import getMultiAdapter
 from zope.interface import alsoProvides
 from zope.interface import implementer
 from zope.interface import Interface
 from zope.schema import getFieldNames
 from zope.schema import getFieldsInOrder
+from zope.schema.interfaces import IField
 from zope.schema.interfaces import IList
 from zope.schema.interfaces import IObject
+from zope.schema.interfaces import ValidationError
 
 import logging
 import lxml
-import zope.schema.interfaces
+
 
 logger = logging.getLogger(__name__)
 
-try:
-    from plone import autoform as has_autoform
-except ImportError:
-    has_autoform = None
-if has_autoform:
-    # support plone.autoform directives within the row schema
-    from .autoform import AutoExtensibleSubForm as BaseObjectSubForm
-    from .autoform import AutoExtensibleSubformAdapter as SubformAdapter
-    from plone.autoform.interfaces import MODES_KEY
-else:
-    from z3c.form.form import Form as BaseObjectSubForm
-    SubformAdapter = object
-    MODES_KEY = None
-
-
-# ------------[ Main Widget ]-----------------------------------------------
 
 @implementer(IDataGridField)
 class DataGridField(MultiWidget):
@@ -117,7 +107,7 @@ class DataGridField(MultiWidget):
             widget = DataGridFieldObjectFactory(valueType, self.request)
             widget.setErrors = idx not in ['TT', 'AA']
         else:
-            widget = zope.component.getMultiAdapter(
+            widget = getMultiAdapter(
                 (valueType, self.request),
                 interfaces.IFieldWidget
             )
@@ -211,14 +201,14 @@ class DataGridField(MultiWidget):
             return not name.endswith('AA') and not name.endswith('TT')
 
 
-@adapter(zope.schema.interfaces.IField, IFormLayer)
+@adapter(IField, IFormLayer)
 @implementer(interfaces.IFieldWidget)
 def DataGridFieldFactory(field, request):
     """IFieldWidget factory for DataGridField."""
     return FieldWidget(field, DataGridField(request))
 
 
-@adapter(zope.schema.interfaces.IList, IDataGridField)
+@adapter(IList, IDataGridField)
 class GridDataConverter(BaseDataConverter):
     """Convert between the context and the widget"""
 
@@ -248,9 +238,7 @@ def datagrid_field_get(self):
             try:
                 converter = interfaces.IDataConverter(widget)
                 value[name] = converter.toFieldValue(widget_value)
-            except (FormatterValidationError,
-                    zope.schema.interfaces.ValidationError,
-                    ValueError):
+            except (FormatterValidationError, ValidationError, ValueError):
                 value[name] = widget_value
     return value
 
@@ -329,7 +317,7 @@ class DataGridFieldObject(ObjectWidget):
         return html
 
 
-@adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
+@adapter(IField, interfaces.IFormLayer)
 @implementer(interfaces.IFieldWidget)
 def DataGridFieldObjectFactory(field, request):
     """IFieldWidget factory for DataGridField."""
@@ -339,7 +327,7 @@ def DataGridFieldObjectFactory(field, request):
 # ------------[ Form to draw the line ]---------------------------------------
 
 
-class DataGridFieldObjectSubForm(BaseObjectSubForm):
+class DataGridFieldObjectSubForm(AutoExtensibleSubForm):
     """Local class of subform - this is intended to all configuration
     information to be passed all the way down to the subform.
 
@@ -393,16 +381,16 @@ class DataGridFieldObjectSubForm(BaseObjectSubForm):
                 converter = interfaces.IDataConverter(widget)
                 value = converter.toFieldValue(widget.value)
                 # validate field value
-                zope.component.getMultiAdapter(
+                getMultiAdapter(
                     (self.context,
                      self.request,
                      self.parentForm,
                      getattr(widget, 'field', None),
                      widget),
                     interfaces.IValidator).validate(value, force=True)
-            except (zope.schema.ValidationError, ValueError) as error:
+            except (ValidationError, ValueError) as error:
                 # on exception, setup the widget error message
-                view = zope.component.getMultiAdapter(
+                view = getMultiAdapter(
                     (error, self.request, widget, widget.field,
                      self.parentForm, self.context),
                     interfaces.IErrorViewSnippet)
@@ -475,7 +463,7 @@ class DataGridFieldObjectSubForm(BaseObjectSubForm):
     Interface,  # field.schema
 )
 @implementer(interfaces.ISubformFactory)
-class DataGridFieldSubformAdapter(SubformAdapter):
+class DataGridFieldSubformAdapter(AutoExtensibleSubformAdapter):
     """Give it my local class of subform, rather than the default"""
 
     factory = DataGridFieldObjectSubForm
