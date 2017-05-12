@@ -34,27 +34,6 @@ class AutoExtensibleSubForm(AutoExtensibleForm, form.BaseForm):
     def refreshActions(self):
         pass
 
-    def updateWidgets(self):
-        form.BaseForm.updateWidgets(self)
-
-    def update(self):
-        """
-        """
-
-        # This is awful hack but I am not sure
-        # how otherwise we can get the parent
-        # call chain work correctly with
-        # both zope.interface.Interface schemas
-        # and plone.directives.form.SchemaForm schemas.
-        rowSchema = self.__parent__.field.schema
-
-        if u'plone.autoform.widgets' in rowSchema.getTaggedValueTags():
-            AutoExtensibleForm.update(self)
-            self.setupFields()
-        else:
-            # zope.interface.Interface path
-            form.BaseForm.update(self)
-
     def updateFields(self):
         self.updateFieldsFromSchemata()
         super(AutoExtensibleSubForm, self).updateFields()
