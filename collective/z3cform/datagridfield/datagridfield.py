@@ -60,7 +60,12 @@ class DataGridField(MultiWidget):
 
     # Define all possible template backends
 
-    def setField(self, value):
+    @property
+    def field(self):
+        return self._field
+
+    @field.setter
+    def field(self, value):
         """
             The field information is passed to the widget after it is
             initialised.  Use this call to initialise the column
@@ -88,11 +93,6 @@ class DataGridField(MultiWidget):
                 'mode': fieldmodes.get(name, None),
             }
             self.columns.append(col)
-
-    def getField(self):
-        return self._field
-
-    field = property(getField, setField)
 
     def createObjectWidget(self, idx):
         """
