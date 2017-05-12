@@ -39,7 +39,7 @@ setup(
     install_requires=[
         'plone.app.z3cform',
         'plone.autoform',
-        'Products.CMFPlone'
+        'Products.CMFPlone',
         'setuptools',
         'z3c.form >=2.4.3dev',
     ],
