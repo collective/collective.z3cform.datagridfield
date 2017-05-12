@@ -19,7 +19,7 @@ def test_suite():
     suite.addTests([
         layered(
             doctest.DocFileSuite(
-                'browser.txt',
+                'browser.rst',
                 package='collective.z3cform.datagridfield',
                 optionflags=OPTIONFLAGS,
                 globs={'pprint': pprint.pprint, }
