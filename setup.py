@@ -39,12 +39,9 @@ setup(
     install_requires=[
         'plone.app.z3cform',
         'plone.autoform',
+        'Products.CMFPlone'
         'setuptools',
         'z3c.form >=2.4.3dev',
-        'zope.component',
-        'zope.i18nmessageid',
-        'zope.interface',
-        'zope.schema',
     ],
     extras_require={
         'test': [
