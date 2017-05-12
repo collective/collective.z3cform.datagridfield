@@ -36,7 +36,7 @@ dist
 .DS_Store
 venv
 bin
-src
+devsrc
 buildout-cache
 lib
 local
