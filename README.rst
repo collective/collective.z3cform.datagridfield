@@ -1,8 +1,11 @@
 Introduction
 ============
 
-This module provides a z3c.form version of the `Products.DataGridField <http://plone.org/products/datagridfield>`_ . This product
-was developed for use with Plone4/5 and Dexterity.
+Provides a field with a datagrid (table), where each row is a sub form.
+
+It is a ``z3c.form`` version of the `Products.DataGridField <http://plone.org/products/datagridfield>`_ .
+
+This product was developed for use with Plone and Dexterity.
 
 .. image:: https://travis-ci.org/collective/collective.z3cform.datagridfield.png
    :target: http://travis-ci.org/collective/collective.z3cform.datagridfield
@@ -13,7 +16,7 @@ was developed for use with Plone4/5 and Dexterity.
 Requirements
 ============
 
-* Plone 4 or Plone 5
+* Plone >= 4.3
 * z3c.forms
 * A browser with javascript support
 * jquery 1.4.3 or later
@@ -31,6 +34,8 @@ Add collective.z3cform.datagridfield to your buildout eggs.::
 
 Example usage
 =============
+
+This example uses grok, but grok usage is deprecated.
 
 This piece of code demonstrates a schema which has a table within it.
 The layout of the table is defined by a second schema.::
@@ -238,18 +243,3 @@ Demo
 
 Examples are in the package `collective.z3cform.datagridfield_demo <https://github.com/collective/collective.z3cform.datagridfield_demo>`_.
 
-
-See also
-========
-
-* https://github.com/collective/collective.z3cform.dgftreeselect
-
-* https://github.com/collective/collective.z3cform.widgets/
-
-
-References
-==========
-
-* http://pypi.python.org/pypi/Products.DataGridField
-
-* http://pypi.python.org/pypi/collective.z3cform.datagridfield_demo

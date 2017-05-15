@@ -32,26 +32,22 @@ setup(
     author_email='kevin@movieextras.ie',
     url='https://github.com/collective/collective.z3cform.datagridfield',
     license='GPL',
-    packages=find_packages(exclude=['ez_setup']),
+    package_dir={'': 'src'},
+    packages=find_packages('src', exclude=['ez_setup']),
     namespace_packages=['collective', 'collective.z3cform'],
     include_package_data=True,
     zip_safe=False,
     install_requires=[
         'plone.app.z3cform',
         'plone.autoform',
+        'Products.CMFPlone',
         'setuptools',
         'z3c.form >=2.4.3dev',
-        'zope.component',
-        'zope.i18nmessageid',
-        'zope.interface',
-        'zope.schema',
     ],
     extras_require={
         'test': [
             'plone.app.testing',
             'collective.z3cform.datagridfield_demo',
-            'unittest2',
-            'transmogrify.dexterity',
         ]
     },
     entry_points="""
