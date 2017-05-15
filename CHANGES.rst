@@ -22,6 +22,9 @@ Changelog
 - Copy relevant parts of ObjectSubform from z3c.form 3.2.10 over here, it was removed in later versions.
   [jensens]
 
+- Add Browserlayer and use it, also add uninstall step.
+  [jensens]
+
 
 1.2 (2017-03-08)
 ----------------

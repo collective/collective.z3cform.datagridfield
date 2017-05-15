@@ -12,10 +12,21 @@
   <includeDependencies package="." />
   <genericsetup:registerProfile
       name="default"
-      title="Data grid field for z3c.form"
-      description=""
+      title="Data Grid Field for z3c.form"
+      description="Install collective.z3cform.datagridfield"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       directory="profiles/default"
+      />
+  <genericsetup:registerProfile
+      name="uninstall"
+      title="Uninstall Data Grid Field for z3c.form"
+      description="Install collective.z3cform.datagridfield"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/uninstall"
+      />
+  <utility
+      factory=".setuphandlers.HiddenProfiles"
+      name="collective.z3cform.datagridfield-hiddenprofiles"
       />
   <!-- -*- extra stuff goes here -*- -->
   <class class=".datagridfield.DataGridField">
@@ -39,37 +50,37 @@
       />
   <z3c:widgetTemplate
       template="datagridfield_input.pt"
-      layer="plone.app.z3cform.interfaces.IPloneFormLayer"
+      layer=".interfaces.IDataGridFieldLayer"
       mode="input"
       widget=".datagridfield.DataGridField"
       />
   <z3c:widgetTemplate
       template="datagridfield_input_block.pt"
-      layer="plone.app.z3cform.interfaces.IPloneFormLayer"
+      layer=".interfaces.IDataGridFieldLayer"
       mode="input"
       widget=".blockdatagridfield.BlockDataGridField"
       />
   <z3c:widgetTemplate
       template="datagridfieldobject_input.pt"
-      layer="plone.app.z3cform.interfaces.IPloneFormLayer"
+      layer=".interfaces.IDataGridFieldLayer"
       mode="input"
       widget=".datagridfield.DataGridFieldObject"
       />
   <z3c:widgetTemplate
       template="datagridfieldobject_input_block.pt"
-      layer="plone.app.z3cform.interfaces.IPloneFormLayer"
+      layer=".interfaces.IDataGridFieldLayer"
       mode="input"
       widget=".blockdatagridfield.BlockDataGridFieldObject"
       />
   <z3c:widgetTemplate
       template="datagridfield_display.pt"
-      layer="plone.app.z3cform.interfaces.IPloneFormLayer"
+      layer=".interfaces.IDataGridFieldLayer"
       mode="display"
       widget=".datagridfield.DataGridField"
       />
   <z3c:widgetTemplate
       template="datagridfieldobject_display.pt"
-      layer="plone.app.z3cform.interfaces.IPloneFormLayer"
+      layer=".interfaces.IDataGridFieldLayer"
       mode="display"
       widget=".datagridfield.DataGridFieldObject"
       />
