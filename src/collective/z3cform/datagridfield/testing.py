@@ -18,13 +18,6 @@ class Fixture(PloneSandboxLayer):
             context=configurationContext
         )
 
-        import collective.z3cform.datagridfield_demo
-        xmlconfig.file(
-            'configure.zcml',
-            collective.z3cform.datagridfield_demo,
-            context=configurationContext
-        )
-
     def setUpPloneSite(self, portal):
         self.applyProfile(portal, 'collective.z3cform.datagridfield:default')
 

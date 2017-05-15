@@ -25,6 +25,9 @@ Changelog
 - Add Browserlayer and use it, also add uninstall step.
   [jensens]
 
+- Move Demo package to in here.
+  [jensens]
+
 
 1.2 (2017-03-08)
 ----------------

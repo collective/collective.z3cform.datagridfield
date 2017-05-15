@@ -10,6 +10,7 @@
     >
   <!-- Include configuration for dependencies listed in setup.py -->
   <includeDependencies package="." />
+  <include package=".demo" />
   <genericsetup:registerProfile
       name="default"
       title="Data Grid Field for z3c.form"

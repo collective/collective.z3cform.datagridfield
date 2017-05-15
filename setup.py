@@ -47,7 +47,6 @@ setup(
     extras_require={
         'test': [
             'plone.app.testing',
-            'collective.z3cform.datagridfield_demo',
         ]
     },
     entry_points="""
