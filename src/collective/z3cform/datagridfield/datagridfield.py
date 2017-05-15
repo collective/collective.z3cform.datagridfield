@@ -309,10 +309,11 @@ class DataGridFieldObject(ObjectWidget):
             html = ''
             for tree in fragments:
                 for el in tree.xpath(PAT_XPATH):
-                    el.attrib['class'] = el.attrib['class'].replace(
-                        'pat-',
-                        'dgw-disabled-pat-'
-                    )
+                    if '.TT.' in el.attrib['name']:
+                        el.attrib['class'] = el.attrib['class'].replace(
+                            'pat-',
+                            'dgw-disabled-pat-'
+                        )
                 html += lxml.html.tostring(tree) + '\n'
         return html
 
