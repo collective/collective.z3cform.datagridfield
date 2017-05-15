@@ -15,6 +15,7 @@ from z3c.form.interfaces import DISPLAY_MODE
 from z3c.form.interfaces import HIDDEN_MODE
 from zope import schema
 from zope.interface import Interface
+from plone.autoform.directives import widget
 
 import z3c.form
 
@@ -65,7 +66,7 @@ class IAddress(Interface):
 
     # A sample datetime field
     if widget_datetime is not None:
-        form.widget(dateAdded=DataGridFieldDatetimeFieldWidget)
+        widget(dateAdded=DataGridFieldDatetimeFieldWidget)
     dateAdded = schema.Datetime(title=u"Date added")
 
     # A sample checkbox
@@ -234,8 +235,8 @@ class EditForm8(EditForm):
         super(EditForm8, self).updateWidgets()
         self.widgets['address'].mode = DISPLAY_MODE
         for row in self.widgets['address'].widgets:
-            for widget in row.subform.widgets.values():
-                widget.mode = DISPLAY_MODE
+            for wdt in row.subform.widgets.values():
+                wdt.mode = DISPLAY_MODE
 
 
 class EditForm9(EditForm):
