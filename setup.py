@@ -3,7 +3,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 
-version = '2.0.0.dev0'
+version = '1.3.0.dev0'
 
 setup(
     name='collective.z3cform.datagridfield',
@@ -38,7 +38,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'plone.app.z3cform>=3.0',
+        'plone.app.z3cform',
         'plone.autoform',
         'Products.CMFPlone',
         'setuptools',
