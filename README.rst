@@ -35,18 +35,17 @@ Add collective.z3cform.datagridfield to your buildout eggs.::
 Example usage
 =============
 
-This example uses grok, but grok usage is deprecated.
-
 This piece of code demonstrates a schema which has a table within it.
 The layout of the table is defined by a second schema.::
 
-    from zope import schema
-    from zope import interface
-    from plone.directives import form
-    from z3c.form.form import extends
+    from collective.z3cform.datagridfield import DataGridFieldFactory
+    from collective.z3cform.datagridfield import DictRow
     from z3c.form import field
-
-    from collective.z3cform.datagridfield import DataGridFieldFactory, DictRow
+    from z3c.form import form
+    from z3c.form.form import extends
+    from zope import interface
+    from zope import component
+    from zope import schema
 
 
     class ITableRowSchema(interface.Interface):
@@ -60,20 +59,23 @@ The layout of the table is defined by a second schema.::
         table = schema.List(title=u"Table",
             value_type=DictRow(title=u"tablerow", schema=ITableRowSchema))
 
-
+    @component.adapter(IFormSchema)
     class EditForm(form.EditForm):
-        extends(form.EditForm)
 
-        grok.context(IFormSchema)
-        grok.require('zope2.View')
         fields = field.Fields(IFormSchema)
         label=u"Demo Usage of DataGridField"
 
         fields['table'].widgetFactory = DataGridFieldFactory
 
-You can also use grok'ed forms where you subclass the schema
-from ``plone.directives.form.SchemaForm`` and declare
-widgets witin the schema using ``form.widget()``.
+Configured like so::
+
+  <browser:page
+      name="editform--example"
+      class=".editform.EditForm"
+      for="*"
+      permission="zope2.View"
+  />
+
 
 Also it can be used from a supermodel xml::
 
@@ -94,9 +96,10 @@ The data can be stored as either a list of dicts or a list of objects.
 If the data is a list of dicts, the value_type is DictRow.
 Otherwise, the value_type is 'schema.Object'.
 
-If you are providing an Object content type (as opposed to dicts) you
-must provide your own conversion class. The default conversion class
-returns a list of dicts, not of your object class. See the demos.
+If you are providing an Object content type (as opposed to dicts) you must provide your own conversion class.
+The default conversion class returns a list of dicts,
+not of your object class.
+See the demos.
 
 
 Configuration
@@ -126,9 +129,8 @@ Block edit mode
 ===============
 
 A widget class variation ``BlockDataGridField`` is provided.
-This widget renders subform widgets vertically in blocks instead
-of horizontally in cells. It makes sense when there are many
-subform fields and they have problem to fit on the screen once.
+This widget renders subform widgets vertically in blocks instead of horizontally in cells.
+It makes sense when there are many subform fields and they have problem to fit on the screen once.
 
 Example::
 
@@ -146,34 +148,31 @@ Example::
 Manipulating the Sub-form
 =========================
 
-The DataGridField makes use of a subform to build each line. The main DataGridField
-contains a DataGridFieldObject for each line in the table. The DataGridFieldObject
-in turn creates the DataGridFieldObjectSubForm to store the fields.
+The DataGridField makes use of a subform to build each line.
+The main DataGridField contains a DataGridFieldObject for each line in the table.
+The DataGridFieldObject in turn creates the DataGridFieldObjectSubForm to store the fields.
 
 There are two callbacks to your main form:
 
 **datagridInitialise(subform, widget)**
 
-* This is called when the subform fields have been initialised, but before
-  the widgets have been created. Field based configuration could occur here.
+* This is called when the subform fields have been initialised,
+  but before the widgets have been created. Field based configuration could occur here.
 
 **datagridUpdateWidgets(subform, widgets, widget)**
 
-* This is called when the subform widgets have been created. At this point,
-  you can configure the widgets, e.g. specify the size of a widget.
+* This is called when the subform widgets have been created.
+  At this point,  you can configure the widgets, e.g. specify the size of a widget.
 
 Here is an example how one can customize per-field widgets for the data grid field::
 
-    from zope import schema
-    from zope import interface
-    from Products.CMFCore.interfaces import ISiteRoot
-
-    from five import grok
-
-    from plone.directives import form
-
-    from collective.z3cform.datagridfield import DataGridFieldFactory, DictRow
     from .widget import DGFTreeSelectFieldWidget
+    from collective.z3cform.datagridfield import DataGridFieldFactory
+    from collective.z3cform.datagridfield import DictRow
+    from Products.CMFCore.interfaces import ISiteRoot
+    from z3c.form import form
+    from zope import interface
+    from zope import schema
 
 
     class ITableRowSchema(form.Schema):
@@ -191,8 +190,13 @@ Here is an example how one can customize per-field widgets for the data grid fie
     class IFormSchema(form.Schema):
 
         form.widget(table=DataGridFieldFactory)
-        table = schema.List(title=u"Nested selection tree test",
-            value_type=DictRow(title=u"tablerow", schema=ITableRowSchema))
+        table = schema.List(
+            title=u"Nested selection tree test",
+            value_type=DictRow(
+                title=u"tablerow",
+                schema=ITableRowSchema
+            )
+        )
 
 
 Working with plone.app.registry
@@ -241,5 +245,5 @@ Example usage::
 Demo
 ====
 
-Examples are in the package `collective.z3cform.datagridfield_demo <https://github.com/collective/collective.z3cform.datagridfield_demo>`_.
+More examples are in the demo subfolder of this package.
 
