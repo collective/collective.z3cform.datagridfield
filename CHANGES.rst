@@ -28,6 +28,9 @@ Changelog
 - Move Demo package to in here.
   [jensens]
 
+- Move pat-registry inclusion in datagridfield.js to the top.
+  [cekk]
+
 
 1.2 (2017-03-08)
 ----------------
