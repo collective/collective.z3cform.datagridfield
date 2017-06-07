@@ -1,6 +1,9 @@
 /*global window, console*/
 
-jQuery(function($) {
+require([
+  'jquery',
+  'pat-registry',
+], function ($, patRegistry) {
 
     // No globals, dude!
     "use strict";
@@ -176,7 +179,7 @@ jQuery(function($) {
         .attr('class', function(i, cls) {
           return cls.replace(/dgw\-disabled-pat-/, 'pat-');
         });
-        var patRegistry = require('pat-registry');
+        // var patRegistry = require('pat-registry');
         patRegistry.scan(new_row);
         return new_row;
     };
