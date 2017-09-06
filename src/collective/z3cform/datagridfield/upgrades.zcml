@@ -1,0 +1,15 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:gs="http://namespaces.zope.org/genericsetup"
+    i18n_domain="collective.z3cform.datagridfield">
+
+  <!-- Upgrade steps -->
+  <gs:upgradeStep
+        title="Upgrade collective.z3cform.datagridfield to 2"
+        description="collective.z3cform.datagridfield upgrade step"
+        source="1"
+        destination="2"
+        handler=".setuphandlers.to_2"
+        profile="collective.z3cform.datagridfield:default" />
+
+</configure>

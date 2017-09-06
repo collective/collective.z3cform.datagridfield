@@ -31,6 +31,8 @@ Changelog
 - Move pat-registry inclusion in datagridfield.js to the top.
   [cekk]
 
+- Register datagridfield.js with resource registry (dropped plone 4 compatibility)
+  [cekk]
 
 1.2 (2017-03-08)
 ----------------
