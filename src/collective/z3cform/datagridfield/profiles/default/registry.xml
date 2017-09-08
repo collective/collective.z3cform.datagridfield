@@ -17,7 +17,7 @@
     <value key="jscompilation">++resource++collective.z3cform.datagridfield/datagridfield.js</value>
     <value key="csscompilation">++resource++collective.z3cform.datagridfield/datagridfield.css</value>
     <value key="last_compilation">2019-11-26 00:00:00</value>
-    <value key="compile">False</value>
+    <value key="compile">True</value>
     <value key="depends">plone</value>
     <value key="merge_with">default</value>
   </records>
