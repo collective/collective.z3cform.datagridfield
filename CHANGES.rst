@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.0 (unreleased)
+1.3.0 (2017-11-22)
 ------------------
 
 - Set widget mode on cell widget in order to support autoform mode directive. [jone]
