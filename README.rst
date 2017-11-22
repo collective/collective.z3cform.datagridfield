@@ -1,3 +1,5 @@
+.. contents:: Table of Contents
+
 Introduction
 ============
 
@@ -14,7 +16,7 @@ This product was developed for use with Plone and Dexterity.
 
 
 Requirements
-============
+------------
 
 * Plone >= 4.3
 * z3c.forms
@@ -25,10 +27,13 @@ Requirements
 Installation
 ============
 
-Add collective.z3cform.datagridfield to your buildout eggs.::
+Add collective.z3cform.datagridfield to your buildout eggs:
 
-    eggs=\
-        ...
+.. code-block:: ini
+
+    [buildout]
+    ...
+    eggs =
         collective.z3cform.datagridfield
 
 
@@ -36,7 +41,9 @@ Example usage
 =============
 
 This piece of code demonstrates a schema which has a table within it.
-The layout of the table is defined by a second schema.::
+The layout of the table is defined by a second schema:
+
+.. code-block:: python
 
     from collective.z3cform.datagridfield import DataGridFieldFactory
     from collective.z3cform.datagridfield import DictRow
@@ -67,17 +74,21 @@ The layout of the table is defined by a second schema.::
 
         fields['table'].widgetFactory = DataGridFieldFactory
 
-Configured like so::
+Configured like so:
 
-  <browser:page
-      name="editform--example"
-      class=".editform.EditForm"
-      for="*"
-      permission="zope2.View"
-  />
+.. code-block:: xml
+
+    <browser:page
+        name="editform--example"
+        class=".editform.EditForm"
+        for="*"
+        permission="zope2.View"
+        />
 
 
-Also it can be used from a supermodel xml::
+Also it can be used from a supermodel XML:
+
+.. code-block:: xml
 
     <field name="table" type="zope.schema.List">
       <description/>
@@ -90,7 +101,7 @@ Also it can be used from a supermodel xml::
 
 
 Storage
-=======
+-------
 
 The data can be stored as either a list of dicts or a list of objects.
 If the data is a list of dicts, the value_type is DictRow.
@@ -111,7 +122,7 @@ Row editor handles
 
 The widget can be customised via the updateWidgets method.
 
-::
+.. code-block:: python
 
     def updateWidgets(self):
         super(EditForm, self).updateWidgets()
@@ -126,13 +137,15 @@ titles.
 
 
 Block edit mode
-===============
+---------------
 
 A widget class variation ``BlockDataGridField`` is provided.
 This widget renders subform widgets vertically in blocks instead of horizontally in cells.
 It makes sense when there are many subform fields and they have problem to fit on the screen once.
 
-Example::
+Example:
+
+.. code-block:: python
 
     class EditForm9(EditForm):
         label = u'Rendering widgets as blocks instead of cells'
@@ -146,7 +159,7 @@ Example::
 
 
 Manipulating the Sub-form
-=========================
+-------------------------
 
 The DataGridField makes use of a subform to build each line.
 The main DataGridField contains a DataGridFieldObject for each line in the table.
@@ -164,7 +177,9 @@ There are two callbacks to your main form:
 * This is called when the subform widgets have been created.
   At this point,  you can configure the widgets, e.g. specify the size of a widget.
 
-Here is an example how one can customize per-field widgets for the data grid field::
+Here is an example how one can customize per-field widgets for the data grid field:
+
+.. code-block:: python
 
     from .widget import DGFTreeSelectFieldWidget
     from collective.z3cform.datagridfield import DataGridFieldFactory
@@ -200,17 +215,19 @@ Here is an example how one can customize per-field widgets for the data grid fie
 
 
 Working with plone.app.registry
-===============================
+-------------------------------
 
 To use the field with plone.app.registry, you'll have to use
 a version of the field that has PersistentField as it's base
-class::
+class:
+
+.. code-block:: python
 
     from collective.z3cform.datagridfield.registry import DictRow
 
 
-Javascript events
-=================
+JavaScript events
+-----------------
 
 ``collective.z3cform.datagridfield`` fires jQuery events,
 so that you can hook them in your own Javascript for DataGridField
@@ -230,7 +247,9 @@ The following events are currently fired against ``table.datagridwidget-table-vi
 
 * ``afterdatagridfieldinit`` - All DGFs on the page have been initialized
 
-Example usage::
+Example usage:
+
+.. code-block:: javascript
 
     var handleDGFInsert = function(event, dgf, row) {
         row = $(row);
