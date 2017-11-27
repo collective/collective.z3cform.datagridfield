@@ -4,6 +4,12 @@ Changelog
 1.3.1 (unreleased)
 ------------------
 
+- Usability change: add an (hidden) label inside the add commands
+  [keul]
+
+- Compatibility with Plone 5 modals/overlay from mockup
+  [keul]
+
 - Wrapped commands inside ``A`` tags, required for accessibility reason (change backported from Products.DataGridField).
   This also simplify customizing icons with pure CSS.
   [keul]
