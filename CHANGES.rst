@@ -4,6 +4,10 @@ Changelog
 1.3.1 (unreleased)
 ------------------
 
+- Wrapped commands inside ``A`` tags, required for accessibility reason (change backported from Products.DataGridField).
+  This also simplify customizing icons with pure CSS.
+  [keul]
+
 - Replaced minus icon with a more usable delete icon.
   [keul]
 
