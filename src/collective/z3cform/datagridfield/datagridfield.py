@@ -3,6 +3,7 @@
     Implementation of the widget
 """
 from Acquisition import aq_parent
+from Products.CMFCore.utils import getToolByName
 from collective.z3cform.datagridfield.autoform import AutoExtensibleSubForm
 from collective.z3cform.datagridfield.autoform import AutoExtensibleSubformAdapter  # noqa: E501
 from collective.z3cform.datagridfield.interfaces import IDataGridField
@@ -208,6 +209,9 @@ class DataGridField(MultiWidget):
                 return self.auto_append or self.allow_insert
         else:
             return not name.endswith('AA') and not name.endswith('TT')
+
+    def portal_url(self):
+        return getToolByName(self.context, 'portal_url')()
 
 
 @adapter(IField, IFormLayer)
