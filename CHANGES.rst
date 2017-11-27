@@ -4,14 +4,15 @@ Changelog
 1.3.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Replaced minus icon with a more usable delete icon.
+  [keul]
+
+- Removed ols-school ``*`` chars for marking fields as required.
+  [keul]
 
 
 1.3.0 (2017-11-22)
 ------------------
-
-- Removed ols-school ``*`` chars for marking fields as required.
-  [keul]
 
 - Set widget mode on cell widget in order to support autoform mode directive. [jone]
 

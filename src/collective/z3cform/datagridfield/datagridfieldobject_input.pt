@@ -25,7 +25,7 @@
     </td>
     <td class="datagridwidget-manipulator delete-row"
         tal:condition="view/isDeleteEnabled">
-      <img src="++resource++collective.z3cform.datagridfield/delete_row_icon.gif"
+      <img src="++resource++collective.z3cform.datagridfield/delete_row_icon.png"
           alt="Delete row"
           i18n:attributes="alt label_datagridwidget_manipulators_deleterow"
           onclick="dataGridField2Functions.removeFieldRow(this);return false"/>
