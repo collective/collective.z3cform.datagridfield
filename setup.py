@@ -41,6 +41,7 @@ setup(
         'plone.app.z3cform',
         'plone.autoform',
         'Products.CMFPlone',
+        'plone.api',
         'setuptools',
         'z3c.form >=2.4.3dev',
     ],

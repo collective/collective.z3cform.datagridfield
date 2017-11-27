@@ -3,13 +3,13 @@
     Implementation of the widget
 """
 from Acquisition import aq_parent
-from Products.CMFCore.utils import getToolByName
 from collective.z3cform.datagridfield.autoform import AutoExtensibleSubForm
 from collective.z3cform.datagridfield.autoform import AutoExtensibleSubformAdapter  # noqa: E501
 from collective.z3cform.datagridfield.interfaces import IDataGridField
 from plone.app.z3cform.interfaces import IPloneFormLayer
 from plone.app.z3cform.utils import closest_content
 from plone.autoform.interfaces import MODES_KEY
+from plone import api
 from z3c.form import interfaces
 from z3c.form.browser.multi import MultiWidget
 from z3c.form.browser.object import ObjectWidget
@@ -212,7 +212,7 @@ class DataGridField(MultiWidget):
             return not name.endswith('AA') and not name.endswith('TT')
 
     def portal_url(self):
-        return getToolByName(self.context, 'portal_url')()
+        return api.portal.get_tool('portal_url')()
 
 
 @adapter(IField, IFormLayer)
