@@ -42,7 +42,7 @@
 
     <td class="datagridwidget-manipulator insert-row"
         tal:condition="view/isInsertEnabled">
-        <a href="" onclick="dataGridField2Functions.addRowAfter(this); return false">
+        <a href="#">
             <img src="++resource++collective.z3cform.datagridfield/add_row_icon.gif"
               alt="Add row"
               i18n:attributes="alt label_datagridwidget_manipulators_addrow"
@@ -51,7 +51,7 @@
     </td>
     <td class="datagridwidget-manipulator delete-row"
         tal:condition="view/isDeleteEnabled">
-        <a href="" onclick="dataGridField2Functions.removeFieldRow(this);return false">
+        <a href="#">
             <img src="++resource++collective.z3cform.datagridfield/delete_row_icon.png"
               alt="Delete row"
               i18n:attributes="alt label_datagridwidget_manipulators_deleterow"
@@ -60,7 +60,7 @@
     </td>
     <td class="datagridwidget-manipulator move-up"
         tal:condition="view/isReorderEnabled">
-        <a href="" onclick="dataGridField2Functions.moveRowUp(this);return false">
+        <a href="#">
             <img src="++resource++collective.z3cform.datagridfield/move_row_up_icon.gif"
               alt="▲" i18n:attributes="alt label_datagridwidget_manipulators_moverowup"
               />
@@ -68,7 +68,7 @@
     </td>
     <td class="datagridwidget-manipulator move-down"
         tal:condition="view/isReorderEnabled">
-        <a href="" onclick="dataGridField2Functions.moveRowDown(this);return false">
+        <a href="#">
             <img src="++resource++collective.z3cform.datagridfield/move_row_down_icon.gif"
               alt="▼" i18n:attributes="alt label_datagridwidget_manipulators_moverowdown"
               />
