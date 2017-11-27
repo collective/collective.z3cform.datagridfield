@@ -16,7 +16,7 @@
             <span i18n:translate=""
                 tal:content="column/label">title</span>
             <span class="required"
-                  tal:condition="column/required">*</span>
+                  tal:condition="column/required" title="Required" i18n:domain="plone" i18n:attributes="title title_required">&nbsp;</span>
       </th>
     </tal:block>
     <th id="" class="header" tal:condition="view/allow_insert"> </th>
@@ -39,4 +39,3 @@
 </table>
 <input type="hidden" tal:replace="structure view/counterMarker" />
 </html>
-

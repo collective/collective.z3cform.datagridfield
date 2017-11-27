@@ -10,6 +10,9 @@ Changelog
 1.3.0 (2017-11-22)
 ------------------
 
+- Removed ols-school ``*`` chars for marking fields as required.
+  [keul]
+
 - Set widget mode on cell widget in order to support autoform mode directive. [jone]
 
 - Bugfix: do not try to update readonly fields. [jone]
