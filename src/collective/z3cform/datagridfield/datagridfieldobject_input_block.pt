@@ -47,6 +47,9 @@
               alt="Add row"
               i18n:attributes="alt label_datagridwidget_manipulators_addrow"
               />
+            <span class="hiddenStructure" tal:content="view/label_add_record">
+                Add new foo
+            </span>
         </a>
     </td>
     <td class="datagridwidget-manipulator delete-row"

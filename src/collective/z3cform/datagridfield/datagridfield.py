@@ -33,6 +33,7 @@ from zope.schema.interfaces import IField
 from zope.schema.interfaces import IList
 from zope.schema.interfaces import IObject
 from zope.schema.interfaces import ValidationError
+from . import _
 
 import logging
 import lxml
@@ -337,6 +338,12 @@ class DataGridFieldObject(ObjectWidget):
                         )
                 html += lxml.html.tostring(tree) + '\n'
         return html
+
+    def label_add_record(self):
+        return _('add_record_label',
+                 default='Add ${type}',
+                 mapping={'type': self.field.title}
+        )
 
 
 @adapter(IField, interfaces.IFormLayer)
