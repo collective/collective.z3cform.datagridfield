@@ -92,7 +92,9 @@ jQuery(function($) {
         // Create a new row
         var newtr = dataGridField2Functions.createNewRow(thisRow), $newtr = $(newtr);
         // Add auto-append functionality to our new row
-        $newtr.addClass('auto-append');
+        if (autoAppendMode) {
+            $newtr.addClass('auto-append');
+        }
 
         /* Put new row to DOM tree after our current row.  Do this before
          * reindexing to ensure that any Javascript we insert that depends on
@@ -141,7 +143,7 @@ jQuery(function($) {
         var filteredRows = dataGridField2Functions.getVisibleRows(currnode);
 
         // If using auto-append we add the "real" row before AA
-        // We have a special case when there is only one visible in the gid
+        // We have a special case when there is only one visible in the grid
         if (thisRow.hasClass('auto-append') && !thisRow.hasClass("minimum-row")) {
             $(newtr).insertBefore(thisRow);
         } else {
