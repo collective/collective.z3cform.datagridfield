@@ -4,6 +4,9 @@ Changelog
 1.3.1 (unreleased)
 ------------------
 
+- Extend uninstall profile.
+  [thet]
+
 - Wrapped commands inside ``A`` tags, required for accessibility reason (change backported from Products.DataGridField).
   This also simplify customizing icons with pure CSS.
   [keul]
