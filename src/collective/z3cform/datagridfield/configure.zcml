@@ -45,6 +45,7 @@
   <adapter factory=".datagridfield.GridDataConverter" />
   <adapter factory=".datagridfield.DataGridFieldSubformAdapter" />
   <adapter factory=".datagridfield.DataGridValidator" />
+  <adapter factory=".row.RowDataManager" />
   <adapter
       factory=".converters.DictRowSerializer"
       zcml:condition="installed transmogrify.dexterity"

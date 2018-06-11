@@ -2,6 +2,7 @@
 
 from z3c.form.interfaces import IMultiWidget
 from plone.app.z3cform.interfaces import IPloneFormLayer
+from zope.schema.interfaces import IList
 from zope.schema.interfaces import IObject
 from zope.schema.interfaces import ValidationError
 
@@ -28,4 +29,9 @@ class AttributeNotFoundError(ValidationError):
 
 class IRow(IObject):
     """A row. The schema defines dict keys.
+    """
+
+
+class IRowList(IList):
+    """A List schema field contain the row.
     """

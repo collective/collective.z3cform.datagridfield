@@ -6,6 +6,7 @@ from .datagridfield import DataGridFieldFactory  # noqa # pylint: disable=unused
 from .interfaces import IDataGridField  # noqa # pylint: disable=unused-import
 from .interfaces import IRow  # noqa # pylint: disable=unused-import
 from .row import DictRow  # noqa # pylint: disable=unused-import
+from .row import RowList  # noqa # pylint: disable=unused-import
 from zope.i18nmessageid import MessageFactory
 
 

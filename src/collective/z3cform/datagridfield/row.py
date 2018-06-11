@@ -4,11 +4,18 @@
 """
 from interfaces import AttributeNotFoundError
 from interfaces import IRow
+from interfaces import IRowList
 from z3c.form.interfaces import NO_VALUE
+from z3c.form.interfaces import IDataManager
+from z3c.form.datamanager import AttributeField
+from zope.interface import Interface
 from zope.interface import implementer
+from zope.component import adapter
+from zope.component import getMultiAdapter
 from zope.schema import Field
 from zope.schema import getFields
 from zope.schema import Object
+from zope.schema import List
 from zope.schema.interfaces import IChoice
 from zope.schema.interfaces import WrongContainedType
 
@@ -57,3 +64,49 @@ class DictRow(Object):
     def set(self, object, value):
         # Override Object field logic
         Field.set(self, object, value)
+
+
+@implementer(IRowList)
+class RowList(List):
+    __doc__ = IRowList.__doc__
+
+
+@adapter(Interface, IRowList)
+class RowDataManager(AttributeField):
+    """Proxy to call datamanager for each field in the subform."""
+
+    @property
+    def subfields(self):
+        return getFields(self.field.value_type.schema)
+
+    def get(self):
+        """Gets the target"""
+        raw_value = []
+        # Calling query() here will lead to infinite recursion!
+        try:
+            raw_value = super(RowDataManager, self).get()
+        except AttributeError:
+            raw_value = None
+        if not raw_value:
+            return []
+
+        resolved_value = []
+        for item in raw_value:
+            new_item = {}
+            for name, field in self.subfields.items():
+                dm = getMultiAdapter((item, field), IDataManager)
+                new_item[name] = dm.get()
+            resolved_value.append(new_item)
+        return resolved_value
+
+    def set(self, value):
+        """Sets the relationship target"""
+        value = value or []
+        new_value = []
+        for item in value:
+            new_item = {}
+            for name, field in self.subfields.items():
+                dm = getMultiAdapter((new_item, field), IDataManager)
+                dm.set(item[name])
+            new_value.append(new_item)
+        super(RowDataManager, self).set(new_value)
