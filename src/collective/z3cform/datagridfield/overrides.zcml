@@ -1,0 +1,16 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    >
+
+  <configure zcml:condition="have plone-5">
+    <browser:page
+        name="getSource"
+        for="z3c.form.interfaces.IWidget"
+        class=".patch.SourceView"
+        permission="zope.Public"
+        />
+  </configure>
+
+</configure>
