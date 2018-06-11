@@ -364,7 +364,10 @@ class DataGridFieldObjectSubForm(AutoExtensibleSubForm):
     """
     def __init__(self, context, request, parentWidget):
         # copied from z3c.form 3.2.10
-        self.context = context
+        if context:
+            self.context = context
+        else:
+            self.context = parentWidget.form.context
         self.request = request
         self.__parent__ = parentWidget
         self.parentForm = parentWidget.form
@@ -427,6 +430,9 @@ class DataGridFieldObjectSubForm(AutoExtensibleSubForm):
                 self.widgets,
                 self.__parent__.__parent__
             )
+        #Add context to field widgets in sub form
+        for widget in self.widgets.values():
+            widget.context = self.context
         return rv
 
     def setupFields(self):
