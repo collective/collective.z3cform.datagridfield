@@ -256,8 +256,11 @@ def datagrid_field_set(self, value):
                 continue
 
             if name in active_names:
-                self.applyValue(self.subform.widgets[name],
-                                value.get(name, interfaces.NO_VALUE))
+                if isinstance(value, dict):
+                    v = value.get(name, interfaces.NO_VALUE)
+                else:
+                    v = getattr(value, name, interfaces.NO_VALUE)
+                self.applyValue(self.subform.widgets[name], v)
 
 
 PAT_XPATH = "//*[contains(concat(' ', normalize-space(@class), ' '), ' pat-')]"

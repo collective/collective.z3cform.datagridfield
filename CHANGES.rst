@@ -17,6 +17,8 @@ Changelog
 - Removed ols-school ``*`` chars for marking fields as required.
   [keul]
 
+- Fix object access
+  [tomgross]
 
 1.3.0 (2017-11-22)
 ------------------

@@ -1,5 +1,4 @@
-*.pyc
-*.pyo
+*.py[co]
 *.mo
 *.egg-info
 *.egg
@@ -38,8 +37,9 @@ venv
 bin
 devsrc
 buildout-cache
-lib
+lib*
 local
 include
 var
 buildout.cfg
+pip-selfcheck.json
