@@ -6,6 +6,7 @@
 """
 from collective.z3cform.datagridfield import DataGridFieldFactory
 from collective.z3cform.datagridfield import IDataGridField
+from plone.autoform import directives
 from z3c.form import button
 from z3c.form import field
 from z3c.form import form
@@ -20,6 +21,9 @@ from zope.interface import Interface
 from zope.component import adapter
 from zope.schema import getFieldsInOrder
 from zope.schema.fieldproperty import FieldProperty
+# Uncomment, if you want to try the relationfield
+# from plone.app.vocabularies.catalog import CatalogSource
+# from z3c.relationfield.schema import RelationChoice
 
 
 class IAddress(Interface):
@@ -43,6 +47,11 @@ class IAddress(Interface):
         title=u'Country',
         required=True
     )
+# Uncomment, if you want to try the relationfield
+#    link = RelationChoice(
+#        title=u"Link to content",
+#        source=CatalogSource(portal_type=['Document']),
+#        required=False)
 
 
 class AddressListField(schema.List):
@@ -67,14 +76,20 @@ class Address(object):
     line2 = FieldProperty(IAddress['line2'])
     city = FieldProperty(IAddress['city'])
     country = FieldProperty(IAddress['country'])
+# Uncomment, if you want to try the relationfield
+#    link = FieldProperty(IAddress['link'])
+
+    # allow getSource to proceed
+    _Modify_portal_content_Permission = ('Anonymous', )
 
     def __init__(self, address_type=None, line1=None, line2=None, city=None,
-                 country=None):
+                 country=None, link=None):
         self.address_type = address_type
         self.line1 = line1
         self.line2 = line2
         self.city = city
         self.country = country
+        self.link = link
 
 
 class AddressList(list):
@@ -85,6 +100,9 @@ class AddressList(list):
 class Person(object):
     name = FieldProperty(IPerson['name'])
     address = FieldProperty(IPerson['address'])
+
+    # allow getSource to proceed
+    _Modify_portal_content_Permission = ('Anonymous', )
 
     def __init__(self, name=None, address=None):
         self.name = name

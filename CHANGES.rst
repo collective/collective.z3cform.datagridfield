@@ -20,6 +20,10 @@ Changelog
 - Fix object access
   [tomgross]
 
+- Fix usage of related items widget in subforms
+  https://github.com/plone/Products.CMFPlone/issues/2446
+  [tomgross]
+
 1.3.0 (2017-11-22)
 ------------------
 

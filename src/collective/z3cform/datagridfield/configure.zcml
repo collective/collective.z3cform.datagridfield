@@ -8,8 +8,6 @@
     xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="collective.z3cform.datagridfield"
     >
-  <!-- Include configuration for dependencies listed in setup.py -->
-  <includeDependencies package="." />
   <include package=".demo" />
   <genericsetup:registerProfile
       name="default"

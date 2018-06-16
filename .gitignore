@@ -43,3 +43,5 @@ include
 var
 buildout.cfg
 pip-selfcheck.json
+.idea
+src/plone*
