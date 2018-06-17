@@ -18,11 +18,9 @@ install:
   - bin/buildout -c test-$PLONE_VERSION.x.cfg -N buildout:download-cache=downloads code-analysis:return-status-codes=True
 script:
   - bin/code-analysis
-  - bin/test
+  - bin/coverage run bin/test
 after_success:
-  - bin/createcoverage
-  - pip install coveralls
-  - coveralls
+  - bin/coveralls
 notifications:
   email:
     - dev@bluedynamics.com
