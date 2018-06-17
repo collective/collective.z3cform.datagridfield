@@ -1,0 +1,10 @@
+[report]
+omit =
+    bin/test
+    eggs/*
+    parts/*
+    */lib/*
+    src/collective/__init__.py
+    *.txt
+    *.rst
+
