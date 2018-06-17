@@ -18,6 +18,6 @@ class Fixture(PloneSandboxLayer):
 
 FIXTURE = Fixture()
 FUNCTIONAL_TESTING = FunctionalTesting(
-    bases=(FIXTURE,),
+    bases=(FIXTURE, ),
     name='collective.z3cform.datagridfield:Functional',
 )

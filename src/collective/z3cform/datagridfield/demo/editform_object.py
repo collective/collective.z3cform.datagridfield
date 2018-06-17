@@ -6,7 +6,6 @@
 """
 from collective.z3cform.datagridfield import DataGridFieldFactory
 from collective.z3cform.datagridfield import IDataGridField
-from plone.autoform import directives
 from z3c.form import button
 from z3c.form import field
 from z3c.form import form
