@@ -28,7 +28,3 @@ def test_suite():
         )
     ])
     return suite
-
-
-if __name__ == '__main__':
-    unittest.main(defaultTest='test_suite')

@@ -4,6 +4,12 @@ Changelog
 1.3.1 (unreleased)
 ------------------
 
+- Nothing changed yet.
+
+
+1.3.0.post1 (2018-07-16)
+------------------------
+
 - Extend uninstall profile.
   [thet]
 
@@ -17,6 +23,12 @@ Changelog
 - Removed ols-school ``*`` chars for marking fields as required.
   [keul]
 
+- Fix object access
+  [tomgross]
+
+- Fix usage of related items widget in subforms
+  https://github.com/plone/Products.CMFPlone/issues/2446
+  [tomgross]
 
 1.3.0 (2017-11-22)
 ------------------

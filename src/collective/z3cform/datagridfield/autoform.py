@@ -15,6 +15,7 @@ from z3c.form.error import MultipleErrorViewSnippet
 from z3c.form.interfaces import IFormLayer
 from z3c.form.interfaces import IMultipleErrors
 from z3c.form.interfaces import IObjectWidget
+from z3c.form.interfaces import ISubForm
 from z3c.form.interfaces import ISubformFactory
 from zope.component import adapter
 from zope.i18nmessageid import Message
@@ -22,6 +23,7 @@ from zope.interface import implementer
 from zope.interface import Interface
 
 
+@implementer(ISubForm)
 class AutoExtensibleSubForm(AutoExtensibleForm, form.BaseForm):
 
     @property

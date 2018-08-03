@@ -6,20 +6,21 @@ cache:
   directories:
     - eggs
     - downloads
+  python:
+    - 2.7.15
 env:
   - PLONE_VERSION=4.3
   - PLONE_VERSION=5.0
   - PLONE_VERSION=5.1
 install:
-  - pip install -r requirements.txt
-  - buildout -c test-$PLONE_VERSION.x.cfg -N buildout:download-cache=downloads code-analysis:return-status-codes=True
+  - virtualenv -p `which python` .
+  - bin/pip install -r requirements.txt
+  - bin/buildout -c test-$PLONE_VERSION.x.cfg -N buildout:download-cache=downloads code-analysis:return-status-codes=True
 script:
   - bin/code-analysis
-  - bin/test
+  - bin/coverage run bin/test
 after_success:
-  - bin/createcoverage
-  - pip install coveralls
-  - coveralls
+  - bin/coveralls
 notifications:
   email:
     - dev@bluedynamics.com

@@ -1,15 +1,11 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
-    xmlns:five="http://namespaces.zope.org/five"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:z3c="http://namespaces.zope.org/z3c"
     xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="collective.z3cform.datagridfield"
     >
-  <!-- Include configuration for dependencies listed in setup.py -->
-  <includeDependencies package="." />
   <include package=".demo" />
   <genericsetup:registerProfile
       name="default"

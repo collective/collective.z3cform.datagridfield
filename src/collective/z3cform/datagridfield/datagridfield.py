@@ -35,7 +35,15 @@ from zope.schema.interfaces import ValidationError
 
 import logging
 import lxml
+import pkg_resources
 
+
+try:
+    pkg_resources.get_distribution('z3c.relationfield')
+    from z3c.relationfield.schema import RelationChoice
+    HAS_REL_FIELD = True
+except pkg_resources.DistributionNotFound:
+    HAS_REL_FIELD = False
 
 logger = logging.getLogger(__name__)
 
@@ -256,8 +264,16 @@ def datagrid_field_set(self, value):
                 continue
 
             if name in active_names:
-                self.applyValue(self.subform.widgets[name],
-                                value.get(name, interfaces.NO_VALUE))
+                if isinstance(value, dict):
+                    v = value.get(name, interfaces.NO_VALUE)
+                else:
+                    v = getattr(value, name, interfaces.NO_VALUE)
+                # probably there is a more generic way to do this ...
+                if HAS_REL_FIELD and \
+                        isinstance(fieldset_field, RelationChoice) \
+                        and v == interfaces.NO_VALUE:
+                    v = ''
+                self.applyValue(self.subform.widgets[name], v)
 
 
 PAT_XPATH = "//*[contains(concat(' ', normalize-space(@class), ' '), ' pat-')]"

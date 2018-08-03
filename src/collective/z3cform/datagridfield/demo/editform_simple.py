@@ -8,6 +8,7 @@ from collective.z3cform.datagridfield import BlockDataGridFieldFactory
 from collective.z3cform.datagridfield import DataGridFieldFactory
 from collective.z3cform.datagridfield import DictRow
 from datetime import datetime
+from plone.autoform.directives import widget
 from z3c.form import button
 from z3c.form import field
 from z3c.form import form
@@ -15,9 +16,9 @@ from z3c.form.interfaces import DISPLAY_MODE
 from z3c.form.interfaces import HIDDEN_MODE
 from zope import schema
 from zope.interface import Interface
-from plone.autoform.directives import widget
-
-import z3c.form
+# Uncomment, if you want to try the relationfield
+# from plone.app.vocabularies.catalog import CatalogSource
+# from z3c.relationfield.schema import RelationChoice
 
 
 try:
@@ -25,7 +26,9 @@ try:
 except ImportError:
     widget_datetime = None
 
+
 if widget_datetime is not None:
+    from z3c.form.widget import FieldWidget
 
     class DataGridFieldDatetimeWidget(widget_datetime.DatetimeWidget):
         # Causes grey hair because of invalid value handling
@@ -34,22 +37,19 @@ if widget_datetime is not None:
 
     def DataGridFieldDatetimeFieldWidget(field, request):
         """IFieldWidget factory for DatetimeWidget."""
-        return z3c.form.widget.FieldWidget(
-            field,
-            DataGridFieldDatetimeWidget(request)
-        )
+        return FieldWidget(field, DataGridFieldDatetimeWidget(request))
 
 
 class IAddress(Interface):
     address_type = schema.Choice(
         title=u'Address Type', required=True,
         values=[u'Work', u'Home'])
-    # A Relation field within a datagrid is a tricky one to get
-    # working.  Uncomment if you want to try this.
-    # link = RelationChoice(
-    #         title=u"Link to content",
-    #         source=ObjPathSourceBinder(),
-    #         required=True)
+# Uncomment, if you want to try the relationfield
+#    link = RelationChoice(
+#        title=u"Link to content",
+#        source=CatalogSource(portal_type=['Document']),
+#        required=True
+#    )
     line1 = schema.TextLine(
         title=u'Line 1', required=True)
     line2 = schema.TextLine(
