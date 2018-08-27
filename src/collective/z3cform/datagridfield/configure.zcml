@@ -21,6 +21,7 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       directory="profiles/uninstall"
       />
+  <include file="upgrades.zcml" />
   <utility
       factory=".setuphandlers.HiddenProfiles"
       name="collective.z3cform.datagridfield-hiddenprofiles"

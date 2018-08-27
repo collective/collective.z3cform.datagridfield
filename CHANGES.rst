@@ -4,8 +4,8 @@ Changelog
 1.3.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Added missing upgrade step, calling browserlayer setup.
+  [sgeulette]
 
 1.3.2 (2019-05-22)
 ------------------
