@@ -62,7 +62,12 @@ class IAddress(Interface):
         title=u'Don\'t change', readonly=True, required=True)
 
     # A sample integer field
-    personCount = schema.Int(title=u'Persons', required=False, min=0, max=15)
+    personCount = schema.Int(
+        title=u'Persons',
+        description=u'Enter number of persons (min 0 and max 15)',
+        required=False,
+        min=0,
+        max=15)
 
     # A sample datetime field
     if widget_datetime is not None:
