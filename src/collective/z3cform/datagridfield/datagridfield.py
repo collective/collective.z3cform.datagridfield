@@ -97,6 +97,7 @@ class DataGridField(MultiWidget):
             col = {
                 'name': name,
                 'label': field.title,
+                'description': field.description,
                 'required': field.required,
                 'mode': fieldmodes.get(name, None),
             }

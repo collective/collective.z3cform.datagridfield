@@ -7,6 +7,9 @@ Changelog
 - Added missing upgrade step, calling browserlayer setup.
   [sgeulette]
 
+- Display column description if provided in schema `field.description`.
+  [gbastien, bleybaert]
+
 1.3.0.post1 (2018-07-16)
 ------------------------
 
