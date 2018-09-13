@@ -60,6 +60,12 @@ Make sure the delete row button is present (x4)
     >>> browser.contents.find('<td class="datagridwidget-manipulator delete-row">') != -1
     True
 
+Make sure the description is displayed in the 'personCount' column header
+
+    >>> browser.contents.find('<span>Persons</span>\n            \n            <span class="formHelp">Enter number of persons (min 0 and max 15)</span>') != -1
+    True
+
+
 Make sure resources from our package are not using absolute URLs.  If absolute
 URLs are present, then the resources won't load on anything except where
 Plone/Zope are the root of the domain.

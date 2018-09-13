@@ -17,6 +17,7 @@
                 tal:content="column/label">title</span>
             <span class="required"
                   tal:condition="column/required" title="Required" i18n:domain="plone" i18n:attributes="title title_required">&nbsp;</span>
+            <span class="formHelp" tal:condition="column/description" tal:content="column/description">Description</span>
       </th>
     </tal:block>
     <th id="" class="header" tal:condition="view/allow_insert"> </th>

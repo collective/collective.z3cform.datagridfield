@@ -4,8 +4,8 @@ Changelog
 1.3.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Display column description if provided in schema `field.description`.
+  [gbastien, bleybaert]
 
 1.3.0.post1 (2018-07-16)
 ------------------------
