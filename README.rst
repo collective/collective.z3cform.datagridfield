@@ -18,7 +18,7 @@ This product was developed for use with Plone and Dexterity.
 Requirements
 ------------
 
-* Plone >= 4.3
+* Versions >= 1.3 are for Plone 5+, if you use Plone 4.3, use versions 1.2.x
 * z3c.forms
 * A browser with javascript support
 * jquery 1.4.3 or later
