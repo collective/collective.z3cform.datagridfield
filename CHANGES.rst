@@ -4,6 +4,9 @@ Changelog
 1.3.1 (unreleased)
 ------------------
 
+- Added missing upgrade step, calling browserlayer setup.
+  [sgeulette]
+
 - Display column description if provided in schema `field.description`.
   [gbastien, bleybaert]
 
