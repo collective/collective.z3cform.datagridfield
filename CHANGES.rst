@@ -6,6 +6,9 @@ Changelog
 
 - Display column description if provided in schema `field.description`.
   [gbastien, bleybaert]
+- Specify in README.rst that versions >= 1.3 are for Plone5+ and
+  versions < 1.3 are for Plone4.
+  [gbastien]
 
 1.3.0.post1 (2018-07-16)
 ------------------------
