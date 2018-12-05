@@ -42,37 +42,72 @@
 
     <td class="datagridwidget-manipulator insert-row"
         tal:condition="view/isInsertEnabled">
-        <a href="" onclick="dataGridField2Functions.addRowAfter(this); return false">
-            <img src="++resource++collective.z3cform.datagridfield/add_row_icon.gif"
-              alt="Add row"
-              i18n:attributes="alt label_datagridwidget_manipulators_addrow"
-              />
-        </a>
+
+        <a href=""
+           onclick="dataGridField2Functions.addRowAfter(this); return false"
+           id="btn-addrow"
+           class="btn btn-default"
+           title=""
+           aria-label="Add row"
+           data-original-title="Add row"
+           i18n:attributes="aria-label label_datagridwidget_manipulators_addrow;
+                            data-original-title label_datagridwidget_manipulators_addrow">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            <span class="sr-only" i18n:translate="label_datagridwidget_manipulators_addrow">Add row</span>
+         </a>
+
     </td>
     <td class="datagridwidget-manipulator delete-row"
         tal:condition="view/isDeleteEnabled">
-        <a href="" onclick="dataGridField2Functions.removeFieldRow(this);return false">
-            <img src="++resource++collective.z3cform.datagridfield/delete_row_icon.png"
-              alt="Delete row"
-              i18n:attributes="alt label_datagridwidget_manipulators_deleterow"
-              />
-        </a>
+
+        <a href=""
+           onclick="dataGridField2Functions.removeFieldRow(this);return false"
+           id="btn-deleterow"
+           class="btn btn-default"
+           title=""
+           aria-label="Delete row"
+           data-original-title="Delete row"
+           i18n:attributes="aria-label label_datagridwidget_manipulators_deleterow;
+                            data-original-title label_datagridwidget_manipulators_deleterow">
+            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            <span class="sr-only" i18n:translate="label_datagridwidget_manipulators_deleterow">Delete row</span>
+         </a>
+
     </td>
     <td class="datagridwidget-manipulator move-up"
         tal:condition="view/isReorderEnabled">
-        <a href="" onclick="dataGridField2Functions.moveRowUp(this);return false">
-            <img src="++resource++collective.z3cform.datagridfield/move_row_up_icon.gif"
-              alt="▲" i18n:attributes="alt label_datagridwidget_manipulators_moverowup"
-              />
-        </a>
+
+
+        <a href=""
+           onclick="dataGridField2Functions.moveRowUp(this);return false"
+           id="btn-moveup"
+           class="btn btn-default"
+           title=""
+           aria-label="Move Up"
+           data-original-title="Move Up"
+           i18n:attributes="aria-label label_datagridwidget_manipulators_moverowup;
+                            data-original-title label_datagridwidget_manipulators_moverowup">
+            <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+            <span class="sr-only" i18n:translate="label_datagridwidget_manipulators_moverowup">Move Up</span>
+         </a>
+
     </td>
     <td class="datagridwidget-manipulator move-down"
         tal:condition="view/isReorderEnabled">
-        <a href="" onclick="dataGridField2Functions.moveRowDown(this);return false">
-            <img src="++resource++collective.z3cform.datagridfield/move_row_down_icon.gif"
-              alt="▼" i18n:attributes="alt label_datagridwidget_manipulators_moverowdown"
-              />
-        </a>
+
+        <a href=""
+           onclick="dataGridField2Functions.moveRowDown(this);return false"
+           id="btn-movedown"
+           class="btn btn-default"
+           title=""
+           aria-label="Move Down"
+           data-original-title="Move Down"
+           i18n:attributes="aria-label label_datagridwidget_manipulators_moverowdown;
+                            data-original-title label_datagridwidget_manipulators_moverowdown">
+            <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+            <span class="sr-only" i18n:translate="label_datagridwidget_manipulators_moverowdown">Move Down</span>
+         </a>
+
     </td>
 
 </html>

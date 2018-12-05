@@ -4,6 +4,9 @@ Changelog
 1.3.1 (unreleased)
 ------------------
 
+- use Plone5 glyphicons instead of images
+  [2silver]
+
 - Added missing upgrade step, calling browserlayer setup.
   [sgeulette]
 
