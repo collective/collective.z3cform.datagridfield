@@ -10,6 +10,9 @@ Changelog
 1.4.0 (2019-02-21)
 ------------------
 
+- use Plone5 glyphicons instead of images
+  [2silver]
+
 - Added missing upgrade step, calling browserlayer setup.
   [sgeulette]
 
