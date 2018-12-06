@@ -1,0 +1,164 @@
+@base_color: #666;
+@light_gray: #EEE;
+@black: #EEE;
+@error_color: red;
+@background_color: #FFDDCC;
+
+.datagridwidget-table-view {
+    width: 100%;
+    border: 1px solid @base_color;
+    background: none repeat scroll 0 0 @light_gray;
+    .header {
+        font-weight: bold;
+        background: none repeat scroll 0 0 @light_gray;
+        color: @base_color;
+        padding: 2px;
+        font-size: 1.1em;
+        text-align: left;
+    }
+}
+
+.datagridwidget-row {
+    vertical-align: top;
+}
+
+.datagridwidget-cell {
+    input[type="text"] {
+        padding: 1px;
+    }
+    input {
+        border: 1px solid #CCC;
+        background: white;
+        background-image: none;
+    }
+    select {
+        border: 1px solid #CCC;
+    }
+    textarea {
+        border: 1px solid #CCC;
+    }
+    >input {
+        &:only-child {
+            width: 99%;
+        }
+    }
+    div.error {
+        color: @error_color;
+        font-weight: bold;
+    }
+    vertical-align: bottom;
+    padding: 1px;
+}
+
+.datagridwidget-empty-row {
+    display: none;
+}
+
+.datagridwidget-manipulator {
+    width: 16px;
+    text-align: center;
+    padding-bottom: 4px;
+    margin: 0;
+    vertical-align: bottom;
+    img {
+        cursor: pointer;
+    }
+}
+
+.datagridwidget-hidden-data {
+    display: none;
+}
+
+.auto-append {
+    >.datagridwidget-manipulator.delete-row {
+        img {
+            display: none;
+        }
+    }
+    >.datagridwidget-manipulator.move-up {
+        img {
+            display: none;
+        }
+    }
+    >.datagridwidget-manipulator.move-down {
+        img {
+            display: none;
+        }
+    }
+    >.datagridwidget-manipulator.insert-row {
+        img {
+            display: none;
+        }
+    }
+}
+
+.minimum-row {
+    >.datagridwidget-manipulator.insert-row {
+        img {
+            display: block;
+        }
+    }
+}
+
+.datagridwidget-body-non-auto-append[data-many-rows="true"] {
+    .datagridfield-last-filled-row {
+        >.datagridwidget-manipulator.move-down {
+            img {
+                display: block;
+            }
+        }
+    }
+    .datagridfield-first-filled-row {
+        >.datagridwidget-manipulator.move-up {
+            img {
+                display: block;
+            }
+        }
+    }
+}
+
+.datagridfield-first-filled-row {
+    >.datagridwidget-manipulator.move-up {
+        img {
+            display: none !important;
+        }
+    }
+}
+
+.datagridfield-last-filled-row {
+    >.datagridwidget-manipulator.move-down {
+        img {
+            display: none !important;
+        }
+    }
+}
+
+.datagridwidget-table-view-block {
+    border-collapse: collapse;
+    thead {
+        display: none;
+    }
+    .datagridwidget-row {
+        border-bottom: 1px solid @black;
+    }
+    td {
+        vertical-align: top;
+    }
+    .datagridwidget-manipulator {
+        width: 16px;
+    }
+}
+
+.datagridwidget-block-edit-cell {
+    width: auto;
+    .error {
+        background-color: @background_color;
+        border: 1px solid red;
+        margin: 1em 0;
+        padding: 0.5em;
+    }
+}
+
+.datagridwidget-block {
+    padding: 0.5em;
+}

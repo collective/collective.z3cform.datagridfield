@@ -10,6 +10,9 @@ Changelog
 1.4.0 (2019-02-21)
 ------------------
 
+- Use Ressource-Registry (Pat-Registry), Update JS/CSS, Add Uninstall
+  [2silver]
+
 - use Plone5 glyphicons instead of images
   [2silver]
 

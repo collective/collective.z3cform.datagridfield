@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<registry>
+  <records prefix="plone.resources/z3cform_datagridfield_css"
+           interface='Products.CMFPlone.interfaces.IResourceRegistry'>
+    <value key="css">
+      <element>++resource++collective.z3cform.datagridfield/datagridfield.css</element>
+    </value>
+  </records>
+  <records prefix="plone.resources/z3cform_datagridfield_js"
+           interface='Products.CMFPlone.interfaces.IResourceRegistry'>
+    <value key="js">++resource++collective.z3cform.datagridfield/datagridfield.js</value>
+  </records>
+
+  <records prefix="plone.bundles/datagridfield-bundle"
+           interface='Products.CMFPlone.interfaces.IBundleRegistry'>
+    <value key="resources" purge="false">
+      <element>z3cform_datagridfield_css</element>
+      <element>z3cform_datagridfield_js</element>
+    </value>
+    <value key="jscompilation">++resource++collective.z3cform.datagridfield/datagridfield.js</value>
+    <value key="csscompilation">++resource++collective.z3cform.datagridfield/datagridfield.css</value>
+    <value key="merge_with">default</value>
+    <value key="compile">True</value>
+    <value key="depends">plone</value>
+    <value key="enabled">True</value>
+    <value key="last_compilation">2017-02-26 10:26:00</value>
+  </records>
+</registry>
