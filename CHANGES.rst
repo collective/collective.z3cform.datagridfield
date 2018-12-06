@@ -4,6 +4,9 @@ Changelog
 1.3.1 (unreleased)
 ------------------
 
+- Use Ressource-Registry (Pat-Registry), Update JS/CSS, Add Uninstall
+  [2silver]
+
 - use Plone5 glyphicons instead of images
   [2silver]
 

@@ -7,6 +7,7 @@
     i18n_domain="collective.z3cform.datagridfield"
     >
   <include package=".demo" />
+  <include file="upgrades.zcml" />
   <genericsetup:registerProfile
       name="default"
       title="Data Grid Field for z3c.form"
@@ -21,7 +22,6 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       directory="profiles/uninstall"
       />
-  <include file="upgrades.zcml" />
   <utility
       factory=".setuphandlers.HiddenProfiles"
       name="collective.z3cform.datagridfield-hiddenprofiles"
