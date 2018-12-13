@@ -13,6 +13,9 @@ Changelog
 - Add support for Python 3 and Plone 5.2.
   [pbauer]
 
+- Drop support for Plone 4.
+  [pbauer]
+
 - Use Ressource-Registry (Pat-Registry), Update JS/CSS, Add Uninstall
   [2silver]
 
