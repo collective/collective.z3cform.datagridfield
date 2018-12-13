@@ -4,6 +4,9 @@ Changelog
 1.3.1 (unreleased)
 ------------------
 
+- Add support for Python 3 and Plone 5.2.
+  [pbauer]
+
 - Use Ressource-Registry (Pat-Registry), Update JS/CSS, Add Uninstall
   [2silver]
 

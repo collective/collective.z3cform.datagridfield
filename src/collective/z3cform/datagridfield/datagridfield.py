@@ -294,13 +294,13 @@ class DataGridFieldObject(ObjectWidget):
     def portal_url(self):
         return self.__parent__.context.portal_url()
 
-    @apply
-    def value():
-        """I have moved this code from z3c/form/object.py because I
-           want to allow a field to handle a sub-set of the schema. I
-           filter on the subform.fields
-        """
-        return property(datagrid_field_get, datagrid_field_set)
+    @property
+    def value(self):
+        return datagrid_field_get(self)
+
+    @value.setter
+    def value(self, value):
+        return datagrid_field_set(self, value)
 
     def updateWidgets(self, *args, **kwargs):
         super(DataGridFieldObject, self).updateWidgets(*args, **kwargs)
@@ -331,7 +331,7 @@ class DataGridFieldObject(ObjectWidget):
                             'pat-',
                             'dgw-disabled-pat-'
                         )
-                html += lxml.html.tostring(tree) + '\n'
+                html += lxml.html.tostring(tree, encoding='unicode') + '\n'
         return html
 
 
