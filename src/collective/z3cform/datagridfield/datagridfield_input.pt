@@ -38,5 +38,6 @@
   </tal:block>
 </tbody>
 </table>
+<script type="text/javascript" src="" tal:attributes="src string:${view/portal_url}/++resource++collective.z3cform.datagridfield/init_field.js"></script>
 <input type="hidden" tal:replace="structure view/counterMarker" />
 </html>

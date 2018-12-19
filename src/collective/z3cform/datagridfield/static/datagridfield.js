@@ -92,7 +92,9 @@ jQuery(function($) {
         // Create a new row
         var newtr = dataGridField2Functions.createNewRow(thisRow), $newtr = $(newtr);
         // Add auto-append functionality to our new row
-        $newtr.addClass('auto-append');
+        if (autoAppendMode) {
+            $newtr.addClass('auto-append');
+        }
 
         /* Put new row to DOM tree after our current row.  Do this before
          * reindexing to ensure that any Javascript we insert that depends on
@@ -127,17 +129,21 @@ jQuery(function($) {
      *
      * @param {Object} currnode DOM <tr>
      */
-    dataGridField2Functions.addRowAfter = function(currnode) {
+    dataGridField2Functions.addRowAfter = function(evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        var currnode = this;
+
         // fetch required data structure
-        var tbody = this.getParentByClass(currnode, "datagridwidget-body");
+        var tbody = dataGridField2Functions.getParentByClass(currnode, "datagridwidget-body");
         var dgf = $(dataGridField2Functions.getParentByClass(currnode, "datagridwidget-table-view"));
-        var thisRow = this.getParentRow(currnode);
-        var newtr = this.createNewRow(thisRow);
+        var thisRow = dataGridField2Functions.getParentRow(currnode);
+        var newtr = dataGridField2Functions.createNewRow(thisRow);
         dgf.trigger("beforeaddrow", [dgf, newtr]);
-        var filteredRows = this.getVisibleRows(currnode);
+        var filteredRows = dataGridField2Functions.getVisibleRows(currnode);
 
         // If using auto-append we add the "real" row before AA
-        // We have a special case when there is only one visible in the gid
+        // We have a special case when there is only one visible in the grid
         if (thisRow.hasClass('auto-append') && !thisRow.hasClass("minimum-row")) {
             $(newtr).insertBefore(thisRow);
         } else {
@@ -146,11 +152,11 @@ jQuery(function($) {
 
         // Ensure minimum special behavior is no longer needed as we have now at least 2 rows
         if(thisRow.hasClass("minimum-row")) {
-            this.supressEnsureMinimum(tbody);
+            dataGridField2Functions.supressEnsureMinimum(tbody);
         }
 
         // update orderindex hidden fields
-        this.updateOrderIndex(tbody, true);
+        dataGridField2Functions.updateOrderIndex(tbody, true);
         dgf.trigger("afteraddrow", [dgf, newtr]);
     };
 
@@ -182,15 +188,18 @@ jQuery(function($) {
     };
 
 
-    dataGridField2Functions.removeFieldRow = function(node) {
+    dataGridField2Functions.removeFieldRow = function(evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        var node = this;
         /* Remove the row in which the given node is found */
-        var tbody = this.getParentByClass(node, "datagridwidget-body");
-        var row = this.getParentRow(node);
+        var tbody = dataGridField2Functions.getParentByClass(node, "datagridwidget-body");
+        var row = dataGridField2Functions.getParentRow(node);
         $(row).remove();
         // ensure minimum rows in non-auto-append mode, reindex if no
         // minimal row was added, otherwise reindexing is done by ensureMinimumRows
-        if ($(tbody).data("auto-append") || !this.ensureMinimumRows(tbody)) {
-            this.updateOrderIndex(tbody, false);
+        if ($(tbody).data("auto-append") || !dataGridField2Functions.ensureMinimumRows(tbody)) {
+            dataGridField2Functions.updateOrderIndex(tbody, false);
         }
     };
 
@@ -254,12 +263,16 @@ jQuery(function($) {
         dgf.trigger("aftermoverow", [dgf, row]);
     };
 
-    dataGridField2Functions.moveRowDown = function(currnode){
-        this.moveRow(currnode, "down");
+    dataGridField2Functions.moveRowDown = function(evt){
+        evt.preventDefault();
+        evt.stopPropagation();
+        dataGridField2Functions.moveRow(this, "down");
     };
 
-    dataGridField2Functions.moveRowUp = function(currnode){
-        this.moveRow(currnode, "up");
+    dataGridField2Functions.moveRowUp = function(evt){
+        evt.preventDefault();
+        evt.stopPropagation();
+        dataGridField2Functions.moveRow(this, "up");
     };
 
     dataGridField2Functions.shiftRow = function(bottom, top){
@@ -568,6 +581,21 @@ jQuery(function($) {
             var $this = $(this);
             var aa;
 
+            // Do not try to init this field more than once
+            // This may happen inside mockup modals
+            if ($this.data('datagrid-enabled')) {
+                return;
+            }
+            $this.data('datagrid-enabled', true);
+
+            // Init commands
+            // BBB: I need .off usage down there due to mockup mess inside overlay/modals
+            // Also tried with loadLinksWithinModal to false...
+            $('.datagridwidget-manipulator.insert-row a', $this).off('click').on('click', dataGridField2Functions.addRowAfter);
+            $('.datagridwidget-manipulator.delete-row a', $this).off('click').on('click', dataGridField2Functions.removeFieldRow);
+            $('.datagridwidget-manipulator.move-up a', $this).off('click').on('click', dataGridField2Functions.moveRowUp);
+            $('.datagridwidget-manipulator.move-down a', $this).off('click').on('click', dataGridField2Functions.moveRowDown);
+
             // Check if this widget is in auto-append mode
             // and store for later usage
             aa = $this.children(".auto-append").size() > 0;
@@ -594,11 +622,16 @@ jQuery(function($) {
         $(document).trigger("afterdatagridfieldinit");
     };
 
-
     $(document).ready(dataGridField2Functions.init);
+
+    // Init commands
+    // Event delegation is not working due to mockup mess, even if I try with loadLinksWithinModal false
+    // $(document).on('click', '.datagridwidget-manipulator.insert-row a', dataGridField2Functions.addRowAfter);
+    // $(document).on('click', '.datagridwidget-manipulator.delete-row a', dataGridField2Functions.removeFieldRow);
+    // $(document).on('click', '.datagridwidget-manipulator.move-up a', dataGridField2Functions.moveRowUp);
+    // $(document).on('click', '.datagridwidget-manipulator.move-down a', dataGridField2Functions.moveRowDown);
 
     // Export module for customizers to mess around
     window.dataGridField2Functions = dataGridField2Functions;
-
 
 });

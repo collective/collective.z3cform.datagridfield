@@ -9,6 +9,7 @@ from collective.z3cform.datagridfield.interfaces import IDataGridField
 from plone.app.z3cform.interfaces import IPloneFormLayer
 from plone.app.z3cform.utils import closest_content
 from plone.autoform.interfaces import MODES_KEY
+from plone import api
 from z3c.form import interfaces
 from z3c.form.browser.multi import MultiWidget
 from z3c.form.browser.object import ObjectWidget
@@ -32,6 +33,7 @@ from zope.schema.interfaces import IField
 from zope.schema.interfaces import IList
 from zope.schema.interfaces import IObject
 from zope.schema.interfaces import ValidationError
+from . import _
 
 import logging
 import lxml
@@ -209,6 +211,9 @@ class DataGridField(MultiWidget):
         else:
             return not name.endswith('AA') and not name.endswith('TT')
 
+    def portal_url(self):
+        return api.portal.get_tool('portal_url')()
+
 
 @adapter(IField, IFormLayer)
 @implementer(interfaces.IFieldWidget)
@@ -333,6 +338,13 @@ class DataGridFieldObject(ObjectWidget):
                         )
                 html += lxml.html.tostring(tree) + '\n'
         return html
+
+    def label_add_record(self):
+        return _(
+            'add_record_label',
+            default='Add ${type}',
+            mapping={'type': self.field.title}
+        )
 
 
 @adapter(IField, interfaces.IFormLayer)

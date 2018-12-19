@@ -64,30 +64,30 @@
 }
 
 /* You cannot delete the auto-append row */
-.auto-append  > .datagridwidget-manipulator.delete-row img,
-.auto-append  > .datagridwidget-manipulator.move-up img,
-.auto-append  > .datagridwidget-manipulator.move-down img,
-.auto-append  > .datagridwidget-manipulator.insert-row img {
+.auto-append  > .datagridwidget-manipulator.delete-row a,
+.auto-append  > .datagridwidget-manipulator.move-up a,
+.auto-append  > .datagridwidget-manipulator.move-down a,
+.auto-append  > .datagridwidget-manipulator.insert-row a {
     display: none;
 }
 
 /* When no AA mode, only one row in the widget */
-.minimum-row  > .datagridwidget-manipulator.insert-row img {
+.minimum-row  > .datagridwidget-manipulator.insert-row a {
     display: block;
 }
 
-.datagridwidget-body-non-auto-append[data-many-rows = "true"] .datagridfield-last-filled-row > .datagridwidget-manipulator.move-down img,
-.datagridwidget-body-non-auto-append[data-many-rows = "true"] .datagridfield-first-filled-row > .datagridwidget-manipulator.move-up img {
+.datagridwidget-body-non-auto-append[data-many-rows = "true"] .datagridfield-last-filled-row > .datagridwidget-manipulator.move-down a,
+.datagridwidget-body-non-auto-append[data-many-rows = "true"] .datagridfield-first-filled-row > .datagridwidget-manipulator.move-up a {
     display: block;
 }
 
 /* Cannot move up out of the grid */
-.datagridfield-first-filled-row > .datagridwidget-manipulator.move-up img {
+.datagridfield-first-filled-row > .datagridwidget-manipulator.move-up a {
     display: none !important;
 }
 
 /* Cannot move below auto-append row */
-.datagridfield-last-filled-row > .datagridwidget-manipulator.move-down img {
+.datagridfield-last-filled-row > .datagridwidget-manipulator.move-down a {
     display: none !important;
 }
 
