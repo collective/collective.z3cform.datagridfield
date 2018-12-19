@@ -340,9 +340,10 @@ class DataGridFieldObject(ObjectWidget):
         return html
 
     def label_add_record(self):
-        return _('add_record_label',
-                 default='Add ${type}',
-                 mapping={'type': self.field.title}
+        return _(
+            'add_record_label',
+            default='Add ${type}',
+            mapping={'type': self.field.title}
         )
 
 
