@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.3.0.post1 (2018-07-16)
-------------------------
+1.3.1 (unreleased)
+------------------
 
 - Extend uninstall profile.
   [thet]
