@@ -20,6 +20,9 @@ Changelog
 - Compatibility with Plone 5 modals/overlay from mockup
   [keul]
 
+1.3.1 (2019-02-21)
+------------------
+
 - Extend uninstall profile.
   [thet]
 
