@@ -5,20 +5,18 @@ Introduction
 
 Provides a field with a datagrid (table), where each row is a sub form.
 
-It is a ``z3c.form`` version of the `Products.DataGridField <http://plone.org/products/datagridfield>`_ .
+It is a `z3c.form <https://z3cform.readthedocs.io/en/latest/>`_ implementation of the `Products.DataGridField <http://plone.org/products/datagridfield>`_ .
 
 This product was developed for use with Plone and Dexterity.
 
 .. image:: https://travis-ci.org/collective/collective.z3cform.datagridfield.png
    :target: http://travis-ci.org/collective/collective.z3cform.datagridfield
 
-.. contents :: :local:
-
 
 Requirements
 ------------
 
-* Versions >= 1.3 are for Plone 5+, if you use Plone 4.3, use versions 1.2.x
+* Versions >= 1.4 are for Plone 5+, if you use Plone 4.3, use versions 1.3.x
 * z3c.forms
 * A browser with javascript support
 * jquery 1.4.3 or later
