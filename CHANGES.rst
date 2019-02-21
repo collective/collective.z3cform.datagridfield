@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.4.0 (unreleased)
+1.4.0 (2019-02-21)
 ------------------
 
 - Added missing upgrade step, calling browserlayer setup.
