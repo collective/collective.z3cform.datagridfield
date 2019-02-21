@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.1 (unreleased)
+1.3.1 (2019-02-21)
 ------------------
 
 - Extend uninstall profile.
