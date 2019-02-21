@@ -10,8 +10,8 @@ Changelog
 - Display column description if provided in schema `field.description`.
   [gbastien, bleybaert]
 
-- Specify in README.rst that versions >= 1.3 are for Plone5+ and
-  versions < 1.3 are for Plone4.
+- Specify in README.rst that versions >= 1.4 are for Plone 5+ and
+  versions < 1.4 are for Plone 4.
   [gbastien]
 
 - Usability change: add an (hidden) label inside the add commands
