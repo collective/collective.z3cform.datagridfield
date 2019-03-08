@@ -17,6 +17,7 @@ Requirements
 ------------
 
 * Versions >= 1.4 are for Plone 5+, if you use Plone 4.3, use versions 1.3.x
+* For Python 3.7 at least PyYAML 4.2b1
 * z3c.forms
 * A browser with javascript support
 * jquery 1.4.3 or later
