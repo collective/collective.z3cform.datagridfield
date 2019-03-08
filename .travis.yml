@@ -8,10 +8,20 @@ cache:
     - downloads
   python:
     - 2.7.15
-env:
-  - PLONE_VERSION=5.0
-  - PLONE_VERSION=5.1
-  - PLONE_VERSION=5.2
+matrix:
+  include:
+    - python: "2.7"
+      env: PLONE_VERSION=4.3.x
+    - python: "2.7"
+      env: PLONE_VERSION=5.1.x
+    - python: "2.7"
+      env: PLONE_VERSION=5.2.x
+    - python: "3.6"
+      env: PLONE_VERSION=5.2.x
+    - python: "3.7"
+      env: PLONE_VERSION=5.2.x
+      dist: xenial
+      sudo: true
 install:
   - virtualenv -p `which python` .
   - bin/pip install -r requirements.txt
@@ -21,6 +31,4 @@ script:
   - bin/coverage run bin/test
 after_success:
   - bin/coveralls
-notifications:
-  email:
-    - dev@bluedynamics.com
+
