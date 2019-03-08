@@ -16,6 +16,8 @@ from z3c.form.interfaces import DISPLAY_MODE
 from z3c.form.interfaces import HIDDEN_MODE
 from zope import schema
 from zope.interface import Interface
+
+
 # Uncomment, if you want to try the relationfield
 # from plone.app.vocabularies.catalog import CatalogSource
 # from z3c.relationfield.schema import RelationChoice

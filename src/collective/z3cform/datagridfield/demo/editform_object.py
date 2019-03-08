@@ -15,11 +15,13 @@ from z3c.form.interfaces import HIDDEN_MODE
 from z3c.form.interfaces import IDataConverter
 from z3c.form.interfaces import NO_VALUE
 from zope import schema
+from zope.component import adapter
 from zope.interface import implementer
 from zope.interface import Interface
-from zope.component import adapter
 from zope.schema import getFieldsInOrder
 from zope.schema.fieldproperty import FieldProperty
+
+
 # Uncomment, if you want to try the relationfield
 # from plone.app.vocabularies.catalog import CatalogSource
 # from z3c.relationfield.schema import RelationChoice

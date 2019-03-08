@@ -4,6 +4,7 @@ from zope.interface import implementer
 
 import logging
 
+
 logger = logging.getLogger(__name__)
 default_profile = 'profile-collective.z3cform.datagridfield:default'
 
