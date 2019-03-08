@@ -1,17 +1,15 @@
 Changelog
 =========
 
-1.4.1 (unreleased)
+1.5.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add support for Python 3 and Plone 5.2.
+  [pbauer, agitator]
 
 
 1.4.0 (2019-02-21)
 ------------------
-
-- Add support for Python 3 and Plone 5.2.
-  [pbauer]
 
 - Drop support for Plone 4.
   [pbauer]
