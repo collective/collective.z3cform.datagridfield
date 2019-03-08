@@ -11,8 +11,6 @@ cache:
 matrix:
   include:
     - python: "2.7"
-      env: PLONE_VERSION=4.3.x
-    - python: "2.7"
       env: PLONE_VERSION=5.1.x
     - python: "2.7"
       env: PLONE_VERSION=5.2.x
@@ -25,7 +23,7 @@ matrix:
 install:
   - virtualenv -p `which python` .
   - bin/pip install -r requirements.txt
-  - bin/buildout -c test-$PLONE_VERSION.x.cfg -N buildout:download-cache=downloads code-analysis:return-status-codes=True
+  - bin/buildout -c test-$PLONE_VERSION.cfg -N buildout:download-cache=downloads code-analysis:return-status-codes=True
 script:
   - bin/code-analysis
   - bin/coverage run bin/test
