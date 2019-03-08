@@ -1,14 +1,24 @@
 Changelog
 =========
 
-1.4.1 (unreleased)
+1.5.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add support for Python 3 and Plone 5.2.
+  [pbauer, agitator]
 
 
 1.4.0 (2019-02-21)
 ------------------
+
+- Drop support for Plone 4.
+  [pbauer]
+
+- Use Ressource-Registry (Pat-Registry), Update JS/CSS, Add Uninstall
+  [2silver]
+
+- use Plone5 glyphicons instead of images
+  [2silver]
 
 - Added missing upgrade step, calling browserlayer setup.
   [sgeulette]

@@ -16,6 +16,8 @@ from z3c.form.interfaces import DISPLAY_MODE
 from z3c.form.interfaces import HIDDEN_MODE
 from zope import schema
 from zope.interface import Interface
+
+
 # Uncomment, if you want to try the relationfield
 # from plone.app.vocabularies.catalog import CatalogSource
 # from z3c.relationfield.schema import RelationChoice
@@ -101,7 +103,7 @@ TESTDATA = {
             'city': 'Mega City',
             'country': 'The Old Sod',
             'personCount': 2,
-            'dateAdded': datetime(1981, 8, 17, 06, 00, 00)
+            'dateAdded': datetime(1981, 8, 17, 0o6, 00, 00)
             },
            {'address_type': 'Home',
             'line1': 'Home Sweet Home',
@@ -109,7 +111,7 @@ TESTDATA = {
             'city': 'Burbs',
             'country': 'The Old Sod',
             'personCount': 4,
-            'dateAdded': datetime(1981, 8, 17, 06, 00, 00)
+            'dateAdded': datetime(1981, 8, 17, 0o6, 00, 00)
             }
     ]}
 
@@ -131,13 +133,13 @@ class EditForm(form.EditForm):
         """
         address = data.get("address", [])
 
-        print "Dumping out extracted addresses"
+        print("Dumping out extracted addresses")
         for entry in address:
-            print entry
+            print(entry)
 
-        print "Dumping out raw HTTP POST form data"
+        print("Dumping out raw HTTP POST form data")
         for k, v in self.request.form.items():
-            print "%s: %s" % (k, v)
+            print("%s: %s" % (k, v))
 
     @button.buttonAndHandler(u'Save', name='save')
     def handleSave(self, action):

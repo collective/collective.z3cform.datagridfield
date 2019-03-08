@@ -2,8 +2,8 @@
 """
     Code an concept courtesy of Martin Aspeli
 """
-from interfaces import AttributeNotFoundError
-from interfaces import IRow
+from collective.z3cform.datagridfield.interfaces import AttributeNotFoundError
+from collective.z3cform.datagridfield.interfaces import IRow
 from z3c.form.interfaces import NO_VALUE
 from zope.interface import implementer
 from zope.schema import Field
