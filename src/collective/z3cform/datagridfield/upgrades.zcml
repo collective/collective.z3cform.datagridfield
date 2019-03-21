@@ -1,10 +1,22 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    xmlns:gs="http://namespaces.zope.org/genericsetup"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="collective.z3cform.datagridfield">
 
+  <genericsetup:registerProfile
+      name="to_2"
+      title="Profile to remove old resources"
+      description="Install collective.z3cform.datagridfield"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/to_2"
+      />
+  <utility
+      factory=".setuphandlers.HiddenProfiles"
+      name="collective.z3cform.datagridfield-to_2"
+      />
+
   <!-- Upgrade steps -->
-  <gs:upgradeStep
+  <genericsetup:upgradeStep
         title="Upgrade collective.z3cform.datagridfield to 2"
         description="collective.z3cform.datagridfield upgrade step"
         source="1"
