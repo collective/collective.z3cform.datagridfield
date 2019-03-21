@@ -1,7 +1,14 @@
 Changelog
 =========
 
-1.5.0 (unreleased)
+1.5.1.dev0 (unreleased)
+------------------
+
+- Add missing upgrade profile to_2
+  [agitator]
+
+
+1.5.0 (2019-03-09)
 ------------------
 
 - Add support for Python 3 and Plone 5.2.

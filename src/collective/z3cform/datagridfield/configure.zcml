@@ -26,6 +26,17 @@
       factory=".setuphandlers.HiddenProfiles"
       name="collective.z3cform.datagridfield-hiddenprofiles"
       />
+  <genericsetup:registerProfile
+      name="to_2"
+      title="Profile to remove old resources"
+      description="Install collective.z3cform.datagridfield"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/to_2"
+      />
+  <utility
+      factory=".setuphandlers.HiddenProfiles"
+      name="collective.z3cform.datagridfield-to_2"
+      />
   <!-- -*- extra stuff goes here -*- -->
   <class class=".datagridfield.DataGridField">
     <require
