@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.5.1.dev0 (unreleased)
+1.5.1 (2019-03-21)
 ------------------
 
 - Add missing upgrade profile to_2
