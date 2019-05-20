@@ -176,8 +176,10 @@ jQuery(function($) {
         .attr('class', function(i, cls) {
           return cls.replace(/dgw\-disabled-pat-/, 'pat-');
         });
-        var patRegistry = require('pat-registry');
-        patRegistry.scan(new_row);
+        if ( typeof require !== 'undefined' ) {
+          var patRegistry = require('pat-registry');
+          patRegistry.scan(new_row);
+        }
         return new_row;
     };
 
