@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.2 (unreleased)
+1.3.2 (2019-05-22)
 ------------------
 
 - Make patterns lib support optional. [jone]
