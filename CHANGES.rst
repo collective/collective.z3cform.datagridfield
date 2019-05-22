@@ -4,7 +4,7 @@ Changelog
 1.3.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Make patterns lib support optional. [jone]
 
 
 1.3.1 (2019-02-21)
