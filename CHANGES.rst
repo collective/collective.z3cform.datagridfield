@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.3 (unreleased)
+1.3.3 (2019-06-09)
 ------------------
 
 - Added missing upgrade step, calling browserlayer setup.
