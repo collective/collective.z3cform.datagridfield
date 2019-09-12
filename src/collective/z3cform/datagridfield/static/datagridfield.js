@@ -156,6 +156,54 @@ require([
           this.updateOrderIndex(tbody, true);
           dgf.trigger("afteraddrow", [dgf, newtr]);
       };
+      /**
+       * Copys the current row after the target row.
+       *
+       * @param {Object} currnode DOM <tr>
+       */
+      dataGridField2Functions.copyRowAfter = function(currnode) {
+          // fetch required data structure
+          var tbody = this.getParentByClass(currnode, "datagridwidget-body");
+          var dgf = $(dataGridField2Functions.getParentByClass(currnode, "datagridwidget-table-view"));
+          var thisRow = this.getParentRow(currnode);
+
+          // find all select2 and destroy them
+          // https://stackoverflow.com/a/17381913
+          var all_select2 = thisRow.find(".pat-select2");
+          for (let i = 0; i < all_select2.length; i++) {
+                $(all_select2[i]).select2('destroy');
+          }
+          //clone the row
+          var duplicatedRow = thisRow.clone();
+          dgf.trigger("beforeaddrow", [dgf, duplicatedRow]);
+
+          // If using auto-append we add the "real" row before AA
+          // We have a special case when there is only one visible in the gid
+          if (thisRow.hasClass('auto-append') && !thisRow.hasClass("minimum-row")) {
+              $(duplicatedRow).insertBefore(thisRow);
+          } else {
+              $(duplicatedRow).insertAfter(thisRow);
+          }
+
+          // Ensure minimum special behavior is no longer needed as we have now at least 2 rows
+          if(thisRow.hasClass("minimum-row")) {
+              this.supressEnsureMinimum(tbody);
+          }
+
+          // update orderindex hidden fields
+          this.updateOrderIndex(tbody, true);
+          dgf.trigger("afteraddrow", [dgf, duplicatedRow]);
+
+          //we must have to re-initialize select2
+          let existingRowSelects = thisRow.find(".pat-select2");
+          for (let i = 0; i < existingRowSelects.length; i++) {
+                $(existingRowSelects[i]).select2();
+          }
+          let duplicatedRowSelects = duplicatedRow.find(".pat-select2");
+          for (let i = 0; i < existingRowSelects.length; i++) {
+                $(duplicatedRowSelects[i]).select2();
+          }
+      };
 
       /**
        * Creates a new row.
