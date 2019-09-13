@@ -166,6 +166,7 @@ require([
           var tbody = this.getParentByClass(currnode, "datagridwidget-body");
           var dgf = $(dataGridField2Functions.getParentByClass(currnode, "datagridwidget-table-view"));
           var thisRow = this.getParentRow(currnode);
+          var filteredRows = this.getVisibleRows(currnode);
 
           // find all select2 and destroy them
           // https://stackoverflow.com/a/17381913
