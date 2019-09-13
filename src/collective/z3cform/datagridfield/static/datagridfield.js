@@ -161,7 +161,7 @@ require([
        *
        * @param {Object} currnode DOM <tr>
        */
-      dataGridField2Functions.copyRowAfter = function(currnode) {
+      dataGridField2Functions.duplicateRowAfter = function(currnode) {
           // fetch required data structure
           var tbody = this.getParentByClass(currnode, "datagridwidget-body");
           var dgf = $(dataGridField2Functions.getParentByClass(currnode, "datagridwidget-table-view"));

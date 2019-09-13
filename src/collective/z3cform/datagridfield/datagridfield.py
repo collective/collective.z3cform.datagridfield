@@ -56,7 +56,7 @@ class DataGridField(MultiWidget):
     schema.Object and an interface"""
 
     allow_insert = True
-    allow_copy = True
+    allow_duplicate = True
     allow_delete = True
     allow_reorder = False
     auto_append = True
@@ -291,8 +291,8 @@ class DataGridFieldObject(ObjectWidget):
     def isInsertEnabled(self):
         return self.__parent__.allow_insert
 
-    def isCopyEnabled(self):
-        return self.__parent__.allow_copy
+    def isDuplicteEnabled(self):
+        return self.__parent__.allow_duplicate
 
     def isDeleteEnabled(self):
         return self.__parent__.allow_delete

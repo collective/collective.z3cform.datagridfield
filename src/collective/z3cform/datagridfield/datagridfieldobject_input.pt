@@ -34,21 +34,22 @@
 
     </td>
 
-    <td class="datagridwidget-manipulator copy-row"
-             tal:condition="view/isCopyEnabled">
+    <td class="datagridwidget-manipulator duplicate-row"
+             tal:condition="view/isDuplicteEnabled">
 
         <a href=""
-           onclick="dataGridField2Functions.copyRowAfter(this); return false"
-           id="btn-copyrow"
+           onclick="dataGridField2Functions.duplicateRowAfter(this); return false"
+           id="btn-duplicaterow"
            class="btn btn-default"
            title=""
-           aria-label="Copy row"
-           data-original-title="Copy row"
-           i18n:attributes="aria-label label_datagridwidget_manipulators_copyrow;
-                            data-original-title label_datagridwidget_manipulators_copyrow">
+           aria-label="Duplicate row"
+           data-original-title="Duplicate row"
+           i18n:attributes="aria-label label_datagridwidget_manipulators_duplicaterow;
+                            data-original-title label_datagridwidget_manipulators_duplicaterow">
             <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
-            <span class="sr-only" i18n:translate="label_datagridwidget_manipulators_addrow">Add row</span>
+            <span class="sr-only" i18n:translate="label_datagridwidget_manipulators_addrow">Duplicate row</span>
          </a>
+
     </td>
     <td class="datagridwidget-manipulator delete-row"
         tal:condition="view/isDeleteEnabled">
