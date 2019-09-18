@@ -4,7 +4,7 @@ Changelog
 1.5.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Bugfix for getting two lines [terapyon]
 
 
 1.5.1 (2019-03-21)

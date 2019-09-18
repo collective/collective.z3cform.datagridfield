@@ -3,12 +3,11 @@ from setuptools import setup
 
 setup(
     # zest.releaser needs version here for now
-    version='1.5.2.dev0',
-
+    version="1.5.2.cmscom-1",
+    
     # thanks to this bug
     # https://github.com/pypa/setuptools/issues/1136
     # we need one line in here:
     package_dir={"": "src"}
-
     # see setup.cfg
 )
