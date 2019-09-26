@@ -43,6 +43,8 @@ if widget_datetime is not None:
 
 
 class IAddress(Interface):
+    line1 = schema.TextLine(
+        title=u'Line 1', required=True)
     address_type = schema.Choice(
         title=u'Address Type', required=True,
         values=[u'Work', u'Home'])
@@ -52,8 +54,6 @@ class IAddress(Interface):
 #        source=CatalogSource(portal_type=['Document']),
 #        required=True
 #    )
-    line1 = schema.TextLine(
-        title=u'Line 1', required=True)
     line2 = schema.TextLine(
         title=u'Line 2', required=False)
     city = schema.TextLine(

@@ -11,4 +11,7 @@ setup(
     package_dir={"": "src"}
 
     # see setup.cfg
+    'test': [
+        'plone.app.robotframework',
+    ],
 )
