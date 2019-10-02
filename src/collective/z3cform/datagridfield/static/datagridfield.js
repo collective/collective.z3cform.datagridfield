@@ -597,7 +597,7 @@ require([
       };
 
 
-      $(document).ready(dataGridField2Functions.init);
+      // $(document).ready(dataGridField2Functions.init);
 
       // Export module for customizers to mess around
       window.dataGridField2Functions = dataGridField2Functions;
