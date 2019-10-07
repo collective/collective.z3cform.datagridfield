@@ -331,7 +331,7 @@ class DataGridFieldObject(ObjectWidget):
             html = ''
             for tree in fragments:
                 for el in tree.xpath(PAT_XPATH):
-                    if '.TT.' in el.attrib['name']:
+                    if '.TT.' in el.attrib.get('name', ''):
                         el.attrib['class'] = el.attrib['class'].replace(
                             'pat-',
                             'dgw-disabled-pat-'
