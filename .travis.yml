@@ -23,7 +23,7 @@ install:
   - bin/buildout -c test-$PLONE_VERSION.x.cfg -N buildout:download-cache=downloads code-analysis:return-status-codes=True
 script:
   - bin/code-analysis
-  - bin/coverage run bin/test
+  - bin/coverage run bin/test --all
 after_success:
   - bin/coveralls
 
