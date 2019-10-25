@@ -1,6 +1,8 @@
 language: python
 python: 2.7
 sudo: false
+addons:
+  firefox: "65.0"
 cache:
   pip: true
   directories:
@@ -17,13 +19,22 @@ matrix:
     - python: "3.7"
       env: PLONE_VERSION=5.2
       dist: xenial
+before_install:
+   - wget https://github.com/mozilla/geckodriver/releases/download/v0.25.0/geckodriver-v0.25.0-linux64.tar.gz
+   - mkdir geckodriver && tar zxvf geckodriver-v0.25.0-linux64.tar.gz -C geckodriver
+   - export PATH=$PATH:$PWD/geckodriver
 install:
   - virtualenv -p `which python` .
   - bin/pip install -r https://dist.plone.org/release/$PLONE_VERSION-latest/requirements.txt
   - bin/buildout -c test-$PLONE_VERSION.x.cfg -N buildout:download-cache=downloads code-analysis:return-status-codes=True
+before_script:
+  - 'export DISPLAY=:99.0'
+  - export VERBOSE=true
+  - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+  - sleep 3
 script:
   - bin/code-analysis
-  - bin/coverage run bin/test
+  - bin/coverage run bin/test --all
 after_success:
   - bin/coveralls
 
