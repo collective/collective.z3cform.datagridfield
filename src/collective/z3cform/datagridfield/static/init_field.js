@@ -1,6 +1,8 @@
-(function($) {
-  if (window.dataGridField2Functions) {
-    // hack for load datagrid stuff in overlay/modals
-    window.dataGridField2Functions.init();
-  }
-})(jQuery);
+require([
+    'jquery',
+    '++resource++collective.z3cform.datagridfield/datagridfield',
+], function ($) {
+    $(document).ready(function() {
+        window.dataGridField2Functions.init();
+    });
+})
