@@ -6,6 +6,9 @@
     xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="collective.z3cform.datagridfield"
     >
+
+  <includeDependencies package="." />
+
   <include package=".demo" />
   <include file="upgrades.zcml" />
   <genericsetup:registerProfile
