@@ -4,6 +4,9 @@ Changelog
 1.5.2 (unreleased)
 ------------------
 
+- Fix "Unknown directive widgetTemplate"
+  [agitator]
+
 - Bug fix: auto appending row.
   [ksuess]
 
