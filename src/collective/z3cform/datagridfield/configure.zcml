@@ -7,7 +7,7 @@
     i18n_domain="collective.z3cform.datagridfield"
     >
 
-  <includeDependencies package="." />
+  <include package="z3c.form" file="meta.zcml" />
 
   <include package=".demo" />
   <include file="upgrades.zcml" />

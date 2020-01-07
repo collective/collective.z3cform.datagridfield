@@ -4,7 +4,8 @@ Changelog
 1.5.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix "Unknown directive widgetTemplate"
+  [agitator]
 
 
 1.5.1 (2019-03-21)
