@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.5.2 (unreleased)
+1.5.2 (2020-01-07)
 ------------------
 
 - Fix "Unknown directive widgetTemplate"
