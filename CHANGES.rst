@@ -7,6 +7,9 @@ Changelog
 - Fix "Unknown directive widgetTemplate"
   [agitator]
 
+- Bug fix: auto appending row.
+  [ksuess]
+
 
 1.5.1 (2019-03-21)
 ------------------
