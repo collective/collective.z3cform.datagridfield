@@ -4,7 +4,8 @@ Changelog
 1.5.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Bug fix: auto appending row.
+  [ksuess]
 
 
 1.5.1 (2019-03-21)
