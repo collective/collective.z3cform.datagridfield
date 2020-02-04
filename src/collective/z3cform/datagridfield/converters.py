@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from row import DictRow
+from collective.z3cform.datagridfield.row import DictRow
 from transmogrify.dexterity.converters import DefaultSerializer
 from transmogrify.dexterity.interfaces import ISerializer
 from zope.component import adapter
