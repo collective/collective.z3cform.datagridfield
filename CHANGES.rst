@@ -4,7 +4,10 @@ Changelog
 1.5.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Bug fix for multiple datagridfields per form.
+  Multiple lines were auto added when more than one datagrid was present.
+  Fixes `issue 96 <https://github.com/collective/collective.z3cform.datagridfield/issues/96>`_.
+  [maurits]
 
 
 1.5.2 (2020-01-07)
