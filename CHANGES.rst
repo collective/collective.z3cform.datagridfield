@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.5.3 (unreleased)
+1.5.3 (2020-03-03)
 ------------------
 
 - Bug fix for multiple datagridfields per form.
