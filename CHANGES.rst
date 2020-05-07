@@ -4,7 +4,8 @@ Changelog
 1.5.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Accesibility fixes.
+  [erral]
 
 
 1.5.3 (2020-03-03)
