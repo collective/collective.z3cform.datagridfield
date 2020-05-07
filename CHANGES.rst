@@ -4,7 +4,11 @@ Changelog
 1.5.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Register translations in locales directory.
+  [erral]
+
+- Add es and eu translations.
+  [erral]
 
 
 1.5.3 (2020-03-03)
