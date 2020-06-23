@@ -3,6 +3,7 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       tal:omit-tag=""
+      i18n:domain="collective.z3cform.datagridfield"
       >
 
     <tal:block tal:repeat="widget view/subform/widgets/values">

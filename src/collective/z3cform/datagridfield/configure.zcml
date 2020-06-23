@@ -4,9 +4,11 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     xmlns:z3c="http://namespaces.zope.org/z3c"
     xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="collective.z3cform.datagridfield"
     >
 
+  <i18n:registerTranslations directory="locales" />
   <include package="z3c.form" file="meta.zcml" />
 
   <include package=".demo" />

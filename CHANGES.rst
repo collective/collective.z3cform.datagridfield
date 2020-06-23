@@ -4,6 +4,12 @@ Changelog
 1.5.4 (unreleased)
 ------------------
 
+- Register translations in locales directory.
+  [erral]
+
+- Add es and eu translations.
+  [erral]
+  
 - Accesibility fixes.
   [erral]
 

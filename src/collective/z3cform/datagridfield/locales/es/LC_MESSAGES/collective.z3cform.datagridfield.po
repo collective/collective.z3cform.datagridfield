@@ -1,0 +1,58 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2020-05-07 08:43+0000\n"
+"PO-Revision-Date: 2020-05-07 10:46+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: DOMAIN\n"
+"Last-Translator: Mikel Larreategi <mlarreategi@codesyntax.com>\n"
+"Language-Team: \n"
+"Language: es\n"
+"X-Generator: Poedit 2.3\n"
+
+#: ../configure.zcml:20
+msgid "Data Grid Field for z3c.form"
+msgstr "Data Grid Field para formularios basados en z3c.form"
+
+#: ../configure.zcml:20 ../upgrades.zcml:12
+msgid "Install collective.z3cform.datagridfield"
+msgstr "Instalar collective.z3cform.datagridfield"
+
+#: ../upgrades.zcml:12
+msgid "Profile to remove old resources"
+msgstr "Perfil para eliminar recursos antiguos"
+
+#: ../configure.zcml:27
+msgid "Uninstall Data Grid Field for z3c.form"
+msgstr "Desinstalar collective.z3cform.datagridfield"
+
+#. Default: "Add ${type}"
+#: ../datagridfield.py:343
+msgid "add_record_label"
+msgstr "Añadir ${type}"
+
+#. Default: "Add row"
+#: ../datagridfieldobject_input.pt:23 ../datagridfieldobject_input_block.pt:47
+msgid "label_datagridwidget_manipulators_addrow"
+msgstr "Añadir línea"
+
+#. Default: "Delete row"
+#: ../datagridfieldobject_input.pt:40 ../datagridfieldobject_input_block.pt:64
+msgid "label_datagridwidget_manipulators_deleterow"
+msgstr "Eliminar línea"
+
+#. Default: "Move Down"
+#: ../datagridfieldobject_input.pt:74 ../datagridfieldobject_input_block.pt:99
+msgid "label_datagridwidget_manipulators_moverowdown"
+msgstr "Mover abajo"
+
+#. Default: "Move Up"
+#: ../datagridfieldobject_input.pt:57 ../datagridfieldobject_input_block.pt:82
+msgid "label_datagridwidget_manipulators_moverowup"
+msgstr "Mover arriba"
