@@ -9,27 +9,33 @@
     <td class="datagridwidget-block-edit-cell">
         <tal:block tal:repeat="widget view/subform/widgets/values">
 
-            <div tal:define="klass python: widget.klass or ''" tal:attributes="class python:'datagridwidget-block-' + widget.id + ' ' + klass + ' datagridwidget-widget-' + widget.field.__name__ + ' ' + (widget.mode == 'hidden' and 'datagridwidget-hidden-data' or 'datagridwidget-block')">
+            <div tal:define="klass python: widget.klass or '';
+                             error python: widget.error and 'error' or ''"
+            tal:attributes="class python:'datagridwidget-block-' + widget.id + ' ' + klass + ' datagridwidget-widget-' + widget.field.__name__ + ' ' + error + ' ' + (widget.mode == 'hidden' and 'datagridwidget-hidden-data' or 'datagridwidget-block')">
                 <div class="label">
                     <label tal:attributes="for widget/id">
                         <span i18n:translate=""
                     tal:content="widget/label">label</span>
                         <span class="required"
                       tal:condition="widget/required" title="Required" i18n:domain="plone" i18n:attributes="title title_required">&nbsp;</span>
+
+                      <span class="formHelp"
+                       tal:define="description widget/field/description"
+                       i18n:translate=""
+                       tal:content="structure description"
+                       tal:condition="python:description"
+                       >field description</span>
                     </label>
                 </div>
 
-                <div tal:condition="widget/error"
-                 tal:replace="structure widget/error/render">error</div>
+
+
+                <div class="fieldErrorBox" tal:condition="widget/error">
+                    <span tal:replace="structure widget/error/render" />
+                </div>
 
                 <div tal:replace="structure widget/render" />
 
-                <div class="formHelp"
-                tal:define="description widget/field/description"
-                i18n:translate=""
-                tal:content="structure description"
-                tal:condition="python:description"
-                >field description</div>
 
             </div>
 
@@ -47,6 +53,7 @@
         <a href=""
            onclick="dataGridField2Functions.addRowAfter(this); return false"
            id="btn-addrow"
+           tal:attributes="id string:btn-addrow-${view/name}"
            class="btn btn-default"
            title=""
            aria-label="Add row"
@@ -64,6 +71,7 @@
         <a href=""
            onclick="dataGridField2Functions.removeFieldRow(this);return false"
            id="btn-deleterow"
+           tal:attributes="id string:btn-deleterow-${view/name}"
            class="btn btn-default"
            title=""
            aria-label="Delete row"
@@ -82,6 +90,7 @@
         <a href=""
            onclick="dataGridField2Functions.moveRowUp(this);return false"
            id="btn-moveup"
+           tal:attributes="id string:btn-moveup-${view/name}"
            class="btn btn-default"
            title=""
            aria-label="Move Up"
@@ -99,6 +108,7 @@
         <a href=""
            onclick="dataGridField2Functions.moveRowDown(this);return false"
            id="btn-movedown"
+           tal:attributes="id string:btn-movedown-${view/name}"
            class="btn btn-default"
            title=""
            aria-label="Move Down"
