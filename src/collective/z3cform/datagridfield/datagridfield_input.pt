@@ -21,6 +21,7 @@
       </th>
     </tal:block>
     <th id="" class="header" tal:condition="view/allow_insert"> </th>
+    <th id="" class="header" tal:condition="view/allow_duplicate"> </th>
     <th id="" class="header" tal:condition="view/allow_delete"> </th>
     <th id="" class="header" tal:condition="view/allow_reorder"> </th>
     <th id="" class="header" tal:condition="view/allow_reorder"> </th>
