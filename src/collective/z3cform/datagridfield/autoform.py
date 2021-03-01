@@ -25,7 +25,6 @@ from zope.interface import Interface
 
 @implementer(ISubForm)
 class AutoExtensibleSubForm(AutoExtensibleForm, form.BaseForm):
-
     @property
     def schema(self):
         return self.__parent__.field.schema
@@ -42,13 +41,13 @@ class AutoExtensibleSubForm(AutoExtensibleForm, form.BaseForm):
 
 
 @adapter(
-    Interface,   # widget value
+    Interface,  # widget value
     IFormLayer,  # request
-    Interface,   # widget context
+    Interface,  # widget context
     IAutoExtensibleForm,  # form
     IObjectWidget,  # widget
-    Interface,   # field
-    Interface    # field.schema
+    Interface,  # field
+    Interface,  # field.schema
 )
 @implementer(ISubformFactory)
 class AutoExtensibleSubformAdapter(object):
@@ -59,6 +58,7 @@ class AutoExtensibleSubformAdapter(object):
 # Its only purpose is to hide redundant error messages. Every
 # error within a subform seem to be rendered both for
 # the subform and for the individual field.
+
 
 @adapter(IMultipleErrors, None, None, None, IAutoExtensibleForm, None)
 class MultipleErrorViewSnippetWithMessage(MultipleErrorViewSnippet):
