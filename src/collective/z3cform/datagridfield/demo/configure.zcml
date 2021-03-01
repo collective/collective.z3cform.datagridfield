@@ -7,145 +7,145 @@
     >
   <browser:page
       name="demo-collective.z3cform.datagrid-menu"
-      template="menu.pt"
       for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      template="menu.pt"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid"
+      for="*"
       class=".editform_simple.EditForm"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid-no-manipulators"
+      for="*"
       class=".editform_simple.EditForm2"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid-no-auto-append"
+      for="*"
       class=".editform_simple.EditForm3"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid-no-country"
+      for="*"
       class=".editform_simple.EditForm4"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid-column-widths"
+      for="*"
       class=".editform_simple.EditForm5"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid-hidden-column"
+      for="*"
       class=".editform_simple.EditForm6"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid-read-only"
+      for="*"
       class=".editform_simple.EditForm7"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid-read-only2"
+      for="*"
       class=".editform_simple.EditForm8"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid-block-edit"
+      for="*"
       class=".editform_simple.EditForm9"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid-object"
+      for="*"
       class=".editform_object.EditForm"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid-object-no-manipulators"
+      for="*"
       class=".editform_object.EditForm2"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid-object-no-auto-append"
+      for="*"
       class=".editform_object.EditForm3"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid-object-no-country"
+      for="*"
       class=".editform_object.EditForm4"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid-object-column-widths"
+      for="*"
       class=".editform_object.EditForm5"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid-object-hidden-column"
+      for="*"
       class=".editform_object.EditForm6"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid-object-read-only"
+      for="*"
       class=".editform_object.EditForm7"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
   <browser:page
       name="demo-collective.z3cform.datagrid-object-read-only2"
+      for="*"
       class=".editform_object.EditForm8"
       template="editform.pt"
-      for="*"
-      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       permission="zope2.View"
-  />
+      layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+      />
 </configure>

@@ -2,14 +2,17 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:z3c="http://namespaces.zope.org/z3c"
     xmlns:zcml="http://namespaces.zope.org/zcml"
-    xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="collective.z3cform.datagridfield"
     >
 
   <i18n:registerTranslations directory="locales" />
-  <include package="z3c.form" file="meta.zcml" />
+  <include
+      package="z3c.form"
+      file="meta.zcml"
+      />
 
   <include package=".demo" />
   <include file="upgrades.zcml" />
@@ -52,40 +55,40 @@
       zcml:condition="installed transmogrify.dexterity"
       />
   <z3c:widgetTemplate
+      widget=".datagridfield.DataGridField"
       template="datagridfield_input.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="input"
-      widget=".datagridfield.DataGridField"
       />
   <z3c:widgetTemplate
+      widget=".blockdatagridfield.BlockDataGridField"
       template="datagridfield_input_block.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="input"
-      widget=".blockdatagridfield.BlockDataGridField"
       />
   <z3c:widgetTemplate
+      widget=".datagridfield.DataGridFieldObject"
       template="datagridfieldobject_input.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="input"
-      widget=".datagridfield.DataGridFieldObject"
       />
   <z3c:widgetTemplate
+      widget=".blockdatagridfield.BlockDataGridFieldObject"
       template="datagridfieldobject_input_block.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="input"
-      widget=".blockdatagridfield.BlockDataGridFieldObject"
       />
   <z3c:widgetTemplate
+      widget=".datagridfield.DataGridField"
       template="datagridfield_display.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="display"
-      widget=".datagridfield.DataGridField"
       />
   <z3c:widgetTemplate
+      widget=".datagridfield.DataGridFieldObject"
       template="datagridfieldobject_display.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="display"
-      widget=".datagridfield.DataGridFieldObject"
       />
   <configure zcml:condition="installed plone.supermodel">
     <utility
