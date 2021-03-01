@@ -4,6 +4,8 @@ Changelog
 1.5.4 (unreleased)
 ------------------
 
+- Rework JavaScript as a Pattern for better initialization.
+
 - Row UI buttons optimizations
   Change row UI elements from anchor to buttons for better semantics.
   Fix Boostrap classes, remove unused attributes, add a title to buttons.
