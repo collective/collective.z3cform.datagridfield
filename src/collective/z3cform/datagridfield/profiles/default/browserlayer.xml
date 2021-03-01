@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <layers>
-  <layer
-      name="collective.z3cform.datagridfield"
-      interface="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
-      />
+  <layer interface="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
+         name="collective.z3cform.datagridfield"
+  />
 </layers>

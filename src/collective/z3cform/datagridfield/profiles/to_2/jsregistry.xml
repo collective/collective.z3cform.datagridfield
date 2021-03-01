@@ -1,4 +1,6 @@
 <?xml version="1.0"?>
 <object name="portal_javascripts">
-  <javascript remove="true" id="++resource++collective.z3cform.datagridfield/datagridfield.js"/>
+  <javascript id="++resource++collective.z3cform.datagridfield/datagridfield.js"
+              remove="true"
+  />
 </object>

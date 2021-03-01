@@ -1,19 +1,24 @@
 <?xml version="1.0"?>
 <registry>
-  <records prefix="plone.resources/z3cform_datagridfield_css"
-           interface='Products.CMFPlone.interfaces.IResourceRegistry'>
+  <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
+           prefix="plone.resources/z3cform_datagridfield_css"
+  >
     <value key="css">
       <element>++resource++collective.z3cform.datagridfield/datagridfield.css</element>
     </value>
   </records>
-  <records prefix="plone.resources/z3cform_datagridfield_js"
-           interface='Products.CMFPlone.interfaces.IResourceRegistry'>
+  <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
+           prefix="plone.resources/z3cform_datagridfield_js"
+  >
     <value key="js">++resource++collective.z3cform.datagridfield/datagridfield.js</value>
   </records>
 
-  <records prefix="plone.bundles/datagridfield-bundle"
-           interface='Products.CMFPlone.interfaces.IBundleRegistry'>
-    <value key="resources" purge="false">
+  <records interface="Products.CMFPlone.interfaces.IBundleRegistry"
+           prefix="plone.bundles/datagridfield-bundle"
+  >
+    <value key="resources"
+           purge="false"
+    >
       <element>z3cform_datagridfield_css</element>
       <element>z3cform_datagridfield_js</element>
     </value>
