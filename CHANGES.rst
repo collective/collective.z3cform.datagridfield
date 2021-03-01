@@ -4,11 +4,18 @@ Changelog
 1.5.4 (unreleased)
 ------------------
 
-- Import with module name [ksuess]
+- Code formatting.
+  [thet]
+
+- Import with module name.
+  [ksuess]
+
 - Register translations in locales directory.
   [erral]
+
 - Add es and eu translations.
-  [erral]  
+  [erral]
+
 - Accesibility fixes.
   [erral]
 
