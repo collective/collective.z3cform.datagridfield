@@ -4,6 +4,9 @@ Changelog
 1.5.4 (unreleased)
 ------------------
 
+- Clean up upgrade profile definitions and align to Plone standards.
+  [thet]
+
 - Use Github actions instead Travis CI.
   [thet]
 
