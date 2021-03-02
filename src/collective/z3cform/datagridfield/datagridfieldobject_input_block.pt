@@ -1,124 +1,177 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:tal="http://xml.zope.org/namespaces/tal"
-      xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      i18n:domain="collective.z3cform.datagridfield"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
       tal:omit-tag=""
+      i18n:domain="collective.z3cform.datagridfield"
+>
+
+  <td class="datagridwidget-block-edit-cell">
+    <tal:block tal:repeat="widget view/subform/widgets/values">
+
+      <div tal:define="
+             klass python: widget.klass or '';
+             error python: widget.error and 'error' or '';
+           "
+           tal:attributes="
+             class python:'datagridwidget-block-' + widget.id + ' ' + klass + ' datagridwidget-widget-' + widget.field.__name__ + ' ' + error + ' ' + (widget.mode == 'hidden' and 'datagridwidget-hidden-data' or 'datagridwidget-block');
+           "
       >
+        <div class="label">
+          <label tal:attributes="
+                   for widget/id;
+                 ">
+            <span tal:content="widget/label"
+                  i18n:translate=""
+            >label</span>
+            <span class="required"
+                  title="Required"
+                  tal:condition="widget/required"
+                  i18n:attributes="title title_required"
+                  i18n:domain="plone"
+            >&nbsp;</span>
 
-    <td class="datagridwidget-block-edit-cell">
-        <tal:block tal:repeat="widget view/subform/widgets/values">
-
-            <div tal:define="klass python: widget.klass or '';
-                             error python: widget.error and 'error' or ''"
-            tal:attributes="class python:'datagridwidget-block-' + widget.id + ' ' + klass + ' datagridwidget-widget-' + widget.field.__name__ + ' ' + error + ' ' + (widget.mode == 'hidden' and 'datagridwidget-hidden-data' or 'datagridwidget-block')">
-                <div class="label">
-                    <label tal:attributes="for widget/id">
-                        <span i18n:translate=""
-                    tal:content="widget/label">label</span>
-                        <span class="required"
-                      tal:condition="widget/required" title="Required" i18n:domain="plone" i18n:attributes="title title_required">&nbsp;</span>
-
-                      <span class="formHelp"
-                       tal:define="description widget/field/description"
-                       i18n:translate=""
-                       tal:content="structure description"
-                       tal:condition="python:description"
-                       >field description</span>
-                    </label>
-                </div>
-
-
-
-                <div class="fieldErrorBox" tal:condition="widget/error">
-                    <span tal:replace="structure widget/error/render" />
-                </div>
-
-                <div tal:replace="structure widget/render" />
+            <span class="formHelp"
+                  tal:define="
+                    description widget/field/description;
+                  "
+                  tal:condition="python:description"
+                  tal:content="structure description"
+                  i18n:translate=""
+            >field description</span>
+          </label>
+        </div>
 
 
-            </div>
 
-        </tal:block>
-    </td>
+        <div class="fieldErrorBox"
+             tal:condition="widget/error"
+        >
+          <span tal:replace="structure widget/error/render"></span>
+        </div>
 
-    <td class="datagridwidget-hidden-data">
-        <input name="field-empty-marker" type="hidden" value="1"
-             tal:attributes="name string:${view/name}-empty-marker" />
-    </td>
-
-    <td class="datagridwidget-manipulator insert-row"
-        tal:condition="view/isInsertEnabled">
-
-        <a href=""
-           onclick="dataGridField2Functions.addRowAfter(this); return false"
-           id="btn-addrow"
-           tal:attributes="id string:btn-addrow-${view/name}"
-           class="btn btn-default"
-           title=""
-           aria-label="Add row"
-           data-original-title="Add row"
-           i18n:attributes="aria-label label_datagridwidget_manipulators_addrow;
-                            data-original-title label_datagridwidget_manipulators_addrow">
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            <span class="sr-only" i18n:translate="label_datagridwidget_manipulators_addrow">Add row</span>
-         </a>
-
-    </td>
-    <td class="datagridwidget-manipulator delete-row"
-        tal:condition="view/isDeleteEnabled">
-
-        <a href=""
-           onclick="dataGridField2Functions.removeFieldRow(this);return false"
-           id="btn-deleterow"
-           tal:attributes="id string:btn-deleterow-${view/name}"
-           class="btn btn-default"
-           title=""
-           aria-label="Delete row"
-           data-original-title="Delete row"
-           i18n:attributes="aria-label label_datagridwidget_manipulators_deleterow;
-                            data-original-title label_datagridwidget_manipulators_deleterow">
-            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-            <span class="sr-only" i18n:translate="label_datagridwidget_manipulators_deleterow">Delete row</span>
-         </a>
-
-    </td>
-    <td class="datagridwidget-manipulator move-up"
-        tal:condition="view/isReorderEnabled">
+        <div tal:replace="structure widget/render"></div>
 
 
-        <a href=""
-           onclick="dataGridField2Functions.moveRowUp(this);return false"
-           id="btn-moveup"
-           tal:attributes="id string:btn-moveup-${view/name}"
-           class="btn btn-default"
-           title=""
-           aria-label="Move Up"
-           data-original-title="Move Up"
-           i18n:attributes="aria-label label_datagridwidget_manipulators_moverowup;
-                            data-original-title label_datagridwidget_manipulators_moverowup">
-            <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
-            <span class="sr-only" i18n:translate="label_datagridwidget_manipulators_moverowup">Move Up</span>
-         </a>
+      </div>
 
-    </td>
-    <td class="datagridwidget-manipulator move-down"
-        tal:condition="view/isReorderEnabled">
+    </tal:block>
+  </td>
 
-        <a href=""
-           onclick="dataGridField2Functions.moveRowDown(this);return false"
-           id="btn-movedown"
-           tal:attributes="id string:btn-movedown-${view/name}"
-           class="btn btn-default"
-           title=""
-           aria-label="Move Down"
-           data-original-title="Move Down"
-           i18n:attributes="aria-label label_datagridwidget_manipulators_moverowdown;
-                            data-original-title label_datagridwidget_manipulators_moverowdown">
-            <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
-            <span class="sr-only" i18n:translate="label_datagridwidget_manipulators_moverowdown">Move Down</span>
-         </a>
+  <td class="datagridwidget-hidden-data">
+    <input name="field-empty-marker"
+           type="hidden"
+           value="1"
+           tal:attributes="
+             name string:${view/name}-empty-marker;
+           "
+    />
+  </td>
 
-    </td>
+  <td class="datagridwidget-manipulator insert-row"
+      tal:condition="view/isInsertEnabled"
+  >
+
+    <a class="btn btn-default"
+       id="btn-addrow"
+       aria-label="Add row"
+       href=""
+       onclick="dataGridField2Functions.addRowAfter(this); return false"
+       title=""
+       data-original-title="Add row"
+       tal:attributes="
+         id string:btn-addrow-${view/name};
+       "
+       i18n:attributes="aria-label label_datagridwidget_manipulators_addrow;
+                            data-original-title label_datagridwidget_manipulators_addrow"
+    >
+      <span class="glyphicon glyphicon-plus"
+            aria-hidden="true"
+      ></span>
+      <span class="sr-only"
+            i18n:translate="label_datagridwidget_manipulators_addrow"
+      >Add row</span>
+    </a>
+
+  </td>
+  <td class="datagridwidget-manipulator delete-row"
+      tal:condition="view/isDeleteEnabled"
+  >
+
+    <a class="btn btn-default"
+       id="btn-deleterow"
+       aria-label="Delete row"
+       href=""
+       onclick="dataGridField2Functions.removeFieldRow(this);return false"
+       title=""
+       data-original-title="Delete row"
+       tal:attributes="
+         id string:btn-deleterow-${view/name};
+       "
+       i18n:attributes="aria-label label_datagridwidget_manipulators_deleterow;
+                            data-original-title label_datagridwidget_manipulators_deleterow"
+    >
+      <span class="glyphicon glyphicon-trash"
+            aria-hidden="true"
+      ></span>
+      <span class="sr-only"
+            i18n:translate="label_datagridwidget_manipulators_deleterow"
+      >Delete row</span>
+    </a>
+
+  </td>
+  <td class="datagridwidget-manipulator move-up"
+      tal:condition="view/isReorderEnabled"
+  >
+
+
+    <a class="btn btn-default"
+       id="btn-moveup"
+       aria-label="Move Up"
+       href=""
+       onclick="dataGridField2Functions.moveRowUp(this);return false"
+       title=""
+       data-original-title="Move Up"
+       tal:attributes="
+         id string:btn-moveup-${view/name};
+       "
+       i18n:attributes="aria-label label_datagridwidget_manipulators_moverowup;
+                            data-original-title label_datagridwidget_manipulators_moverowup"
+    >
+      <span class="glyphicon glyphicon-arrow-up"
+            aria-hidden="true"
+      ></span>
+      <span class="sr-only"
+            i18n:translate="label_datagridwidget_manipulators_moverowup"
+      >Move Up</span>
+    </a>
+
+  </td>
+  <td class="datagridwidget-manipulator move-down"
+      tal:condition="view/isReorderEnabled"
+  >
+
+    <a class="btn btn-default"
+       id="btn-movedown"
+       aria-label="Move Down"
+       href=""
+       onclick="dataGridField2Functions.moveRowDown(this);return false"
+       title=""
+       data-original-title="Move Down"
+       tal:attributes="
+         id string:btn-movedown-${view/name};
+       "
+       i18n:attributes="aria-label label_datagridwidget_manipulators_moverowdown;
+                            data-original-title label_datagridwidget_manipulators_moverowdown"
+    >
+      <span class="glyphicon glyphicon-arrow-down"
+            aria-hidden="true"
+      ></span>
+      <span class="sr-only"
+            i18n:translate="label_datagridwidget_manipulators_moverowdown"
+      >Move Down</span>
+    </a>
+
+  </td>
 
 </html>

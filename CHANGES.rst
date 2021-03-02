@@ -10,7 +10,7 @@ Changelog
 - Test setup using bobtemplate.plone config.
   [thet]
 
-- Code formatting.
+- Code formatting - black, zpretty, prettier.
   [thet]
 
 - Import with module name.

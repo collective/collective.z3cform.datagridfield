@@ -1,24 +1,30 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
-      xmlns:tal="http://xml.zope.org/namespaces/tal"
-      xmlns:metal="http://xml.zope.org/namespaces/metal"
+<html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
       lang="en"
       metal:use-macro="context/main_template/macros/master"
-      i18n:domain="example.conference">
-<body>
+      xml:lang="en"
+      i18n:domain="example.conference"
+>
+  <body>
 
-<metal:main fill-slot="main">
-    <tal:main-macro metal:define-macro="main">
+    <metal:main fill-slot="main">
+      <tal:main-macro metal:define-macro="main">
 
-        <div tal:replace="structure provider:plone.abovecontenttitle" />
+        <div tal:replace="structure provider:plone.abovecontenttitle"></div>
 
-        <h1 class="documentFirstHeading" tal:content="view/label" />
+        <h1 class="documentFirstHeading"
+            tal:content="view/label"
+        ></h1>
 
-        <div tal:replace="structure provider:plone.belowcontenttitle" />
+        <div tal:replace="structure provider:plone.belowcontenttitle"></div>
 
-        <p class="documentDescription" tal:content="context/description" />
+        <p class="documentDescription"
+           tal:content="context/description"
+        ></p>
 
-        <div tal:replace="structure provider:plone.abovecontentbody" />
+        <div tal:replace="structure provider:plone.abovecontentbody"></div>
         <p tal:condition="view/show_note">
             Here the table widget is set to DISPLAY_MODE in the
             updateWidgets method. The table cannot insert / delete or
@@ -29,16 +35,15 @@
         </p>
 
         <div id="content-core">
-            <metal:block use-macro="context/@@ploneform-macros/titlelessform" />
+          <metal:block use-macro="context/@@ploneform-macros/titlelessform" />
         </div>
 
-        <span tal:replace="structure context/@@demo-collective.z3cform.datagrid-menu" />
+        <span tal:replace="structure context/@@demo-collective.z3cform.datagrid-menu"></span>
 
-        <div tal:replace="structure provider:plone.belowcontentbody" />
+        <div tal:replace="structure provider:plone.belowcontentbody"></div>
 
-    </tal:main-macro>
-</metal:main>
+      </tal:main-macro>
+    </metal:main>
 
-</body>
+  </body>
 </html>
-
