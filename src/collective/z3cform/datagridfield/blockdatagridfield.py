@@ -19,20 +19,18 @@ class BlockDataGridField(DataGridField):
     klass = "blockdatagridfield"
 
     def createObjectWidget(self, idx):
-        """
-        """
+        """"""
         valueType = self.field.value_type
 
         if IObject.providedBy(valueType):
             widget = BlockDataGridFieldObjectFactory(valueType, self.request)
-            if idx in ['TT', 'AA']:
+            if idx in ["TT", "AA"]:
                 widget.setErrors = False
             else:
                 widget.setErrors = True
         else:
             widget = zope.component.getMultiAdapter(
-                (valueType, self.request),
-                interfaces.IFieldWidget
+                (valueType, self.request), interfaces.IFieldWidget
             )
 
         return widget

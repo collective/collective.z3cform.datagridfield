@@ -1,47 +1,34 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
-    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:z3c="http://namespaces.zope.org/z3c"
     xmlns:zcml="http://namespaces.zope.org/zcml"
-    xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="collective.z3cform.datagridfield"
     >
 
   <i18n:registerTranslations directory="locales" />
-  <include package="z3c.form" file="meta.zcml" />
 
+  <include
+      package="z3c.form"
+      file="meta.zcml"
+      />
   <include package=".demo" />
-  <include file="upgrades.zcml" />
-  <genericsetup:registerProfile
-      name="default"
-      title="Data Grid Field for z3c.form"
-      description="Install collective.z3cform.datagridfield"
-      provides="Products.GenericSetup.interfaces.EXTENSION"
-      directory="profiles/default"
+  <include file="configure-profiles.zcml" />
+  <include file="configure-upgrades.zcml" />
+
+  <browser:resourceDirectory
+      name="collective.z3cform.datagridfield"
+      directory="static"
       />
-  <genericsetup:registerProfile
-      name="uninstall"
-      title="Uninstall Data Grid Field for z3c.form"
-      description="Install collective.z3cform.datagridfield"
-      provides="Products.GenericSetup.interfaces.EXTENSION"
-      directory="profiles/uninstall"
-      />
-  <utility
-      factory=".setuphandlers.HiddenProfiles"
-      name="collective.z3cform.datagridfield-hiddenprofiles"
-      />
-  <!-- -*- extra stuff goes here -*- -->
+
   <class class=".datagridfield.DataGridField">
     <require
         permission="zope.Public"
         interface=".datagridfield.IDataGridField"
         />
   </class>
-  <browser:resourceDirectory
-      name="collective.z3cform.datagridfield"
-      directory="static"
-      />
+
   <adapter factory=".autoform.AutoExtensibleSubformAdapter" />
   <adapter factory=".autoform.MultipleErrorViewSnippetWithMessage" />
   <adapter factory=".datagridfield.GridDataConverter" />
@@ -51,46 +38,49 @@
       factory=".converters.DictRowSerializer"
       zcml:condition="installed transmogrify.dexterity"
       />
+
   <z3c:widgetTemplate
+      widget=".datagridfield.DataGridField"
       template="datagridfield_input.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="input"
-      widget=".datagridfield.DataGridField"
       />
   <z3c:widgetTemplate
+      widget=".blockdatagridfield.BlockDataGridField"
       template="datagridfield_input_block.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="input"
-      widget=".blockdatagridfield.BlockDataGridField"
       />
   <z3c:widgetTemplate
+      widget=".datagridfield.DataGridFieldObject"
       template="datagridfieldobject_input.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="input"
-      widget=".datagridfield.DataGridFieldObject"
       />
   <z3c:widgetTemplate
+      widget=".blockdatagridfield.BlockDataGridFieldObject"
       template="datagridfieldobject_input_block.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="input"
-      widget=".blockdatagridfield.BlockDataGridFieldObject"
       />
   <z3c:widgetTemplate
+      widget=".datagridfield.DataGridField"
       template="datagridfield_display.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="display"
-      widget=".datagridfield.DataGridField"
       />
   <z3c:widgetTemplate
+      widget=".datagridfield.DataGridFieldObject"
       template="datagridfieldobject_display.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="display"
-      widget=".datagridfield.DataGridFieldObject"
       />
+
   <configure zcml:condition="installed plone.supermodel">
     <utility
         name="collective.z3cform.datagridfield.DictRow"
         component=".supermodel.DictRowHandler"
         />
   </configure>
+
 </configure>

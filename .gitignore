@@ -23,6 +23,7 @@ dist
 *~
 *.bak
 .coverage
+.coverage.*
 *.pyd
 *.so
 *.orig
@@ -43,5 +44,8 @@ include
 var
 buildout.cfg
 pip-selfcheck.json
+reports
 .idea
 src/plone*
+pyvenv.cfg
+share/

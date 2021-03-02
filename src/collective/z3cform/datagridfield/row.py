@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-    Code an concept courtesy of Martin Aspeli
-"""
 from collective.z3cform.datagridfield.interfaces import AttributeNotFoundError
 from collective.z3cform.datagridfield.interfaces import IRow
 from z3c.form.interfaces import NO_VALUE
@@ -17,6 +14,8 @@ from zope.schema.interfaces import WrongContainedType
 class DictRow(Object):
     __doc__ = IRow.__doc__
     _type = dict
+
+    # Code an concept courtesy of Martin Aspeli
 
     def __init__(self, schema, **kw):
         super(DictRow, self).__init__(schema, **kw)
