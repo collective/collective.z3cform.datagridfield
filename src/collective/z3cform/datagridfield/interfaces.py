@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from plone.app.z3cform.interfaces import IPloneFormLayer
 from z3c.form.interfaces import IMultiWidget
 from zope.schema.interfaces import IObject

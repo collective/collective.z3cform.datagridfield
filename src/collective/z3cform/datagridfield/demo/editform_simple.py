@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
     Demo of the widget
-
-    I haven't gotten these views working with tests.
 """
 from collective.z3cform.datagridfield import BlockDataGridFieldFactory
 from collective.z3cform.datagridfield import DataGridFieldFactory

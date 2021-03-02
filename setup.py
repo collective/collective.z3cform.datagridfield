@@ -9,10 +9,4 @@ setup(
     # https://github.com/pypa/setuptools/issues/1136
     # we need one line in here:
     package_dir={"": "src"},
-    # see setup.cfg
-    extras_require={
-        "test": [
-            "plone.app.robotframework[debug]",
-        ],
-    },
 )

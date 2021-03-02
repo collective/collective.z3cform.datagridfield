@@ -45,3 +45,5 @@ buildout.cfg
 pip-selfcheck.json
 .idea
 src/plone*
+pyvenv.cfg
+share/

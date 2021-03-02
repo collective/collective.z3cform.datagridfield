@@ -3,14 +3,10 @@
     Implementation of the widget
 """
 from . import _
+from .autoform import AutoExtensibleSubForm
+from .autoform import AutoExtensibleSubformAdapter
+from .interfaces import IDataGridField
 from Acquisition import aq_parent
-from collective.z3cform.datagridfield.autoform import (
-    AutoExtensibleSubForm  # noqa: E501
-)
-from collective.z3cform.datagridfield.autoform import (
-    AutoExtensibleSubformAdapter
-)
-from collective.z3cform.datagridfield.interfaces import IDataGridField
 from plone import api
 from plone.app.z3cform.interfaces import IPloneFormLayer
 from plone.app.z3cform.utils import closest_content
