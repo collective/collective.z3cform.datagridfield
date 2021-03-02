@@ -4,6 +4,9 @@ Changelog
 1.5.4 (unreleased)
 ------------------
 
+- Test setup using bobtemplate.plone config.
+  [thet]
+
 - Code formatting.
   [thet]
 
