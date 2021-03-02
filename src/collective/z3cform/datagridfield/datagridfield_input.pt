@@ -8,7 +8,6 @@
   <table class="datagridwidget-table-view"
          data-mode="row"
          tal:attributes="
-           data-extra view/extra;
            id view/id_prefix;
          "
   >

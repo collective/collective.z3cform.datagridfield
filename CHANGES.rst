@@ -4,6 +4,9 @@ Changelog
 1.5.4 (unreleased)
 ------------------
 
+- Remove extra parameter for datagridfield widget as it was unused and untested.
+  [thet]
+
 - Clean up upgrade profile definitions and align to Plone standards.
   [thet]
 
