@@ -4,6 +4,9 @@ Changelog
 1.5.4 (unreleased)
 ------------------
 
+- Use Github actions instead Travis CI.
+  [thet]
+
 - Test setup using bobtemplate.plone config.
   [thet]
 
