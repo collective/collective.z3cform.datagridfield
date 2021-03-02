@@ -5,7 +5,7 @@
       tal:omit-tag=""
 >
 
-  <table class="datagridwidget-table-view datagridwidget-table-view-block"
+  <table class="datagridwidget-table-view datagridwidget-table-view-block pat-datagridfield"
          data-mode="block"
   >
     <thead>
@@ -55,12 +55,6 @@
       </tal:block>
     </tbody>
   </table>
-  <script src=""
-          type="text/javascript"
-          tal:attributes="
-            src string:${view/portal_url}/++resource++collective.z3cform.datagridfield/init_field.js;
-          "
-  ></script>
   <input type="hidden"
          tal:replace="structure view/counterMarker"
   />

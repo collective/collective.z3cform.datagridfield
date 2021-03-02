@@ -4,6 +4,9 @@ Changelog
 1.5.4 (unreleased)
 ------------------
 
+- Use pat-datagridfield in templates.
+  [thet]
+
 - Remove extra parameter for datagridfield widget as it was unused and untested.
   [thet]
 
