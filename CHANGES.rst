@@ -4,6 +4,16 @@ Changelog
 2.0 (unreleased)
 ----------------
 
+- Register new pat-datagridfield bundle.
+
+  Breaking change:
+  The JavaScript resources have changed a lot.
+  Please run the provided upgrade steps!
+
+  If you were customizing templates which loaded these JavaScript resources
+  or customized the JavaScript functionality itself, take special care.
+  The bundle is loaded only for logged-in users.
+
 - Rework JavaScript as a Pattern for better initialization.
 
 - Row UI buttons optimizations
