@@ -2,9 +2,9 @@
 """
     Demo of the widget
 """
-from collective.z3cform.datagridfield import BlockDataGridFieldFactory
-from collective.z3cform.datagridfield import DataGridFieldFactory
-from collective.z3cform.datagridfield import DictRow
+from ..blockdatagridfield import BlockDataGridFieldFactory
+from ..datagridfield import DataGridFieldFactory
+from ..row import DictRow
 from datetime import datetime
 from plone.autoform.directives import widget
 from z3c.form import button
