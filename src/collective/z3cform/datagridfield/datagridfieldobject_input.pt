@@ -16,6 +16,7 @@
       <div tal:replace="structure widget/render"></div>
     </td>
   </tal:block>
+
   <td class="datagridwidget-hidden-data">
     <input name="field-empty-marker"
            type="hidden"
@@ -25,15 +26,13 @@
            "
     />
   </td>
+
   <td class="datagridwidget-manipulator insert-row"
       tal:condition="view/isInsertEnabled"
   >
-
-    <a class="btn btn-default"
-       id="btn-addrow"
+    <a class="btn btn-default dgf--row-add"
        aria-label="Add row"
        href=""
-       onclick="dataGridField2Functions.addRowAfter(this); return false"
        title=""
        data-original-title="Add row"
        i18n:attributes="aria-label label_datagridwidget_manipulators_addrow;
@@ -46,17 +45,14 @@
             i18n:translate="label_datagridwidget_manipulators_addrow"
       >Add row</span>
     </a>
-
   </td>
+
   <td class="datagridwidget-manipulator delete-row"
       tal:condition="view/isDeleteEnabled"
   >
-
-    <a class="btn btn-default"
-       id="btn-deleterow"
+    <a class="btn btn-default dgf--row-delete"
        aria-label="Delete row"
        href=""
-       onclick="dataGridField2Functions.removeFieldRow(this);return false"
        title=""
        data-original-title="Delete row"
        i18n:attributes="aria-label label_datagridwidget_manipulators_deleterow;
@@ -69,17 +65,14 @@
             i18n:translate="label_datagridwidget_manipulators_deleterow"
       >Delete row</span>
     </a>
-
   </td>
+
   <td class="datagridwidget-manipulator move-up"
       tal:condition="view/isReorderEnabled"
   >
-
-    <a class="btn btn-default"
-       id="btn-moveup"
+    <a class="btn btn-default dgf--row-moveup"
        aria-label="Move Up"
        href=""
-       onclick="dataGridField2Functions.moveRowUp(this);return false"
        title=""
        data-original-title="Move Up"
        i18n:attributes="aria-label label_datagridwidget_manipulators_moverowup;
@@ -92,17 +85,14 @@
             i18n:translate="label_datagridwidget_manipulators_moverowup"
       >Move Up</span>
     </a>
-
   </td>
+
   <td class="datagridwidget-manipulator move-down"
       tal:condition="view/isReorderEnabled"
   >
-
-    <a class="btn btn-default"
-       id="btn-movedown"
+    <a class="btn btn-default dgf--row-movedown"
        aria-label="Move Down"
        href=""
-       onclick="dataGridField2Functions.moveRowDown(this);return false"
        title=""
        data-original-title="Move Down"
        i18n:attributes="aria-label label_datagridwidget_manipulators_moverowdown;
@@ -115,7 +105,6 @@
             i18n:translate="label_datagridwidget_manipulators_moverowdown"
       >Move Down</span>
     </a>
-
   </td>
 
 </html>
