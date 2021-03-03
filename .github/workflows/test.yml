@@ -26,15 +26,9 @@ jobs:
               uses: actions/setup-python@v2
               with:
                   python-version: ${{ matrix.python-version }}
-            - name: Install xmllint
-              run: sudo apt-get install libxml2-dev libxslt1-dev libjpeg-dev
-
             - name: Install dependencies
               run: |
-                  python -m pip install --upgrade pip
+                  sudo apt-get install libxml2-dev libxslt1-dev libjpeg-dev
                   pip install flake8 tox tox-gh-actions
-                  if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-                  pip install -e .
             - name: Test with tox
-              run: |
-                  tox
+              run: tox
