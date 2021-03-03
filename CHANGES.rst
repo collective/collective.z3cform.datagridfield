@@ -4,6 +4,11 @@ Changelog
 1.5.4 (unreleased)
 ------------------
 
+- Row UI buttons optimizations
+  Change row UI elements from anchor to buttons for better semantics.
+  Fix Boostrap classes, remove unused attributes, add a title to buttons.
+  [thet]
+
 - Change UI element classes
 
   Remove non-unique id attributes from UI buttons and add classes instead.
