@@ -8,51 +8,45 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
     var pattern = Base.extend({
         name: "datagridfield",
         trigger: ".pat-datagridfield",
-        parser: "mockup",
-
-        defaults: {
-            // Default values for attributes
-        },
-
-        aa_cells_selector:
-            ".auto-append .datagridwidget-cell, .auto-append .datagridwidget-block-edit-cell",
 
         init: function () {
-            // When DOM model is ready execute this actions to wire up page logic.
+            // - Make sure, at least one empty row is always shown.
+            // - Auto append a new row when editing the last row.
 
             this.el = this.$el[0];
             this.el_body = this.el.querySelector(".datagridwidget-body");
 
-            // Check if this widget is in auto-append mode
-            // and store for later usage
-            var aa = this.el.querySelectorAll(".auto-append").length > 0;
-            this.$el.data("auto-append", aa);
+            this.auto_append = this.el.dataset.autoAppend;
 
             // Hint CSS
-            if (aa) {
+            if (this.auto_append) {
                 this.el_body.classList.add("datagridwidget-body-auto-append");
             } else {
                 this.el_body.classList.add("datagridwidget-body-non-auto-append"); // prettier-ignore
             }
+            this.handler_auto_append = function (e) {
+                // Store event handler which also has to be removed, so we can detach it.
+                // See: https://stackoverflow.com/a/10444156/1337474 , also comment about "bind"
+                // using ``bind`` will change the function signature too.
+                if (e) {
+                    e.stopPropagation();
+                }
+                // Also allow direct call without event.
+                if (e && !e.target.closest(".datagridwidget-cell")) {
+                    return;
+                }
+                this.auto_append_row();
+            }.bind(this);
 
             this.updateOrderIndex(false);
 
-            if (!aa) {
-                this.ensureMinimumRows();
-            }
-
-            // Bind the handlers to the auto append rows
-            var aa_cells = this.el.querySelectorAll(this.aa_cells_selector);
-            aa_cells.forEach(function (aa_cell) {
-                aa_cell.addEventListener(
-                    "focusout",
-                    this.autoInsertRowHandler.bind(this)
-                );
+            // Before ensureMinimumRows, as creating a row initializes row ui again.
+            this.getVisibleRows().forEach(function (row) {
+                this.initRowUI(row);
             }, this);
 
-            this.getRows().forEach(function (row) {
-                this.initRow(row);
-            }, this);
+            this.ensureMinimumRows();
+            this.initAutoAppendHandler();
 
             this.el.dispatchEvent(
                 new Event("afterdatagridfieldinit", {
@@ -62,13 +56,13 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
             );
         },
 
-        initRow: function (row) {
+        initRowUI: function (row) {
             row.querySelectorAll(".dgf--row-add").forEach(function (el) {
                 el.addEventListener(
                     "click",
                     function (e) {
                         e.preventDefault();
-                        this.addRowAfter(row);
+                        this.insertRow(row);
                     }.bind(this)
                 );
             }, this);
@@ -110,67 +104,60 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
         },
 
         getVisibleRows: function () {
-            // Get all visible rows of DGF
-            // Incl. normal rows + AA row
+            return this.el_body.querySelectorAll(
+                ".datagridwidget-row:not(.datagridwidget-empty-row)"
+            );
+        },
 
-            var rows = this.getRows();
-            var filteredRows = $(rows).filter(function () {
-                var $tr = $(this);
-                return !$tr.hasClass("datagridwidget-empty-row");
+        getLastRow: function () {
+            return this.el_body.querySelector(".datagridwidget-row:last-child");
+        },
+
+        getLastVisibleRow: function () {
+            var result = this.el_body.querySelectorAll(
+                ".datagridwidget-row:not(.datagridwidget-empty-row)"
+            );
+            return result[result.length - 1];
+        },
+
+        initAutoAppendHandler: function () {
+            if (!this.auto_append) {
+                return;
+            }
+
+            this.getVisibleRows().forEach(function (row) {
+                row.removeEventListener("focusout", this.handler_auto_append);
+            }, this);
+
+            var last_row = this.getLastVisibleRow();
+            if (last_row) {
+                last_row.addEventListener("focusout", this.handler_auto_append);
+            }
+        },
+
+        auto_append_row: function () {
+            this.el.dispatchEvent(new Event("beforeaddrowauto"));
+            this.getVisibleRows().forEach(function (row) {
+                row.classList.remove("auto-append");
             });
-            return filteredRows;
+            var last_row = this.getLastVisibleRow() || this.getLastRow();
+            var new_row = this.insertRow(last_row);
+            new_row.classList.add("auto-append");
+            this.reindexRow(new_row, "AA");
+            this.el.dispatchEvent(new Event("afteraddrowauto"));
         },
 
-        autoInsertRowHandler: function (e) {
-            // Handle auto insert events by auto append.
-            var currnode = e.currentTarget;
-            this.autoInsertRow(currnode);
-        },
-
-        autoInsertRow: function (currnode, ensureMinimumRows) {
+        insertRow: function (ref_row, ensureMinimumRows, before) {
             /**
              * Add a new row when changing the last row
              *
-             * @param {Boolean} ensureMinimumRows we insert a special minimum row so the widget is not empty
+             * @param {DOM node} ref_row insert row after this one.
+             * @param {Boolean} ensureMinimumRows: we insert a special minimum row so the widget is not empty
              */
 
-            // fetch required data structure
-            var thisRow = this.getParentRow(currnode); // The new row we are working on
-
-            if (!thisRow.classList.contains("auto-append")) {
-                // We only auto-append when in the last row.
-                return;
-            }
-
-            var $thisRow = $(thisRow);
-            var autoAppendMode = $(this.el_body).data("auto-append");
-
-            if ($thisRow.hasClass("minimum-row")) {
-                // The change event was not triggered on real AA row,
-                // but on a minimum ensured row (row 0).
-                // 1. Don't add new row
-                // 2. Make widget to "normal" state now as the user has edited the empty row so we assume it's a real row
-                this.supressEnsureMinimum();
-                return;
-            }
-
-            // Remove the auto-append functionality from the all rows in this widget
-            var aa_cells = this.el.querySelectorAll(this.aa_cells_selector);
-            aa_cells.forEach(function (aa_cell) {
-                aa_cell.removeEventListener(
-                    "focusout",
-                    this.autoInsertRowHandler
-                );
-            }, this);
-            this.el.querySelectorAll(".auto-append").forEach(function (aa_row) {
-                aa_row.classList.remove("auto-append");
-            }, this);
-
             // Create a new row
-            var newtr = this.createNewRow(thisRow),
-                $newtr = $(newtr);
-            // Add auto-append functionality to our new row
-            $newtr.addClass("auto-append");
+            var newtr = this.createNewRow();
+            var $newtr = $(newtr);
 
             /* Put new row to DOM tree after our current row.  Do this before
              * reindexing to ensure that any Javascript we insert that depends on
@@ -181,63 +168,22 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
              * selectors will pick up elements in this new row first.
              */
 
-            this.$el.trigger("beforeaddrowauto", [this.$el, newtr]);
+            this.$el.trigger("beforeaddrow", [this.$el, $newtr]);
 
-            if (ensureMinimumRows) {
-                // Add a special class so we can later deal with it
-                $newtr.addClass("minimum-row");
-                $newtr.insertBefore(thisRow);
+            if (before) {
+                $newtr.insertBefore(ref_row);
             } else {
-                $newtr.insertAfter(thisRow);
+                $newtr.insertAfter(ref_row);
             }
-
-            // Re-enable auto-append change handler feature on the new auto-appended row
-            var aa_cells = this.el.querySelectorAll(this.aa_cells_selector);
-            aa_cells.forEach(function (aa_cell) {
-                aa_cell.addEventListener(
-                    "focusout",
-                    this.autoInsertRowHandler.bind(this)
-                );
-            }, this);
-
-            this.reindexRow(newtr, "AA");
 
             // Update order index to give rows correct values
             this.updateOrderIndex(true, ensureMinimumRows);
-            this.$el.trigger("afteraddrowauto", [this.$el, newtr]);
-        },
 
-        addRowAfter: function (row) {
-            /**
-             * Creates a new row after the the target row.
-             *
-             * @param {Object} row DOM <tr>
-             */
+            this.initAutoAppendHandler();
 
-            // fetch required data structure
-            var newtr = this.createNewRow();
-            this.$el.trigger("beforeaddrow", [this.$el, newtr]);
-            var filteredRows = this.getVisibleRows();
+            this.$el.trigger("afteraddrow", [this.$el, $newtr]);
 
-            // If using auto-append we add the "real" row before AA
-            // We have a special case when there is only one visible in the gid
-            if (
-                row.classList.contains("auto-append") &&
-                !row.classList.contains("minimum-row")
-            ) {
-                $(newtr).insertBefore(row);
-            } else {
-                $(newtr).insertAfter(row);
-            }
-
-            // Ensure minimum special behavior is no longer needed as we have now at least 2 rows
-            if (row.classList.contains("minimum-row")) {
-                this.supressEnsureMinimum();
-            }
-
-            // update orderindex hidden fields
-            this.updateOrderIndex(true);
-            this.$el.trigger("afteraddrow", [this.$el, newtr]);
+            return newtr;
         },
 
         createNewRow: function () {
@@ -248,19 +194,19 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
              */
 
             // hidden template row
-            var emptyRow = $(this.el_body)
-                .children(".datagridwidget-empty-row")
-                .first();
-            if (emptyRow.size() === 0) {
-                // Ghetto assert()
+            var template_row = this.el_body.querySelector(
+                ".datagridwidget-empty-row"
+            );
+            if (!template_row) {
                 throw new Error("Could not locate empty template row in DGF");
             }
-            var $new_row = emptyRow
-                .clone(true)
-                .removeClass("datagridwidget-empty-row");
 
-            this.initRow($new_row[0]);
+            var new_row = template_row.cloneNode(true);
+            new_row.classList.remove("datagridwidget-empty-row");
 
+            this.initRowUI(new_row);
+
+            var $new_row = $(new_row);
             // enable patternslib
             $new_row
                 .find('*[class^="dgw-disabled-pat-"]')
@@ -268,21 +214,54 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
                     return cls.replace(/dgw\-disabled-pat-/, "pat-");
                 });
             Registry.scan($new_row);
-            return $new_row;
+            return new_row;
         },
 
         removeFieldRow: function (row) {
             /* Remove the row in which the given node is found */
             $(row).remove();
 
-            // ensure minimum rows in non-auto-append mode, reindex if no
-            // minimal row was added, otherwise reindexing is done by ensureMinimumRows
-            if (
-                $(this.el_body).data("auto-append") ||
-                !this.ensureMinimumRows()
-            ) {
+            // ensure minimum rows.
+            // if no minimal row was added, reindex.
+            // otherwise reindexing is done by insertRow
+            if (!this.ensureMinimumRows()) {
                 this.updateOrderIndex(false);
             }
+
+            this.initAutoAppendHandler();
+        },
+
+        moveRowDown: function (row) {
+            this.moveRow(row, "down");
+            this.initAutoAppendHandler();
+        },
+
+        moveRowUp: function (row) {
+            this.moveRow(row, "up");
+            this.initAutoAppendHandler();
+        },
+
+        moveRowToTop: function (row) {
+            var rows = this.getRows();
+            $(row).insertBefore(rows[0]);
+            this.initAutoAppendHandler();
+        },
+
+        moveRowToBottom: function (row) {
+            var rows = this.getRows();
+
+            // make sure we insert the directly above any auto appended rows
+            var insert_after = 0;
+            $(rows).each(function (i) {
+                if (
+                    !$(this).hasClass("datagridwidget-empty-row") &&
+                    !$(this).hasClass("auto-append")
+                ) {
+                    insert_after = i;
+                }
+            });
+            $(row).insertAfter(rows[insert_after]);
+            this.initAutoAppendHandler();
         },
 
         moveRow: function (row, direction) {
@@ -341,38 +320,9 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
             this.$el.trigger("aftermoverow", [this.$el, row]);
         },
 
-        moveRowDown: function (row) {
-            this.moveRow(row, "down");
-        },
-
-        moveRowUp: function (row) {
-            this.moveRow(row, "up");
-        },
-
         shiftRow: function (bottom, top) {
             /* Put node top before node bottom */
             $(top).insertBefore(bottom);
-        },
-
-        moveRowToTop: function (row) {
-            var rows = this.getRows();
-            $(row).insertBefore(rows[0]);
-        },
-
-        moveRowToBottom: function (row) {
-            var rows = this.getRows();
-
-            // make sure we insert the directly above any auto appended rows
-            var insert_after = 0;
-            $(rows).each(function (i) {
-                if (
-                    !$(this).hasClass("datagridwidget-empty-row") &&
-                    !$(this).hasClass("auto-append")
-                ) {
-                    insert_after = i;
-                }
-            });
-            $(row).insertAfter(rows[insert_after]);
         },
 
         reindexRow: function (row, newindex) {
@@ -443,33 +393,6 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
             ) {
                 replaceIndex($(el), "data-fieldname", name_prefix);
             });
-        },
-
-        supressEnsureMinimum: function () {
-            /**
-             * Stop ensure miminum special behavior.
-             *
-             * The caller is responsible to check there was one and only one minimum-row in the table.
-             *
-             * Call when data is edited for the first time or a row added.
-             */
-
-            // Remove the auto-append functionality from the all rows in this widget
-            var aa_cells = this.el.querySelectorAll(this.aa_cells_selector);
-            aa_cells.forEach(function (aa_cell) {
-                aa_cell.removeEventListener(
-                    "focusout",
-                    this.autoInsertRowHandler
-                );
-            }, this);
-            this.el.querySelectorAll(".auto-append").forEach(function (aa_row) {
-                aa_row.classList.remove("auto-append");
-            }, this);
-            this.el.querySelectorAll(".minimum-row").forEach(function (aa_row) {
-                aa_row.classList.remove("minimum-row");
-            }, this);
-
-            this.updateOrderIndex(true, false);
         },
 
         updateOrderIndex: function (backwards, ensureMinimumRows) {
@@ -601,13 +524,10 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
 
             var rows = this.getRows();
             var filteredRows = this.getVisibleRows();
-            var self = this;
 
             // Rows = 0 -> make one AA row available
-            if (filteredRows.length === 0) {
-                // XXX: make the function call signatures more sane
-                var child = rows[0];
-                this.autoInsertRow(child, true);
+            if (rows.length && filteredRows.length === 0) {
+                this.auto_append_row();
                 return true;
             }
             return false;
