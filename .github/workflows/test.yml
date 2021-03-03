@@ -1,4 +1,7 @@
-name: test
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Test Plone package
 
 on:
     push:
@@ -8,29 +11,58 @@ on:
 
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-18.04
         strategy:
             fail-fast: false
             matrix:
-                python-version: [3.8, 2.7]
+                plone-version:
+                  - 'Plone52'
+                python-version: [3.6, 3.7, 3.8]
+                include:
+                  - plone-version: Plone52
+                    python-version: 2.7
+                  - plone-version: Plone51
+                    python-version: 2.7
+
+
         steps:
             - uses: actions/checkout@v2
             - uses: actions/cache@v2
               with:
-                  path: ~/.cache/pip
-                  key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-                  restore-keys: |
-                    ${{ runner.os }}-pip-
+                  path: |
+                    ~/.cache/pip
+                    ~/buildout-cache
+                    ~/extends
+                  key: ${{ runner.os }}-tox-${{ matrix.python-version }}-${{ matrix.plone-version }}-${{ hashFiles('**/setup.py') }}-${{ hashFiles('**/requirements.txt') }}-${{ hashFiles('**/tox.ini') }}
+                  # restore-keys: |
+                  #   ${{ runner.os }}-tox-
             - name: Set up Python ${{ matrix.python-version }}
               uses: actions/setup-python@v2
               with:
                   python-version: ${{ matrix.python-version }}
+            - name: Install system libraries...
+              run: sudo apt-get install libxml2-dev libxslt1-dev libjpeg-dev
+            - name: setup buildout cache
+              run: |
+                  mkdir -p ~/buildout-cache/{eggs,downloads}
+                  mkdir ~/.buildout
+                  echo "[buildout]" > $HOME/.buildout/default.cfg
+                  echo "download-cache = $HOME/buildout-cache/downloads" >> $HOME/.buildout/default.cfg
+                  echo "eggs-directory = $HOME/buildout-cache/eggs" >> $HOME/.buildout/default.cfg
             - name: Install dependencies
               run: |
-                  sudo apt-get install libxml2-dev libxslt1-dev libjpeg-dev
-                  pip install flake8 tox tox-gh-actions
-            - name: Test with tox
+                  python -m pip install --upgrade pip
+                  pip install tox tox-gh-actions
+                  # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+            - name: python versions
               run: |
                   python --version
-                  tox -l
-                  tox
+                  python3 --version
+            - name: Lint and test Plone package with tox
+              run: tox -r
+              env:
+                PLONE-VERSION: ${{ matrix.plone-version }}
+                PYTHON-VERSION: ${{ matrix.python-version }}
+            - name: coverage report on python3.7
+              run: tox -r -e coverage-report
+              if: matrix.python-version == '3.7'
