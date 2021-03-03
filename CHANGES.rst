@@ -4,13 +4,19 @@ Changelog
 1.5.4 (unreleased)
 ------------------
 
+- Remove extra parameter for datagridfield widget as it was unused and untested.
+  [thet]
+
+- Clean up upgrade profile definitions and align to Plone standards.
+  [thet]
+
 - Use Github actions instead Travis CI.
   [thet]
 
 - Test setup using bobtemplate.plone config.
   [thet]
 
-- Code formatting.
+- Code formatting - black, zpretty, prettier.
   [thet]
 
 - Import with module name.

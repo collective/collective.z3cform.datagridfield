@@ -15,7 +15,7 @@
       />
   <include package=".demo" />
   <include file="configure-profiles.zcml" />
-  <include file="configure-upgrades.zcml" />
+  <include package=".upgrades" />
 
   <browser:resourceDirectory
       name="collective.z3cform.datagridfield"

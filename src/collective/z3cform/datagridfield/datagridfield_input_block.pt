@@ -1,33 +1,67 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:tal="http://xml.zope.org/namespaces/tal"
-      xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      tal:omit-tag="">
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      tal:omit-tag=""
+>
 
-<table class="datagridwidget-table-view datagridwidget-table-view-block" data-mode="block" tal:attributes="data-extra view/extra">
-<thead>
-  <tr>
-    <th class="header">
-        <!-- -->
-    </th>
-    <th id="" class="header" tal:condition="view/allow_insert"> </th>
-    <th id="" class="header" tal:condition="view/allow_delete"> </th>
-    <th id="" class="header" tal:condition="view/allow_reorder"> </th>
-    <th id="" class="header" tal:condition="view/allow_reorder"> </th>
-  </tr>
-</thead>
-<tbody class="datagridwidget-body" tal:attributes="data-name_prefix view/name_prefix; data-id_prefix view/id_prefix">
-  <tal:block repeat="widget view/widgets">
-    <tr tal:attributes="class python:'%s%s' % (widget.klass, widget.mode=='hidden' and ' hidden' or '');
-                        data-index python:widget.name.split('.')[-1];"
-        tal:condition="python:view._includeRow(widget.name)">
-      <metal:block define-macro="widget-row">
-          <div tal:replace="structure widget/render"></div>
-      </metal:block>
-    </tr>
-  </tal:block>
-</tbody>
-</table>
-<script type="text/javascript" src="" tal:attributes="src string:${view/portal_url}/++resource++collective.z3cform.datagridfield/init_field.js"></script>
-<input type="hidden" tal:replace="structure view/counterMarker" />
+  <table class="datagridwidget-table-view datagridwidget-table-view-block"
+         data-mode="block"
+  >
+    <thead>
+      <tr>
+        <th class="header">
+          <!-- -->
+        </th>
+        <th class="header"
+            id=""
+            tal:condition="view/allow_insert"
+        >
+        </th>
+        <th class="header"
+            id=""
+            tal:condition="view/allow_delete"
+        >
+        </th>
+        <th class="header"
+            id=""
+            tal:condition="view/allow_reorder"
+        >
+        </th>
+        <th class="header"
+            id=""
+            tal:condition="view/allow_reorder"
+        >
+        </th>
+      </tr>
+    </thead>
+    <tbody class="datagridwidget-body"
+           tal:attributes="
+             data-name_prefix view/name_prefix;
+             data-id_prefix view/id_prefix;
+           "
+    >
+      <tal:block repeat="widget view/widgets">
+        <tr tal:condition="python:view._includeRow(widget.name)"
+            tal:attributes="
+              class python:'%s%s' % (widget.klass, widget.mode=='hidden' and ' hidden' or '');
+              data-index python:widget.name.split('.')[-1];
+            "
+        >
+          <metal:block define-macro="widget-row">
+            <div tal:replace="structure widget/render"></div>
+          </metal:block>
+        </tr>
+      </tal:block>
+    </tbody>
+  </table>
+  <script src=""
+          type="text/javascript"
+          tal:attributes="
+            src string:${view/portal_url}/++resource++collective.z3cform.datagridfield/init_field.js;
+          "
+  ></script>
+  <input type="hidden"
+         tal:replace="structure view/counterMarker"
+  />
 </html>

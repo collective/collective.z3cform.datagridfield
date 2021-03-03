@@ -64,11 +64,6 @@ class DataGridField(MultiWidget):
 
     klass = "datagridfield"
 
-    # You can give data-extra attribute
-    # for the widget to allow there some custom
-    # JSON payload concerning all rows
-    extra = None
-
     # Define all possible template backends
 
     @property
