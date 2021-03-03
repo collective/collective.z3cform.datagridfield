@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.5.4 (unreleased)
-------------------
+2.0 (unreleased)
+----------------
 
 - Rework JavaScript as a Pattern for better initialization.
 
