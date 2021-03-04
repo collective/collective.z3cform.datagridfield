@@ -6,10 +6,9 @@
 >
 
   <table class="datagridwidget-table-view pat-datagridfield"
+         id="${view/id_prefix}"
+         data-auto-append="${view/auto_append}"
          data-mode="row"
-         tal:attributes="
-           id view/id_prefix;
-         "
   >
     <thead>
       <tr>

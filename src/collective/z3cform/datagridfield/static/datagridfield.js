@@ -16,7 +16,7 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
             this.el = this.$el[0];
             this.el_body = this.el.querySelector(".datagridwidget-body");
 
-            this.auto_append = this.el.dataset.autoAppend;
+            this.auto_append = (this.el.dataset.autoAppend || "true").toLowerCase() !== "false"; // prettier-ignore
 
             // Hint CSS
             if (this.auto_append) {

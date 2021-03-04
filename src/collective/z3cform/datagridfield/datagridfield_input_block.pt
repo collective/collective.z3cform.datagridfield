@@ -6,6 +6,7 @@
 >
 
   <table class="datagridwidget-table-view datagridwidget-table-view-block pat-datagridfield"
+         data-auto-append="${view/auto_append}"
          data-mode="block"
   >
     <thead>
