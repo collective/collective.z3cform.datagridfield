@@ -21,6 +21,7 @@ from z3c.form.field import Fields
 from z3c.form.interfaces import IFormLayer
 from z3c.form.interfaces import INPUT_MODE
 from z3c.form.interfaces import IValidator
+from z3c.form.interfaces import NO_VALUE
 from z3c.form.validator import SimpleFieldValidator
 from z3c.form.widget import FieldWidget
 from zope.component import adapter
@@ -63,8 +64,6 @@ class DataGridField(MultiWidget):
     display_table_css_class = "datagridwidget-table-view"
 
     klass = "datagridfield"
-
-    # Define all possible template backends
 
     @property
     def field(self):
@@ -227,57 +226,6 @@ class GridDataConverter(BaseDataConverter):
         return value
 
 
-# ------------[ Support for each line ]---------------------------------------
-
-
-def datagrid_field_get(self):
-    # value (get) cannot raise an exception, then we return
-    # insane values
-    try:
-        return self.extract()
-    except MultipleErrors:
-        value = {}
-        active_names = self.subform.fields.keys()
-        for name in getFieldNames(self.field.schema):
-            if name not in active_names:
-                continue
-            widget = self.subform.widgets[name]
-            widget_value = widget.value
-            try:
-                converter = interfaces.IDataConverter(widget)
-                value[name] = converter.toFieldValue(widget_value)
-            except (FormatterValidationError, ValidationError, ValueError):
-                value[name] = widget_value
-    return value
-
-
-def datagrid_field_set(self, value):
-    self._value = value
-    self.updateWidgets()
-
-    # ensure that we apply our new values to the widgets
-    if value is not interfaces.NO_VALUE:
-        active_names = self.subform.fields.keys()
-        for name in getFieldNames(self.field.schema):
-            fieldset_field = self.field.schema[name]
-            if fieldset_field.readonly:
-                continue
-
-            if name in active_names:
-                if isinstance(value, dict):
-                    v = value.get(name, interfaces.NO_VALUE)
-                else:
-                    v = getattr(value, name, interfaces.NO_VALUE)
-                # probably there is a more generic way to do this ...
-                if (
-                    HAS_REL_FIELD
-                    and isinstance(fieldset_field, RelationChoice)
-                    and v == interfaces.NO_VALUE
-                ):
-                    v = ""
-                self.applyValue(self.subform.widgets[name], v)
-
-
 PAT_XPATH = "//*[contains(concat(' ', normalize-space(@class), ' '), ' pat-')]"
 
 
@@ -296,11 +244,51 @@ class DataGridFieldObject(ObjectWidget):
 
     @property
     def value(self):
-        return datagrid_field_get(self)
+        # value (get) cannot raise an exception, then we return
+        # insane values
+        try:
+            return self.extract()
+        except MultipleErrors:
+            value = {}
+            active_names = self.subform.fields.keys()
+            for name in getFieldNames(self.field.schema):
+                if name not in active_names:
+                    continue
+                widget = self.subform.widgets[name]
+                widget_value = widget.value
+                try:
+                    converter = interfaces.IDataConverter(widget)
+                    value[name] = converter.toFieldValue(widget_value)
+                except (FormatterValidationError, ValidationError, ValueError):
+                    value[name] = widget_value
+        return value
 
     @value.setter
     def value(self, value):
-        return datagrid_field_set(self, value)
+        self._value = value
+        self.updateWidgets()
+
+        # ensure that we apply our new values to the widgets
+        if value is not NO_VALUE:
+            active_names = self.subform.fields.keys()
+            for name in getFieldNames(self.field.schema):
+                fieldset_field = self.field.schema[name]
+                if fieldset_field.readonly:
+                    continue
+
+                if name in active_names:
+                    if isinstance(value, dict):
+                        v = value.get(name, NO_VALUE)
+                    else:
+                        v = getattr(value, name, NO_VALUE)
+                    # probably there is a more generic way to do this ...
+                    if (
+                        HAS_REL_FIELD
+                        and isinstance(fieldset_field, RelationChoice)
+                        and v == NO_VALUE
+                    ):
+                        v = ""
+                    self.applyValue(self.subform.widgets[name], v)
 
     def updateWidgets(self, *args, **kwargs):
         super(DataGridFieldObject, self).updateWidgets(*args, **kwargs)
