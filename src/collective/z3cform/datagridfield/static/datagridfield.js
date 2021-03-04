@@ -24,19 +24,8 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
             } else {
                 this.el_body.classList.add("datagridwidget-body-non-auto-append"); // prettier-ignore
             }
-            this.handler_auto_append = function (e) {
-                // Store event handler which also has to be removed, so we can detach it.
-                // See: https://stackoverflow.com/a/10444156/1337474 , also comment about "bind"
-                // using ``bind`` will change the function signature too.
-                if (e) {
-                    e.stopPropagation();
-                }
-                // Also allow direct call without event.
-                if (e && !e.target.closest(".datagridwidget-cell")) {
-                    return;
-                }
-                this.auto_append_row();
-            }.bind(this);
+
+            this._defineHandler();
 
             this.updateOrderIndex(false);
 
@@ -54,6 +43,33 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
                     cancelable: true,
                 })
             );
+        },
+
+        _defineHandler: function () {
+            // Store event handler which also has to be removed, so we can detach it.
+            // See: https://stackoverflow.com/a/10444156/1337474 , also comment about "bind"
+            // using ``bind`` will change the function signature too.
+
+            this.handler_auto_append = function (e) {
+                if (e) {
+                    e.stopPropagation();
+                }
+                // Also allow direct call without event.
+                if (e && !e.target.closest(".datagridwidget-cell")) {
+                    return;
+                }
+                this.auto_append_row();
+            }.bind(this);
+
+            this.handler_auto_append_input = function (e) {
+                var row = e.currentTarget;
+                row.classList.remove("auto-append");
+                this.updateOrderIndex();
+                row.removeEventListener(
+                    "input",
+                    this.handler_auto_append_input
+                );
+            }.bind(this);
         },
 
         initRowUI: function (row) {
@@ -144,6 +160,7 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
             var new_row = this.insertRow(last_row);
             new_row.classList.add("auto-append");
             this.reindexRow(new_row, "AA");
+            new_row.addEventListener("input", this.handler_auto_append_input);
             this.el.dispatchEvent(new Event("afteraddrowauto"));
         },
 
