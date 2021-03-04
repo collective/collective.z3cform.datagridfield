@@ -136,6 +136,17 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
             return result[result.length - 1];
         },
 
+        countRows: function () {
+            var count = 0;
+            this.getRows().forEach(function (row) {
+                // do not include the TT and the AA rows in the count
+                if (["AA", "TT"].indexOf(row.dataset.index) === -1) {
+                    count++;
+                }
+            }, this);
+            return count;
+        },
+
         initAutoAppendHandler: function () {
             if (!this.auto_append) {
                 return;
@@ -483,26 +494,14 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
             }
 
             // Set total visible row counts and such and hint CSS
-            var vis = this.getVisibleRows().length;
-            $tbody.attr("data-count", this.getRows().length);
-            $tbody.attr("data-visible-count", this.getVisibleRows().length);
-            $tbody.attr("data-many-rows", vis >= 2 ? "true" : "false");
+            $tbody.attr("data-count", rows.length);
+            $tbody.attr("data-visible-count", visibleRows.length);
+            $tbody.attr("data-many-rows", visibleRows >= 2 ? "true" : "false");
 
-            $(document)
-                .find('input[name="' + name_prefix + 'count"]')
-                .each(function () {
-                    // do not include the TT and the AA rows in the count
-                    var count = rows.length;
-                    if (
-                        $(rows[count - 1]).hasClass("datagridwidget-empty-row")
-                    ) {
-                        count--;
-                    }
-                    if ($(rows[count - 1]).hasClass("auto-append")) {
-                        count--;
-                    }
-                    this.value = count;
-                });
+            var count_el = this.el.querySelector(
+                'input[name="' + name_prefix + 'count"]'
+            );
+            count_el.value = this.countRows();
         },
 
         getParentRow: function (node) {

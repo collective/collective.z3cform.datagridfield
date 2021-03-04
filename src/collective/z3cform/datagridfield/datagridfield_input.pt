@@ -4,10 +4,11 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       tal:omit-tag=""
 >
-
-  <table class="datagridwidget-table-view pat-datagridfield"
+<div class="pat-datagridfield"
+     data-auto-append="${view/auto_append}"
+>
+  <table class="datagridwidget-table-view"
          id="${view/id_prefix}"
-         data-auto-append="${view/auto_append}"
          data-mode="row"
   >
     <thead>
@@ -82,4 +83,5 @@
   <input type="hidden"
          tal:replace="structure view/counterMarker"
   />
+</div>
 </html>
