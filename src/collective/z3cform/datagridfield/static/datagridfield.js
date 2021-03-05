@@ -18,13 +18,6 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
 
             this.auto_append = (this.el.dataset.autoAppend || "true").toLowerCase() !== "false"; // prettier-ignore
 
-            // Hint CSS
-            if (this.auto_append) {
-                this.el_body.classList.add("datagridwidget-body-auto-append");
-            } else {
-                this.el_body.classList.add("datagridwidget-body-non-auto-append"); // prettier-ignore
-            }
-
             this._defineHandler();
 
             // Before ensureMinimumRows, as creating a row initializes row ui again.
