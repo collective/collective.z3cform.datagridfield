@@ -27,14 +27,15 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
 
             this._defineHandler();
 
-            this.updateOrderIndex(false);
-
             // Before ensureMinimumRows, as creating a row initializes row ui again.
             this.getVisibleRows().forEach(function (row) {
                 this.initRowUI(row);
             }, this);
 
-            this.ensureMinimumRows();
+            if (!this.ensureMinimumRows()) {
+                // If ensureMinimumRows returned true, it already did the update.
+                this.updateOrderIndex();
+            }
             this.initAutoAppendHandler();
 
             this.el.dispatchEvent(
@@ -64,6 +65,8 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
             this.handler_auto_append_input = function (e) {
                 var row = e.currentTarget;
                 row.classList.remove("auto-append");
+                row.dataset.oldIndex = row.dataset.index; // store for replacing.
+                delete row.dataset.index; // remove "AA" index
                 this.updateOrderIndex();
                 row.removeEventListener(
                     "input",
@@ -79,6 +82,7 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
                     function (e) {
                         e.preventDefault();
                         this.insertRow(row);
+                        this.updateOrderIndex();
                     }.bind(this)
                 );
             }, this);
@@ -121,7 +125,7 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
 
         getVisibleRows: function () {
             return this.el_body.querySelectorAll(
-                ".datagridwidget-row:not(.datagridwidget-empty-row)"
+                ".datagridwidget-row:not([data-index=TT])"
             );
         },
 
@@ -131,7 +135,7 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
 
         getLastVisibleRow: function () {
             var result = this.el_body.querySelectorAll(
-                ".datagridwidget-row:not(.datagridwidget-empty-row)"
+                ".datagridwidget-row:not([data-index=TT])"
             );
             return result[result.length - 1];
         },
@@ -166,21 +170,28 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
             this.el.dispatchEvent(new Event("beforeaddrowauto"));
             this.getVisibleRows().forEach(function (row) {
                 row.classList.remove("auto-append");
+                if (row.dataset.index !== "TT") {
+                    // actually, getVisibleRows should only return non-"TT"
+                    // rows, but to be clear here...
+                    // delete the index, we're setting it in updateOrderIndex again.
+                    row.dataset.oldIndex = row.dataset.index; // store for replacing.
+                    delete row.dataset.index;
+                }
             });
             var last_row = this.getLastVisibleRow() || this.getLastRow();
             var new_row = this.insertRow(last_row);
             new_row.classList.add("auto-append");
             this.reindexRow(new_row, "AA");
+            this.updateOrderIndex();
             new_row.addEventListener("input", this.handler_auto_append_input);
             this.el.dispatchEvent(new Event("afteraddrowauto"));
         },
 
-        insertRow: function (ref_row, ensureMinimumRows, before) {
+        insertRow: function (ref_row, before) {
             /**
              * Add a new row when changing the last row
              *
              * @param {DOM node} ref_row insert row after this one.
-             * @param {Boolean} ensureMinimumRows: we insert a special minimum row so the widget is not empty
              */
 
             // Create a new row
@@ -204,9 +215,6 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
                 $newtr.insertAfter(ref_row);
             }
 
-            // Update order index to give rows correct values
-            this.updateOrderIndex(true, ensureMinimumRows);
-
             this.initAutoAppendHandler();
 
             this.$el.trigger("afteraddrow", [this.$el, $newtr]);
@@ -222,14 +230,15 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
              */
 
             // hidden template row
-            var template_row = this.el_body.querySelector(
-                ".datagridwidget-empty-row"
-            );
+            var template_row = this.el_body.querySelector("[data-index=TT]");
             if (!template_row) {
                 throw new Error("Could not locate empty template row in DGF");
             }
 
             var new_row = template_row.cloneNode(true);
+
+            new_row.dataset.oldIndex = new_row.dataset.index; // store for replacing.
+            delete new_row.dataset.index; // fresh row.
             new_row.classList.remove("datagridwidget-empty-row");
 
             this.initRowUI(new_row);
@@ -249,29 +258,30 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
             /* Remove the row in which the given node is found */
             $(row).remove();
 
-            // ensure minimum rows.
-            // if no minimal row was added, reindex.
-            // otherwise reindexing is done by insertRow
             if (!this.ensureMinimumRows()) {
-                this.updateOrderIndex(false);
+                // If ensureMinimumRows returned true, it already did the update.
+                this.updateOrderIndex();
             }
-
+            this.updateOrderIndex();
             this.initAutoAppendHandler();
         },
 
         moveRowDown: function (row) {
             this.moveRow(row, "down");
+            this.updateOrderIndex();
             this.initAutoAppendHandler();
         },
 
         moveRowUp: function (row) {
             this.moveRow(row, "up");
+            this.updateOrderIndex();
             this.initAutoAppendHandler();
         },
 
         moveRowToTop: function (row) {
             var rows = this.getRows();
             $(row).insertBefore(rows[0]);
+            this.updateOrderIndex();
             this.initAutoAppendHandler();
         },
 
@@ -280,15 +290,13 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
 
             // make sure we insert the directly above any auto appended rows
             var insert_after = 0;
-            $(rows).each(function (i) {
-                if (
-                    !$(this).hasClass("datagridwidget-empty-row") &&
-                    !$(this).hasClass("auto-append")
-                ) {
+            $(rows).each(function (i, _row) {
+                if (["AA", "TT"].indexOf(_row.dataset.index) === -1) {
                     insert_after = i;
                 }
             });
             $(row).insertAfter(rows[insert_after]);
+            this.updateOrderIndex();
             this.initAutoAppendHandler();
         },
 
@@ -300,26 +308,20 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
 
             // We can't use nextSibling because of blank text nodes in some browsers
             // Need to find the index of the row
-            $(rows).each(function (i) {
-                if (this == row) {
+            $(rows).each(function (i, _row) {
+                if (row === _row) {
                     idx = i;
                 }
             });
 
             // Abort if the current row wasn't found
-            if (idx == null) return;
+            if (idx === null) {
+                return;
+            }
 
             // The up and down should cycle through the rows, excluding the auto-append and
             // empty-row rows.
-            var validrows = 0;
-            $(rows).each(function (i) {
-                if (
-                    !$(this).hasClass("datagridwidget-empty-row") &&
-                    !$(this).hasClass("auto-append")
-                ) {
-                    validrows += 1;
-                }
-            });
+            var validrows = this.countRows();
 
             if (idx + 1 == validrows) {
                 if (direction == "down") {
@@ -344,7 +346,6 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
                     this.shiftRow(row, nextRow);
                 }
             }
-            this.updateOrderIndex();
             this.$el.trigger("aftermoverow", [this.$el, row]);
         },
 
@@ -353,7 +354,7 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
             $(top).insertBefore(bottom);
         },
 
-        reindexRow: function (row, newindex) {
+        reindexRow: function (row, new_index) {
             /**
              * Fixup all attributes on all child elements that contain
              * the row index. The following attributes are scanned:
@@ -371,133 +372,69 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
              * in funny ways.
              *
              * @param  {DOM} row
-             * @param  {Number} newindex
+             * @param  {Number} new_index
              */
 
-            var $tbody = $(this.el_body);
-            var name_prefix = $tbody.data("name_prefix") + ".";
-            var id_prefix = $tbody.data("id_prefix") + "-";
-            var $row = $(row);
-            var oldindex = $row.data("index");
+            var name_prefix = this.el_body.dataset.name_prefix + ".";
+            var id_prefix = this.el_body.dataset.id_prefix + "-";
+            var old_index = row.dataset.oldIndex || row.dataset.index;
+            delete row.dataset.oldIndex;
 
             function replaceIndex(el, attr, prefix) {
-                if (el.attr(attr)) {
-                    var val = el.attr(attr);
-                    var pattern = new RegExp("^" + prefix + oldindex);
-                    el.attr(attr, val.replace(pattern, prefix + newindex));
-                    if (attr.indexOf("data-") === 0) {
-                        var key = attr.substr(5);
-                        var data = el.data(key);
-                        el.data(key, data.replace(pattern, prefix + newindex));
-                    }
+                var val = el.getAttribute(attr);
+                if (val) {
+                    var pattern = new RegExp("^" + prefix + old_index);
+                    el.setAttribute(
+                        attr,
+                        val.replace(pattern, prefix + new_index)
+                    );
                 }
             }
 
-            // update index data
-            $row.data("index", newindex);
-            $row.attr("data-index", newindex);
+            row.dataset.index = new_index; // update index data
 
-            $row.find('[id^="formfield-' + id_prefix + '"]').each(function (
-                i,
-                el
-            ) {
-                replaceIndex($(el), "id", "formfield-" + id_prefix);
-            });
-            $row.find('[name^="' + name_prefix + '"]').each(function (i, el) {
-                replaceIndex($(el), "name", name_prefix);
-            });
-            $row.find('[id^="' + id_prefix + '"]').each(function (i, el) {
-                replaceIndex($(el), "id", id_prefix);
-            });
-            $row.find('[for^="' + id_prefix + '"]').each(function (i, el) {
-                replaceIndex($(el), "for", id_prefix);
-            });
-            $row.find('[href*="#' + id_prefix + '"]').each(function (i, el) {
-                replaceIndex($(el), "href", "#" + id_prefix);
-            });
-            $row.find('[data-fieldname^="' + name_prefix + '"]').each(function (
-                i,
-                el
-            ) {
-                replaceIndex($(el), "data-fieldname", name_prefix);
-            });
+            row.querySelectorAll('[id^="formfield-' + id_prefix + '"]').forEach(function (el) {
+                replaceIndex(el, "id", "formfield-" + id_prefix);
+            }, this); // prettier-ignore
+            row.querySelectorAll('[name^="' + name_prefix + '"]').forEach(function (el) {
+                replaceIndex(el, "name", name_prefix);
+            }, this); // prettier-ignore
+            row.querySelectorAll('[id^="' + id_prefix + '"]').forEach(function (el) {
+                replaceIndex(el, "id", id_prefix);
+            }, this); // prettier-ignore
+            row.querySelectorAll('[for^="' + id_prefix + '"]').forEach(function (el) {
+                replaceIndex(el, "for", id_prefix);
+            }, this); // prettier-ignore
+            row.querySelectorAll('[href*="#' + id_prefix + '"]').forEach(function (el) {
+                replaceIndex(el, "href", "#" + id_prefix);
+            }, this); // prettier-ignore
+            row.querySelectorAll('[data-fieldname^="' + name_prefix + '"]').forEach(function (el) {
+                replaceIndex(el, "data-fieldname", name_prefix);
+            }, this); // prettier-ignore
         },
 
-        updateOrderIndex: function (backwards, ensureMinimumRows) {
+        updateOrderIndex: function () {
             /**
              * Update all row indexes on a DGF table.
              *
              * Each <tr> and input widget has recalculated row index number in its name,
              * so that the server can then parsit the submitted data in the correct order.
-             *
-             * @param  {Boolean} backwards iterate rows backwards
-             * @param  {Boolean} ensureMinimumRows We have inserted a special auto-append row
              */
 
-            var $tbody = $(this.el_body);
-            var name_prefix = $tbody.attr("data-name_prefix") + ".";
-            var i, idx, row, $row, $nextRow;
-
-            // Was this auto-append table
-            var autoAppend = false;
+            var cnt = 0;
             var rows = this.getRows();
-            for (i = 0; i < rows.length; i++) {
-                idx = backwards ? rows.length - i - 1 : i;
-                (row = rows[idx]), ($row = $(row));
-
-                if ($row.hasClass("datagridwidget-empty-row")) {
-                    continue;
+            rows.forEach(function (row) {
+                var index = row.dataset.index;
+                if (["AA", "TT"].indexOf(index) > -1) {
+                    this.reindexRow(row, index);
+                    return;
                 }
-                if ($row.hasClass("auto-append")) {
-                    autoAppend = true;
-                }
-                this.reindexRow(row, idx);
-            }
+                this.reindexRow(row, cnt);
+                row.dataset.index = cnt;
+                cnt++; // we start counting with "0"
+            }, this);
 
-            // Handle a special case where
-            // 1. Widget is empty
-            // 2. We don't have AA mode turned on
-            // 3. We need to have minimum editable row count of 1
-            if (ensureMinimumRows) {
-                this.reindexRow(rows[0], "AA");
-                autoAppend = true;
-            }
-
-            // Add a special first and class row classes
-            // to hide manipulation handles
-            // AA handling is different once again
-            var visibleRows = this.getVisibleRows();
-            for (i = 0; i < visibleRows.length; i++) {
-                (row = visibleRows[i]), ($row = $(row));
-                if (i < visibleRows.length - 2) {
-                    $nextRow = $(visibleRows[i + 1]);
-                }
-                if (i === 0) {
-                    $row.addClass("datagridfield-first-filled-row");
-                } else {
-                    $row.removeClass("datagridfield-first-filled-row");
-                }
-                // Last visible before AA
-                if (autoAppend) {
-                    if ($nextRow && $nextRow.hasClass("auto-append")) {
-                        $row.addClass("datagridfield-last-filled-row");
-                    } else {
-                        $row.removeClass("datagridfield-last-filled-row");
-                    }
-                } else {
-                    if (i == visibleRows.length - 1) {
-                        $row.addClass("datagridfield-last-filled-row");
-                    } else {
-                        $row.removeClass("datagridfield-last-filled-row");
-                    }
-                }
-            }
-
-            // Set total visible row counts and such and hint CSS
-            $tbody.attr("data-count", rows.length);
-            $tbody.attr("data-visible-count", visibleRows.length);
-            $tbody.attr("data-many-rows", visibleRows >= 2 ? "true" : "false");
-
+            var name_prefix = this.el_body.dataset.name_prefix + ".";
             var count_el = this.el.querySelector(
                 'input[name="' + name_prefix + 'count"]'
             );
