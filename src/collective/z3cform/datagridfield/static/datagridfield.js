@@ -118,6 +118,95 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
             }, this);
         },
 
+        get_row_buttons: function (row) {
+            return {
+                add: row.querySelector(".dgf--row-add"),
+                delete: row.querySelector(".dgf--row-delete"),
+                up: row.querySelector(".dgf--row-moveup"),
+                down: row.querySelector(".dgf--row-movedown"),
+            };
+        },
+
+        setUIState: function () {
+            var rows = this.getVisibleRows();
+            for (var cnt = 0; cnt < rows.length; cnt++) {
+                var row = rows[cnt];
+                var buttons = this.get_row_buttons(row);
+
+                if (row.dataset.index === "AA") {
+                    // Special case AA
+
+                    if (buttons.add) {
+                        buttons.add.disabled = true;
+                    }
+                    if (buttons.delete) {
+                        buttons.delete.disabled = true;
+                    }
+                    if (buttons.up) {
+                        buttons.up.disabled = true;
+                    }
+                    if (buttons.down) {
+                        buttons.down.disabled = true;
+                    }
+                    if (cnt > 0) {
+                        // Set the previous buttons also, if available.
+                        var before_aa_buttons = this.get_row_buttons(
+                            rows[cnt - 1]
+                        );
+                        if (before_aa_buttons.down) {
+                            before_aa_buttons.down.disabled = true;
+                        }
+                    }
+                } else if (cnt === 0) {
+                    // First row
+
+                    if (buttons.add) {
+                        buttons.add.disabled = false;
+                    }
+                    if (buttons.delete) {
+                        buttons.delete.disabled = false;
+                    }
+                    if (buttons.up) {
+                        buttons.up.disabled = true;
+                    }
+                    if (buttons.down) {
+                        buttons.down.disabled = rows.length === 1; // disable if 1 row.
+                    }
+                } else if (cnt === rows.length - 1) {
+                    // Last button - if no AA buttons.
+                    // Also, if this is reached, it's not the only row.
+
+                    if (buttons.add) {
+                        buttons.add.disabled = false;
+                    }
+                    if (buttons.delete) {
+                        buttons.delete.disabled = false;
+                    }
+                    if (buttons.up) {
+                        buttons.up.disabled = false;
+                    }
+                    if (buttons.down) {
+                        buttons.down.disabled = true;
+                    }
+                } else {
+                    // Normal in-between case.
+
+                    if (buttons.add) {
+                        buttons.add.disabled = false;
+                    }
+                    if (buttons.delete) {
+                        buttons.delete.disabled = false;
+                    }
+                    if (buttons.up) {
+                        buttons.up.disabled = false;
+                    }
+                    if (buttons.down) {
+                        buttons.down.disabled = false;
+                    }
+                }
+            }
+        },
+
         getRows: function () {
             // Return primary nodes with class of datagridwidget-row, they can be any tag: tr, div, etc.
             return this.el_body.querySelectorAll(".datagridwidget-row");
@@ -439,6 +528,8 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
                 'input[name="' + name_prefix + 'count"]'
             );
             count_el.value = this.countRows();
+
+            this.setUIState();
         },
 
         getParentRow: function (node) {
