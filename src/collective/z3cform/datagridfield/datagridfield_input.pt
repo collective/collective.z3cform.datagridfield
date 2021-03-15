@@ -4,12 +4,12 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       tal:omit-tag=""
 >
-
+<div class="pat-datagridfield"
+     data-auto-append="${view/auto_append}"
+>
   <table class="datagridwidget-table-view"
+         id="${view/id_prefix}"
          data-mode="row"
-         tal:attributes="
-           id view/id_prefix;
-         "
   >
     <thead>
       <tr>
@@ -60,7 +60,7 @@
         </th>
       </tr>
     </thead>
-    <tbody class="datagridwidget-body pat-datagridfield"
+    <tbody class="datagridwidget-body"
            tal:attributes="
              data-name_prefix view/name_prefix;
              data-id_prefix view/id_prefix;
@@ -80,13 +80,8 @@
       </tal:block>
     </tbody>
   </table>
-  <script src=""
-          type="text/javascript"
-          tal:attributes="
-            src string:${view/portal_url}/++resource++collective.z3cform.datagridfield/init_field.js;
-          "
-  ></script>
   <input type="hidden"
          tal:replace="structure view/counterMarker"
   />
+</div>
 </html>

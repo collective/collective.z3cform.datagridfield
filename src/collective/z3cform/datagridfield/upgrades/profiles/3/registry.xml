@@ -1,6 +1,27 @@
 <?xml version="1.0"?>
 <registry>
 
+  <!-- Remove old -->
+  <records remove="True"
+           prefix="plone.resources/z3cform_datagridfield_css"
+           interface="Products.CMFPlone.interfaces.IResourceRegistry"
+  />
+  <records remove="True"
+           prefix="plone.resources/z3cform_datagridfield_js"
+           interface="Products.CMFPlone.interfaces.IResourceRegistry"
+  />
+  <records remove="True"
+           prefix="plone.resources/resource-collective-z3cform-datagridfield"
+           interface="Products.CMFPlone.interfaces.IResourceRegistry"
+  />
+  <records prefix="plone.bundles/plone-legacy"
+            interface='Products.CMFPlone.interfaces.IBundleRegistry'>
+    <value key="resources" purge="false">
+      <element remove="True">++resource++collective.z3cform.datagridfield/datagridfield.js</element>
+    </value>
+  </records>
+
+  <!-- Add new -->
   <records prefix="plone.resources/pat-datagridfield"
            interface="Products.CMFPlone.interfaces.IResourceRegistry"
   >

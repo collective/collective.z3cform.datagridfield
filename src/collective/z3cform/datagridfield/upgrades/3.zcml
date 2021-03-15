@@ -1,0 +1,26 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:gs="http://namespaces.zope.org/genericsetup"
+    >
+
+  <gs:registerProfile
+      name="3"
+      title="Upgrade to version 3"
+      description=""
+      directory="profiles/3"
+      for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
+  <gs:upgradeSteps
+      source="2"
+      destination="3"
+      profile="collective.z3cform.datagridfield:default">
+    <gs:upgradeDepends
+      title="Upgrade to version 3"
+      description=""
+      import_profile="collective.z3cform.datagridfield.upgrades:3"
+      />
+  </gs:upgradeSteps>
+
+</configure>

@@ -5,6 +5,7 @@
       tal:omit-tag=""
 >
 
+<div>
   <table class="datagridwidget-table-view"
          tal:attributes="
            class view/display_table_css_class;
@@ -52,4 +53,5 @@
   <input type="hidden"
          tal:replace="structure view/counterMarker"
   />
+</div>
 </html>

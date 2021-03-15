@@ -71,19 +71,12 @@
   <td class="datagridwidget-manipulator insert-row"
       tal:condition="view/isInsertEnabled"
   >
-
-    <a class="btn btn-default"
-       id="btn-addrow"
-       aria-label="Add row"
-       href=""
-       onclick="dataGridField2Functions.addRowAfter(this); return false"
-       title=""
-       data-original-title="Add row"
-       tal:attributes="
-         id string:btn-addrow-${view/name};
-       "
-       i18n:attributes="aria-label label_datagridwidget_manipulators_addrow;
-                            data-original-title label_datagridwidget_manipulators_addrow"
+    <button class="plone-btn plone-btn-default plone-btn-sm dgf--row-add"
+            type="button"
+            aria-label="Add row"
+            title="Add row"
+            i18n:attributes="aria-label label_datagridwidget_manipulators_addrow;
+                             title label_datagridwidget_manipulators_addrow"
     >
       <span class="glyphicon glyphicon-plus"
             aria-hidden="true"
@@ -91,25 +84,18 @@
       <span class="sr-only"
             i18n:translate="label_datagridwidget_manipulators_addrow"
       >Add row</span>
-    </a>
-
+    </button>
   </td>
+
   <td class="datagridwidget-manipulator delete-row"
       tal:condition="view/isDeleteEnabled"
   >
-
-    <a class="btn btn-default"
-       id="btn-deleterow"
-       aria-label="Delete row"
-       href=""
-       onclick="dataGridField2Functions.removeFieldRow(this);return false"
-       title=""
-       data-original-title="Delete row"
-       tal:attributes="
-         id string:btn-deleterow-${view/name};
-       "
-       i18n:attributes="aria-label label_datagridwidget_manipulators_deleterow;
-                            data-original-title label_datagridwidget_manipulators_deleterow"
+    <button class="plone-btn plone-btn-default plone-btn-sm dgf--row-delete"
+            type="button"
+            aria-label="Delete row"
+            title="Delete row"
+            i18n:attributes="aria-label label_datagridwidget_manipulators_deleterow;
+                             title label_datagridwidget_manipulators_deleterow"
     >
       <span class="glyphicon glyphicon-trash"
             aria-hidden="true"
@@ -117,26 +103,18 @@
       <span class="sr-only"
             i18n:translate="label_datagridwidget_manipulators_deleterow"
       >Delete row</span>
-    </a>
-
+    </button>
   </td>
+
   <td class="datagridwidget-manipulator move-up"
       tal:condition="view/isReorderEnabled"
   >
-
-
-    <a class="btn btn-default"
-       id="btn-moveup"
-       aria-label="Move Up"
-       href=""
-       onclick="dataGridField2Functions.moveRowUp(this);return false"
-       title=""
-       data-original-title="Move Up"
-       tal:attributes="
-         id string:btn-moveup-${view/name};
-       "
-       i18n:attributes="aria-label label_datagridwidget_manipulators_moverowup;
-                            data-original-title label_datagridwidget_manipulators_moverowup"
+    <button class="plone-btn plone-btn-default plone-btn-sm dgf--row-moveup"
+            type="button"
+            aria-label="Move Up"
+            title="Move Up"
+            i18n:attributes="aria-label label_datagridwidget_manipulators_moverowup;
+                             title label_datagridwidget_manipulators_moverowup"
     >
       <span class="glyphicon glyphicon-arrow-up"
             aria-hidden="true"
@@ -144,25 +122,18 @@
       <span class="sr-only"
             i18n:translate="label_datagridwidget_manipulators_moverowup"
       >Move Up</span>
-    </a>
-
+    </button>
   </td>
+
   <td class="datagridwidget-manipulator move-down"
       tal:condition="view/isReorderEnabled"
   >
-
-    <a class="btn btn-default"
-       id="btn-movedown"
-       aria-label="Move Down"
-       href=""
-       onclick="dataGridField2Functions.moveRowDown(this);return false"
-       title=""
-       data-original-title="Move Down"
-       tal:attributes="
-         id string:btn-movedown-${view/name};
-       "
-       i18n:attributes="aria-label label_datagridwidget_manipulators_moverowdown;
-                            data-original-title label_datagridwidget_manipulators_moverowdown"
+    <button class="plone-btn plone-btn-default plone-btn-sm dgf--row-movedown"
+            type="button"
+            aria-label="Move Down"
+            title="Move Down"
+            i18n:attributes="aria-label label_datagridwidget_manipulators_moverowdown;
+                             title label_datagridwidget_manipulators_moverowdown"
     >
       <span class="glyphicon glyphicon-arrow-down"
             aria-hidden="true"
@@ -170,8 +141,7 @@
       <span class="sr-only"
             i18n:translate="label_datagridwidget_manipulators_moverowdown"
       >Move Down</span>
-    </a>
-
+    </button>
   </td>
 
 </html>

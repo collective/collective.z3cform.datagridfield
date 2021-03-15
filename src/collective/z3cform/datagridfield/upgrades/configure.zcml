@@ -1,5 +1,6 @@
 <configure xmlns="http://namespaces.zope.org/zope">
 
   <include file="2.zcml" />
+  <include file="3.zcml" />
 
 </configure>

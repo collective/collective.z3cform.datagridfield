@@ -1,14 +1,17 @@
 <?xml version="1.0"?>
 <registry>
 
-  <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
-           prefix="plone.resources/z3cform-datagridfield"
-           remove="true"
+  <records remove="True"
+           prefix="plone.resources/pat-datagridfield"
+           interface="Products.CMFPlone.interfaces.IResourceRegistry"
   />
-
-  <records interface="Products.CMFPlone.interfaces.IBundleRegistry"
-           prefix="plone.bundles/collective.z3cform.datagridfield"
-           remove="true"
+  <records remove="True"
+           prefix="plone.resources/datagridfield-bundle"
+           interface="Products.CMFPlone.interfaces.IResourceRegistry"
+  />
+  <records remove="True"
+           prefix="plone.bundles/datagridfield-bundle"
+           interface="Products.CMFPlone.interfaces.IBundleRegistry"
   />
 
 </registry>
