@@ -9,4 +9,5 @@ class HiddenProfiles(object):
         return [
             "collective.z3cform.datagridfield:uninstall",
             "collective.z3cform.datagridfield.upgrades:2",
+            "collective.z3cform.datagridfield.upgrades:3",
         ]
