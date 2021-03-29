@@ -29,8 +29,10 @@ Changelog
   Breaking change:
     In this version a pattern handles all the JavaScript functionality to ensure best possible encapsulation between different instances of the datagridfield widget.
     If you have customized templates, make sure you do the following:
-    - Add the class ``pat-datagridfield`` to the ``datagridwidget-table-view`` nodes (files: datagridfield_input.pt, datagridfield_input_block.pt).
-    - Add the following classes instead of ids to the ui buttons as shown in this map (files: datagridfieldobject_input.pt, datagridfieldobject_input_block.pt_):
+
+    - Add the class ``pat-datagridfield`` to the ``datagridwidget-table-view`` nodes (datagridfield_input.pt, datagridfield_input_block.pt).
+    - Add the following classes instead of ids to the ui buttons as shown in this map (datagridfieldobject_input.pt, datagridfieldobject_input_block.pt):
+
       - #btn-addrow -> .dgf--row-add
       - #btn-deleterow -> .dgf--row-delete
       - #btn-moveup -> .dgf--row-moveup
