@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0 (unreleased)
+2.0 (2021-03-29)
 ----------------
 
 - Register new pat-datagridfield bundle.
