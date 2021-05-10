@@ -44,8 +44,8 @@ The layout of the table is defined by a second schema:
 
 .. code-block:: python
 
-    from collective.z3cform.datagridfield import DataGridFieldFactory
-    from collective.z3cform.datagridfield import DictRow
+    from collective.z3cform.datagridfield.datagridfield import DataGridFieldFactory
+    from collective.z3cform.datagridfield.row import DictRow
     from z3c.form import field
     from z3c.form import form
     from z3c.form.form import extends
@@ -181,8 +181,8 @@ Here is an example how one can customize per-field widgets for the data grid fie
 .. code-block:: python
 
     from .widget import DGFTreeSelectFieldWidget
-    from collective.z3cform.datagridfield import DataGridFieldFactory
-    from collective.z3cform.datagridfield import DictRow
+    from collective.z3cform.datagridfield.datagridfield import DataGridFieldFactory
+    from collective.z3cform.datagridfield.row import DictRow
     from Products.CMFCore.interfaces import ISiteRoot
     from z3c.form import form
     from zope import interface
