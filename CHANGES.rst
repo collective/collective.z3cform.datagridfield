@@ -4,6 +4,9 @@ Changelog
 2.0.1 (unreleased)
 ------------------
 
+- Amend fix for `#110 <https://github.com/collective/collective.z3cform.datagridfield/issues/110>`_ in registry.
+  [agitator]
+
 - Fix documentation. `#110 <https://github.com/collective/collective.z3cform.datagridfield/issues/110>`_.
   [petschki]
 
