@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.1 (unreleased)
+2.0.1 (2021-07-28)
 ------------------
 
 - Amend fix for `#110 <https://github.com/collective/collective.z3cform.datagridfield/issues/110>`_ in registry.
