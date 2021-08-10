@@ -4,7 +4,9 @@ Changelog
 2.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Remove the ZCML registration for ``AutoExtensibleSubformAdapter``.  This
+  fixes `#114 <https://github.com/collective/collective.z3cform.datagridfield/issues/114>`_.
+  [batlock666]
 
 
 2.0.1 (2021-07-28)

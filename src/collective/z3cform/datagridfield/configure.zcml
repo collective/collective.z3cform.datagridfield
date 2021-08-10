@@ -29,7 +29,6 @@
         />
   </class>
 
-  <adapter factory=".autoform.AutoExtensibleSubformAdapter" />
   <adapter factory=".autoform.MultipleErrorViewSnippetWithMessage" />
   <adapter factory=".datagridfield.GridDataConverter" />
   <adapter factory=".datagridfield.DataGridFieldSubformAdapter" />
