@@ -4,7 +4,8 @@ Changelog
 2.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix sub form adapter implementation. `#114 <https://github.com/collective/collective.z3cform.datagridfield/issues/114>_`.
+  [thomasmassmann]
 
 
 2.0.1 (2021-07-28)
