@@ -74,10 +74,6 @@ jobs:
               run: |
                   tox -r -e black-check
 
-            - name: Lint check
-              run: |
-                  tox -r -e py${{ matrix.python-version }}-lint
-
             - name: Test with tox
               run: |
                   tox -r
