@@ -76,10 +76,7 @@ jobs:
 
             - name: Lint check
               run: |
-                  tox -r
-              env:
-                LINTER: lint
-                PYTHON-VERSION: ${{ matrix.python-version }}
+                  tox -r -e py${{ matrix.python-version }}-lint
 
             - name: Test with tox
               run: |
