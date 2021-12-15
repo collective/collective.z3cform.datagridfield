@@ -4,7 +4,8 @@ Changelog
 2.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Use latest config for Github Actions and tox. Add Plone 6 related ci and tox config.
+  [thomasmassmann]
 
 
 2.0.1 (2021-07-28)
