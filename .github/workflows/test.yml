@@ -28,10 +28,6 @@ jobs:
                       python-version: 3.9
                     - plone-version: 'Plone60'
                       python-version: 2.7
-                    - plone-version: 'Plone60'
-                      python-version: 3.7
-                    - plone-version: 'Plone60'
-                      python-version: 3.8
 
         steps:
             - uses: actions/setup-python@v2
