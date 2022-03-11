@@ -9,6 +9,5 @@ class HiddenProfiles(object):
         return ["collective.z3cform.datagridfield:uninstall"]
 
     def getNonInstallableProducts(self):
-        """Hide the upgrades package from site-creation and quickinstaller.
-        """
+        """Hide the upgrades package from site-creation and quickinstaller."""
         return ["collective.z3cform.datagridfield.upgrades"]
