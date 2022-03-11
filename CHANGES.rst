@@ -4,6 +4,10 @@ Changelog
 2.0.2 (unreleased)
 ------------------
 
+- Scan and init row ui after inserting the row into the DOM tree.
+  Should prevent JS initialization errors.
+  [thet]
+
 - When creating rows clone the row without any attached event handlers.
   [thet]
 

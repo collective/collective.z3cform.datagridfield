@@ -297,6 +297,9 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
                 $newtr.insertAfter(ref_row);
             }
 
+            this.initRowUI(newtr);
+            Registry.scan($newtr);
+
             this.initAutoAppendHandler();
 
             this.$el.trigger("afteraddrow", [this.$el, $newtr]);
@@ -325,8 +328,6 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
             delete new_row.dataset.index; // fresh row.
             new_row.classList.remove("datagridwidget-empty-row");
 
-            this.initRowUI(new_row);
-
             var $new_row = $(new_row);
             // enable patternslib
             $new_row
@@ -334,7 +335,6 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
                 .attr("class", function (i, cls) {
                     return cls.replace(/dgw\-disabled-pat-/, "pat-");
                 });
-            Registry.scan($new_row);
             return new_row;
         },
 
