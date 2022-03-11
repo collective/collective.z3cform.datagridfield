@@ -317,7 +317,9 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
                 throw new Error("Could not locate empty template row in DGF");
             }
 
-            var new_row = template_row.cloneNode(true);
+            var new_row = document.createElement("table");
+            new_row.innerHTML = template_row.outerHTML;
+            new_row = new_row.querySelector("tr");
 
             new_row.dataset.oldIndex = new_row.dataset.index; // store for replacing.
             delete new_row.dataset.index; // fresh row.

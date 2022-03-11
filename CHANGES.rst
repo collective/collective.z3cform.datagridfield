@@ -4,6 +4,9 @@ Changelog
 2.0.2 (unreleased)
 ------------------
 
+- When creating rows clone the row without any attached event handlers.
+  [thet]
+
 - Set auto-append UI state only for auto-append mode.
   [thet]
 
