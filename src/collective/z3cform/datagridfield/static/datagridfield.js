@@ -126,7 +126,7 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
                 var row = rows[cnt];
                 var buttons = this.get_row_buttons(row);
 
-                if (row.dataset.index === "AA") {
+                if (this.auto_append === true && row.dataset.index === "AA") {
                     // Special case AA
 
                     if (buttons.add) {

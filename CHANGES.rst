@@ -4,6 +4,9 @@ Changelog
 2.0.2 (unreleased)
 ------------------
 
+- Set auto-append UI state only for auto-append mode.
+  [thet]
+
 - Merge member-only JavaScript with logged-in bundle, not default bundle.
   [thet]
 
