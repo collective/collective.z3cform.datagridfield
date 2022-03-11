@@ -4,6 +4,9 @@ Changelog
 2.0.2 (unreleased)
 ------------------
 
+- Merge member-only JavaScript with logged-in bundle, not default bundle.
+  [thet]
+
 - Remove unused ``init_field.js`` script.
   [thet]
 
