@@ -4,6 +4,9 @@ Changelog
 2.0.2 (unreleased)
 ------------------
 
+- Remove unused ``init_field.js`` script.
+  [thet]
+
 - Use latest config for Github Actions and tox. Add Plone 6 related ci and tox config.
   [thomasmassmann]
 
