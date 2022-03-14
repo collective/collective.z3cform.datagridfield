@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.2 (unreleased)
+2.0.2 (2022-03-14)
 ------------------
 
 - Scan and init row ui after inserting the row into the DOM tree.
