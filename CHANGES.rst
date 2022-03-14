@@ -4,6 +4,22 @@ Changelog
 2.0.2 (unreleased)
 ------------------
 
+- Scan and init row ui after inserting the row into the DOM tree.
+  Should prevent JS initialization errors.
+  [thet]
+
+- When creating rows clone the row without any attached event handlers.
+  [thet]
+
+- Set auto-append UI state only for auto-append mode.
+  [thet]
+
+- Merge member-only JavaScript with logged-in bundle, not default bundle.
+  [thet]
+
+- Remove unused ``init_field.js`` script.
+  [thet]
+
 - Use latest config for Github Actions and tox. Add Plone 6 related ci and tox config.
   [thomasmassmann]
 

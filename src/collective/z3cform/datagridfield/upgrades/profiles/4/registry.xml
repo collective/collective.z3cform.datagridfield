@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<registry>
+
+  <records prefix="plone.bundles/datagridfield-bundle"
+           interface="Products.CMFPlone.interfaces.IBundleRegistry"
+  >
+    <value key="merge_with">logged-in</value>
+    <value key="last_compilation">2022-03-11 20:20:00</value>
+  </records>
+
+</registry>

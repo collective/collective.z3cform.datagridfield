@@ -126,7 +126,7 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
                 var row = rows[cnt];
                 var buttons = this.get_row_buttons(row);
 
-                if (row.dataset.index === "AA") {
+                if (this.auto_append === true && row.dataset.index === "AA") {
                     // Special case AA
 
                     if (buttons.add) {
@@ -297,6 +297,9 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
                 $newtr.insertAfter(ref_row);
             }
 
+            this.initRowUI(newtr);
+            Registry.scan($newtr);
+
             this.initAutoAppendHandler();
 
             this.$el.trigger("afteraddrow", [this.$el, $newtr]);
@@ -317,13 +320,13 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
                 throw new Error("Could not locate empty template row in DGF");
             }
 
-            var new_row = template_row.cloneNode(true);
+            var new_row = document.createElement("table");
+            new_row.innerHTML = template_row.outerHTML;
+            new_row = new_row.querySelector("tr");
 
             new_row.dataset.oldIndex = new_row.dataset.index; // store for replacing.
             delete new_row.dataset.index; // fresh row.
             new_row.classList.remove("datagridwidget-empty-row");
-
-            this.initRowUI(new_row);
 
             var $new_row = $(new_row);
             // enable patternslib
@@ -332,7 +335,6 @@ define(["jquery", "pat-base", "pat-registry"], function ($, Base, Registry) {
                 .attr("class", function (i, cls) {
                     return cls.replace(/dgw\-disabled-pat-/, "pat-");
                 });
-            Registry.scan($new_row);
             return new_row;
         },
 
