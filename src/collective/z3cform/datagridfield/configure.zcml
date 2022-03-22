@@ -29,11 +29,12 @@
         />
   </class>
 
-  <adapter factory=".autoform.AutoExtensibleSubformAdapter" />
   <adapter factory=".autoform.MultipleErrorViewSnippetWithMessage" />
   <adapter factory=".datagridfield.GridDataConverter" />
   <adapter factory=".datagridfield.DataGridFieldSubformAdapter" />
   <adapter factory=".datagridfield.DataGridValidator" />
+  <adapter factory=".row.DictRowConverter" />
+
   <adapter
       factory=".converters.DictRowSerializer"
       zcml:condition="installed transmogrify.dexterity"

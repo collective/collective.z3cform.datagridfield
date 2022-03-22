@@ -182,10 +182,10 @@ class EditForm(form.EditForm):
 
     def updateActions(self):
         """Bypass the baseclass editform - it causes problems"""
-        super(form.EditForm, self).updateActions()
+        super().updateActions()
 
     def updateWidgets(self):
-        super(EditForm, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].allow_reorder = True
 
 
@@ -195,7 +195,7 @@ class EditForm2(EditForm):
     fields["address"].widgetFactory = DataGridFieldFactory
 
     def updateWidgets(self):
-        super(EditForm2, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].allow_insert = False
         self.widgets["address"].allow_delete = False
 
@@ -206,7 +206,7 @@ class EditForm3(EditForm):
     fields["address"].widgetFactory = DataGridFieldFactory
 
     def updateWidgets(self):
-        super(EditForm3, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].auto_append = False
 
 
@@ -216,7 +216,7 @@ class EditForm4(EditForm):
     fields["address"].widgetFactory = DataGridFieldFactory
 
     def updateWidgets(self):
-        super(EditForm4, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].columns = [
             c for c in self.widgets["address"].columns if c["name"] != "country"
         ]
@@ -231,7 +231,7 @@ class EditForm4b(EditForm):
     fields["address"].widgetFactory = DataGridFieldFactory
 
     def updateWidgets(self):
-        super(EditForm4b, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].columns = [
             c for c in self.widgets["address"].columns if c["name"] != "line2"
         ]
@@ -259,7 +259,7 @@ class EditForm6(EditForm):
 
     def updateWidgets(self):
         # This one hides the column title
-        super(EditForm6, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].columns[3]["mode"] = HIDDEN_MODE
 
 
@@ -267,7 +267,7 @@ class EditForm7(EditForm):
     label = u"Table is read-only, cells editable (Objects)"
 
     def updateWidgets(self):
-        super(EditForm7, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].mode = DISPLAY_MODE
 
 
@@ -275,7 +275,7 @@ class EditForm8(EditForm):
     label = u"Table and cells are read-only (Objects)"
 
     def updateWidgets(self):
-        super(EditForm8, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].mode = DISPLAY_MODE
         for row in self.widgets["address"].widgets:
             for widget in row.subform.widgets.values():

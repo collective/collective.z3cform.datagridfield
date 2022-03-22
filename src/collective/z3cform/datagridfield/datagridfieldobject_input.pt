@@ -6,7 +6,7 @@
       i18n:domain="collective.z3cform.datagridfield"
 >
 
-  <tal:block tal:repeat="widget view/subform/widgets/values">
+  <tal:block tal:repeat="widget python:view.widgets.values()">
     <td tal:attributes="
           class python:('cell-%d ' % repeat['widget'].number()) + ('datagridwidget-hidden-data' if widget.mode == 'hidden' else 'datagridwidget-cell');
         ">

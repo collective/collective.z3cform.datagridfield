@@ -54,7 +54,7 @@ class IAddress(Interface):
     line2 = schema.TextLine(title=u"Line 2", required=False)
     city = schema.TextLine(title=u"City / Town", required=True)
     country = schema.TextLine(title=u"Country", required=True)
-    frozenField = schema.TextLine(title=u"Don't change", readonly=True, required=True)
+    frozenField = schema.TextLine(title=u"Don't change", readonly=True, required=False)
 
     # A sample integer field
     personCount = schema.Int(
@@ -100,6 +100,8 @@ TESTDATA = {
             "country": "The Old Sod",
             "personCount": 2,
             "dateAdded": datetime(1981, 8, 17, 0o6, 00, 00),
+            "billed": False,
+            "frozenField": "do not change!",
         },
         {
             "address_type": "Home",
@@ -109,6 +111,8 @@ TESTDATA = {
             "country": "The Old Sod",
             "personCount": 4,
             "dateAdded": datetime(1981, 8, 17, 0o6, 00, 00),
+            "billed": True,
+            "frozenField": "do not change!",
         },
     ],
 }
@@ -155,10 +159,10 @@ class EditForm(form.EditForm):
 
     def updateActions(self):
         """Bypass the baseclass editform - it causes problems"""
-        super(form.EditForm, self).updateActions()
+        super().updateActions()
 
     def updateWidgets(self):
-        super(EditForm, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].allow_reorder = True
 
 
@@ -169,7 +173,7 @@ class EditForm2(EditForm):
     fields["address"].widgetFactory = DataGridFieldFactory
 
     def updateWidgets(self):
-        super(EditForm2, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].allow_insert = False
         self.widgets["address"].allow_delete = False
 
@@ -181,7 +185,7 @@ class EditForm3(EditForm):
     fields["address"].widgetFactory = DataGridFieldFactory
 
     def updateWidgets(self):
-        super(EditForm3, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].auto_append = False
 
 
@@ -192,7 +196,7 @@ class EditForm4(EditForm):
     fields["address"].widgetFactory = DataGridFieldFactory
 
     def updateWidgets(self):
-        super(EditForm4, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].columns = [
             c for c in self.widgets["address"].columns if c["name"] != "country"
         ]
@@ -220,7 +224,7 @@ class EditForm6(EditForm):
 
     def updateWidgets(self):
         # This one hides the column title
-        super(EditForm6, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].columns[3]["mode"] = HIDDEN_MODE
 
 
@@ -229,7 +233,7 @@ class EditForm7(EditForm):
     show_note = True
 
     def updateWidgets(self):
-        super(EditForm7, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].mode = DISPLAY_MODE
 
 
@@ -237,7 +241,7 @@ class EditForm8(EditForm):
     label = u"Table and cells are read-only"
 
     def updateWidgets(self):
-        super(EditForm8, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].mode = DISPLAY_MODE
         for row in self.widgets["address"].widgets:
             for wdt in row.subform.widgets.values():
@@ -255,4 +259,4 @@ class EditForm9(EditForm):
     def update(self):
         # Set a custom widget for a field for this form instance only
         self.fields["address"].widgetFactory = BlockDataGridFieldFactory
-        super(EditForm9, self).update()
+        super().update()

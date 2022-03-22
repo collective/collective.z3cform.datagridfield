@@ -3,14 +3,16 @@
     Implementation of the widget
 """
 from . import _
-from .autoform import AutoExtensibleSubForm
-from .autoform import AutoExtensibleSubformAdapter
 from .interfaces import IDataGridField
 from Acquisition import aq_parent
 from plone import api
 from plone.app.z3cform.interfaces import IPloneFormLayer
 from plone.app.z3cform.utils import closest_content
 from plone.autoform.interfaces import MODES_KEY
+from plone.autoform.form import AutoObjectSubForm
+from plone.z3cform.interfaces import ISubformFactory
+from plone.z3cform.subform import ObjectSubForm
+from plone.z3cform.subform import SubformAdapter
 from z3c.form import interfaces
 from z3c.form.browser.multi import MultiWidget
 from z3c.form.browser.object import ObjectWidget
@@ -158,7 +160,7 @@ class DataGridField(MultiWidget):
             ]
 
         # if the field has configuration data set - copy it
-        super(DataGridField, self).updateWidgets()
+        super().updateWidgets()
 
         if self.mode == INPUT_MODE:
             if self.auto_append:
@@ -250,11 +252,11 @@ class DataGridFieldObject(ObjectWidget):
             return self.extract()
         except MultipleErrors:
             value = {}
-            active_names = self.subform.fields.keys()
+            active_names = self.fields.keys()
             for name in getFieldNames(self.field.schema):
                 if name not in active_names:
                     continue
-                widget = self.subform.widgets[name]
+                widget = self.widgets[name]
                 widget_value = widget.value
                 try:
                     converter = interfaces.IDataConverter(widget)
@@ -266,11 +268,10 @@ class DataGridFieldObject(ObjectWidget):
     @value.setter
     def value(self, value):
         self._value = value
-        self.updateWidgets()
 
         # ensure that we apply our new values to the widgets
         if value is not NO_VALUE:
-            active_names = self.subform.fields.keys()
+            active_names = self.fields.keys()
             for name in getFieldNames(self.field.schema):
                 fieldset_field = self.field.schema[name]
                 if fieldset_field.readonly:
@@ -288,21 +289,21 @@ class DataGridFieldObject(ObjectWidget):
                         and v == NO_VALUE
                     ):
                         v = ""
-                    self.applyValue(self.subform.widgets[name], v)
+                    fieldset_field.set(self.field, v)
 
     def updateWidgets(self, *args, **kwargs):
-        super(DataGridFieldObject, self).updateWidgets(*args, **kwargs)
+        super().updateWidgets(*args, **kwargs)
 
         # Tell the "cell"-widget the "mode" of it's column,
         # so that plone.autoform.directives.mode works on the cell.
         for column_info in aq_parent(self).columns:
             if column_info["mode"] is None:
                 continue
-            self.subform.widgets[column_info["name"]].mode = column_info["mode"]
+            self.widgets[column_info["name"]].mode = column_info["mode"]
 
     def render(self):
         """See z3c.form.interfaces.IWidget."""
-        html = super(DataGridFieldObject, self).render()
+        html = super().render()
         if "datagridwidget-empty-row" in self.klass or "auto-append" in self.klass:
             # deactivate patterns
             fragments = lxml.html.fragments_fromstring(html)
@@ -334,7 +335,7 @@ def DataGridFieldObjectFactory(field, request):
 # ------------[ Form to draw the line ]---------------------------------------
 
 
-class DataGridFieldObjectSubForm(AutoExtensibleSubForm):
+class DataGridFieldObjectSubForm(AutoObjectSubForm, ObjectSubForm):
     """Local class of subform - this is intended to all configuration
     information to be passed all the way down to the subform.
 
@@ -369,69 +370,8 @@ class DataGridFieldObjectSubForm(AutoExtensibleSubForm):
 
     """
 
-    def __init__(self, context, request, parentWidget):
-        # copied from z3c.form 3.2.10
-        self.context = context
-        self.request = request
-        self.__parent__ = parentWidget
-        self.parentForm = parentWidget.form
-        self.ignoreContext = self.__parent__.ignoreContext
-        self.ignoreRequest = self.__parent__.ignoreRequest
-        if interfaces.IFormAware.providedBy(self.__parent__):
-            self.ignoreReadonly = self.parentForm.ignoreReadonly
-        self.prefix = self.__parent__.name
-
-    def _validate(self):
-        # copied from z3c.form 3.2.10
-        for widget in self.widgets.values():
-            try:
-                # convert widget value to field value
-                converter = interfaces.IDataConverter(widget)
-                value = converter.toFieldValue(widget.value)
-                # validate field value
-                getMultiAdapter(
-                    (
-                        self.context,
-                        self.request,
-                        self.parentForm,
-                        getattr(widget, "field", None),
-                        widget,
-                    ),
-                    interfaces.IValidator,
-                ).validate(value, force=True)
-            except (ValidationError, ValueError) as error:
-                # on exception, setup the widget error message
-                view = getMultiAdapter(
-                    (
-                        error,
-                        self.request,
-                        widget,
-                        widget.field,
-                        self.parentForm,
-                        self.context,
-                    ),
-                    interfaces.IErrorViewSnippet,
-                )
-                view.update()
-                widget.error = view
-
-    def update(self):
-        # copied from z3c.form 3.2.10
-        if self.__parent__.field is None:
-            raise ValueError(
-                "%r .field is None, that's a blocking point" % self.__parent__
-            )
-        # update stuff from parent to be sure
-        self.mode = self.__parent__.mode
-        self.setupFields()
-        super(DataGridFieldObjectSubForm, self).update()
-
-    def getContent(self):
-        # copied from z3c.form 3.2.10
-        return self.__parent__._value
-
     def updateWidgets(self):
-        rv = super(DataGridFieldObjectSubForm, self).updateWidgets()
+        rv = super().updateWidgets()
         if hasattr(self.parentForm, "datagridUpdateWidgets"):
             self.parentForm.datagridUpdateWidgets(
                 self, self.widgets, self.__parent__.__parent__
@@ -472,26 +412,11 @@ class DataGridFieldObjectSubForm(AutoExtensibleSubForm):
     Interface,  # field
     Interface,  # field.schema
 )
-@implementer(interfaces.ISubformFactory)
-class DataGridFieldSubformAdapter(AutoExtensibleSubformAdapter):
+@implementer(ISubformFactory)
+class DataGridFieldSubformAdapter(SubformAdapter):
     """Give it my local class of subform, rather than the default"""
 
     factory = DataGridFieldObjectSubForm
-
-    def __init__(self, context, request, widgetContext, form, widget, field, schema):
-        # copied from z3c.form 3.2.10
-        self.context = context
-        self.request = request
-        self.widgetContext = widgetContext
-        self.form = form
-        self.widget = widget
-        self.field = field
-        self.schema = schema
-
-    def __call__(self):
-        # copied from z3c.form 3.2.10
-        obj = self.factory(self.context, self.request, self.widget)
-        return obj
 
 
 @implementer(IValidator)

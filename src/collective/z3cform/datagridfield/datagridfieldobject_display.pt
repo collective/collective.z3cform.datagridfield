@@ -1,4 +1,4 @@
-<tal:block tal:repeat="widget view/subform/widgets/values">
+<tal:block tal:repeat="widget python:view.widgets.values()">
   <td tal:attributes="
         class python:widget.mode == 'hidden' and 'datagridwidget-hidden-data' or 'datagridwidget-cell';
       ">

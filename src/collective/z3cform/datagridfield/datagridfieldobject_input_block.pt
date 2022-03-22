@@ -7,7 +7,7 @@
 >
 
   <td class="datagridwidget-block-edit-cell">
-    <tal:block tal:repeat="widget view/subform/widgets/values">
+    <tal:block tal:repeat="widget python:view.widgets.values()">
 
       <div tal:define="
              klass python: widget.klass or '';
