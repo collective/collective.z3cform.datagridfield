@@ -15,6 +15,7 @@
   >
     <value key="jscompilation">++resource++collective.z3cform.datagridfield/datagridfield.min.js</value>
     <value key="csscompilation" purge="true"></value>
+    <value key="depends" purge="true"></value>
   </records>
 
 </registry>

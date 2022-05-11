@@ -2,8 +2,7 @@
 <registry>
 
   <records interface="Products.CMFPlone.interfaces.IBundleRegistry"
-           prefix="plone.bundles/bootstrap-js"
-  >
+           prefix="plone.bundles/datagridfield-bundle">
     <value key="enabled">True</value>
     <value key="jscompilation">++resource++collective.z3cform.datagridfield/datagridfield.min.js</value>
     <value key="csscompilation"></value>
