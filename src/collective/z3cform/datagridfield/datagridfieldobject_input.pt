@@ -4,8 +4,9 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       tal:omit-tag=""
       i18n:domain="collective.z3cform.datagridfield"
+      tal:define="icons nocall:context/@@iconresolver"
 >
-<tal:block tal:define="icons nocall:context/@@iconresolver">
+
   <tal:block tal:repeat="widget python:view.widgets.values()">
     <td tal:attributes="
           class python:('cell-%d' % repeat['widget'].number()) + (' d-none' if widget.mode == 'hidden' else '');
@@ -74,5 +75,5 @@
            type="hidden"
            value="1" />
   </td>
-</tal:block>
+
 </html>
