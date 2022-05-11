@@ -5,7 +5,7 @@
       tal:omit-tag=""
       i18n:domain="collective.z3cform.datagridfield"
 >
-
+<tal:block tal:define="icons nocall:context/@@iconresolver">
   <tal:block tal:repeat="widget python:view.widgets.values()">
     <td tal:attributes="
           class python:('cell-%d ' % repeat['widget'].number()) + ('datagridwidget-hidden-data' if widget.mode == 'hidden' else 'datagridwidget-cell');
@@ -30,16 +30,14 @@
   <td class="datagridwidget-manipulator insert-row"
       tal:condition="view/isInsertEnabled"
   >
-    <button class="plone-btn plone-btn-default plone-btn-sm dgf--row-add"
+    <button class="btn btn-outline-dark btn-sm dgf--row-add"
             type="button"
             aria-label="Add row"
             title="Add row"
             i18n:attributes="aria-label label_datagridwidget_manipulators_addrow;
                              title label_datagridwidget_manipulators_addrow"
     >
-      <span class="glyphicon glyphicon-plus"
-            aria-hidden="true"
-      ></span>
+    <tal:icon tal:replace="structure python:icons.tag('plus')" />
       <span class="sr-only"
             i18n:translate="label_datagridwidget_manipulators_addrow"
       >Add row</span>
@@ -49,16 +47,14 @@
   <td class="datagridwidget-manipulator delete-row"
       tal:condition="view/isDeleteEnabled"
   >
-    <button class="plone-btn plone-btn-default plone-btn-sm dgf--row-delete"
+    <button class="btn btn-outline-dark btn-sm dgf--row-delete"
             type="button"
             aria-label="Delete row"
             title="Delete row"
             i18n:attributes="aria-label label_datagridwidget_manipulators_deleterow;
                              title label_datagridwidget_manipulators_deleterow"
     >
-      <span class="glyphicon glyphicon-trash"
-            aria-hidden="true"
-      ></span>
+    <tal:icon tal:replace="structure python:icons.tag('trash')" />
       <span class="sr-only"
             i18n:translate="label_datagridwidget_manipulators_deleterow"
       >Delete row</span>
@@ -68,16 +64,14 @@
   <td class="datagridwidget-manipulator move-up"
       tal:condition="view/isReorderEnabled"
   >
-    <button class="plone-btn plone-btn-default plone-btn-sm dgf--row-moveup"
+    <button class="btn btn-outline-dark btn-sm dgf--row-moveup"
             type="button"
             aria-label="Move Up"
             title="Move Up"
             i18n:attributes="aria-label label_datagridwidget_manipulators_moverowup;
                              title label_datagridwidget_manipulators_moverowup"
     >
-      <span class="glyphicon glyphicon-arrow-up"
-            aria-hidden="true"
-      ></span>
+    <tal:icon tal:replace="structure python:icons.tag('arrow-up')" />
       <span class="sr-only"
             i18n:translate="label_datagridwidget_manipulators_moverowup"
       >Move Up</span>
@@ -87,20 +81,18 @@
   <td class="datagridwidget-manipulator move-down"
       tal:condition="view/isReorderEnabled"
   >
-    <button class="plone-btn plone-btn-default plone-btn-sm dgf--row-movedown"
+    <button class="btn btn-outline-dark btn-sm dgf--row-movedown"
             type="button"
             aria-label="Move Down"
             title="Move Down"
             i18n:attributes="aria-label label_datagridwidget_manipulators_moverowdown;
                              title label_datagridwidget_manipulators_moverowdown"
     >
-      <span class="glyphicon glyphicon-arrow-down"
-            aria-hidden="true"
-      ></span>
+    <tal:icon tal:replace="structure python:icons.tag('arrow-down')" />
       <span class="sr-only"
             i18n:translate="label_datagridwidget_manipulators_moverowdown"
       >Move Down</span>
     </button>
   </td>
-
+</tal:block>
 </html>
