@@ -8,6 +8,7 @@ build
 downloads/*
 eggs/*
 fake-eggs/*
+node_modules/*
 parts/*
 develop-eggs
 dist

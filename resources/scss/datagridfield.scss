@@ -1,17 +1,17 @@
-@base_color: #666;
-@light_gray: #eee;
-@black: #eee;
-@error_color: red;
-@background_color: #ffddcc;
+$base_color: #666;
+$light_gray: #eee;
+$black: #eee;
+$error_color: red;
+$background_color: #ffddcc;
 
 .datagridwidget-table-view {
     width: 100%;
-    border: 1px solid @base_color;
-    background: none repeat scroll 0 0 @light_gray;
+    border: 1px solid $base_color;
+    background: none repeat scroll 0 0 $light_gray;
     .header {
         font-weight: bold;
-        background: none repeat scroll 0 0 @light_gray;
-        color: @base_color;
+        background: none repeat scroll 0 0 $light_gray;
+        color: $base_color;
         padding: 2px;
         font-size: 1.1em;
         text-align: left;
@@ -43,7 +43,7 @@
         }
     }
     div.error {
-        color: @error_color;
+        color: $error_color;
         font-weight: bold;
     }
     vertical-align: bottom;
@@ -75,7 +75,7 @@
         display: none;
     }
     .datagridwidget-row {
-        border-bottom: 1px solid @black;
+        border-bottom: 1px solid $black;
     }
     td {
         vertical-align: top;
@@ -88,7 +88,7 @@
 .datagridwidget-block-edit-cell {
     width: auto;
     .error {
-        background-color: @background_color;
+        background-color: $background_color;
         border: 1px solid red;
         margin: 1em 0;
         padding: 0.5em;
