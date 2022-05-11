@@ -14,7 +14,9 @@
            prefix="plone.bundles/datagridfield-bundle"
   >
     <value key="jscompilation">++resource++collective.z3cform.datagridfield/datagridfield.min.js</value>
-    <value key="csscompilation" purge="true"></value>
+    <value key="csscompilation"
+           purge="true"
+    />
     <value key="depends">plone</value>
   </records>
 
