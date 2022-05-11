@@ -19,12 +19,10 @@
         "@testing-library/jest-dom": "^5.15.0",
         "@types/sinon": "^10.0.2",
         "babel-loader": "^8.2.3",
-        "clean-css-cli": "^4.3.0",
         "copy-webpack-plugin": "^10.0.0",
         "copyfiles": "^2.4.1",
         "core-js": "3.20.2",
         "cross-env": "^7.0.3",
-        "css-loader": "^6.5.0",
         "eslint": "^8.2.0",
         "eslint-config-prettier": "^8.3.0",
         "expose-loader": "^3.0.0",
@@ -60,14 +58,9 @@
         "ua-parser-js": "See https://github.com/faisalman/ua-parser-js/issues/536"
     },
     "scripts": {
-        "build": "npm-run-all build:webpack build:css",
-        "build:webpack": "NODE_ENV=production webpack --config webpack.config.js",
-        "build:css": "npm-run-all css-compile css-minify",
-        "watch:webpack": "NODE_ENV=development webpack --config webpack.config.js --watch",
-        "watch:scss": "nodemon --watch resources/scss/ --ext scss --exec \"yarn build:css\"",
-        "start": "NODE_ENV=development webpack serve --config webpack.config.js",
-        "css-compile": "sass --load-path=node_modules --style expanded --source-map --embed-sources --no-error-css resources/scss/datagridfield.scss:src/collective/z3cform/datagridfield/static/datagridfield.css",
-        "css-minify": "cleancss --level 1 --format breakWith=lf --source-map --source-map-inline-sources --output src/collective/z3cform/datagridfield/static/datagridfield.min.css src/collective/z3cform/datagridfield/static/datagridfield.css"
+        "build": "NODE_ENV=production webpack --config webpack.config.js",
+        "watch": "NODE_ENV=development webpack --config webpack.config.js --watch",
+        "start": "NODE_ENV=development webpack serve --config webpack.config.js"
     },
     "browserslist": {
         "production": [

@@ -15,8 +15,6 @@ export default Base.extend({
     parser: "mockup",
 
     init: function () {
-        import("../scss/datagridfield.scss");
-
         // - Make sure, at least one empty row is always shown.
         // - Auto append a new row when editing the last row.
 
