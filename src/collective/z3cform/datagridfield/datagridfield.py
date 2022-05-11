@@ -8,11 +8,7 @@ from Acquisition import aq_parent
 from plone import api
 from plone.app.z3cform.interfaces import IPloneFormLayer
 from plone.app.z3cform.utils import closest_content
-from plone.autoform.form import AutoObjectSubForm
 from plone.autoform.interfaces import MODES_KEY
-from plone.z3cform.interfaces import ISubformFactory
-from plone.z3cform.subform import ObjectSubForm
-from plone.z3cform.subform import SubformAdapter
 from z3c.form import interfaces
 from z3c.form.browser.multi import MultiWidget
 from z3c.form.browser.object import ObjectWidget
@@ -112,7 +108,7 @@ class DataGridField(MultiWidget):
         valueType = self.field.value_type
 
         if IObject.providedBy(valueType):
-            widget = DataGridFieldObjectFactory(valueType, self.request)
+            widget = DataGridFieldObjectWidget(valueType, self.request)
             widget.setErrors = idx not in ["TT", "AA"]
         else:
             widget = getMultiAdapter((valueType, self.request), interfaces.IFieldWidget)
@@ -205,15 +201,16 @@ class DataGridField(MultiWidget):
         else:
             return not name.endswith("AA") and not name.endswith("TT")
 
-    def portal_url(self):
-        return api.portal.get_tool("portal_url")()
-
 
 @adapter(IField, IFormLayer)
 @implementer(interfaces.IFieldWidget)
-def DataGridFieldFactory(field, request):
+def DataGridFieldWidget(field, request):
     """IFieldWidget factory for DataGridField."""
     return FieldWidget(field, DataGridField(request))
+
+
+# BBB
+DataGridFieldFactory = DataGridFieldWidget
 
 
 @adapter(IList, IDataGridField)
@@ -240,9 +237,6 @@ class DataGridFieldObject(ObjectWidget):
 
     def isReorderEnabled(self):
         return self.__parent__.allow_reorder
-
-    def portal_url(self):
-        return self.__parent__.context.portal_url()
 
     @property
     def value(self):
@@ -282,14 +276,16 @@ class DataGridFieldObject(ObjectWidget):
                         v = value.get(name, NO_VALUE)
                     else:
                         v = getattr(value, name, NO_VALUE)
-                    # probably there is a more generic way to do this ...
-                    if (
-                        HAS_REL_FIELD
-                        and isinstance(fieldset_field, RelationChoice)
-                        and v == NO_VALUE
-                    ):
-                        v = ""
-                    fieldset_field.set(self.field, v)
+                    widget = self.widgets[name]
+                    converter = interfaces.IDataConverter(widget)
+                    try:
+                        __traceback_info__ = widget, converter, v
+                        widget_value = converter.toWidgetValue(v)
+                        widget.value = widget_value
+                    except (TypeError, AttributeError):
+                        widget.value = converter.toFieldValue(v)
+                    except (FormatterValidationError, ValidationError, ValueError):
+                        pass
 
     def updateWidgets(self, *args, **kwargs):
         super().updateWidgets(*args, **kwargs)
@@ -327,96 +323,13 @@ class DataGridFieldObject(ObjectWidget):
 
 @adapter(IField, interfaces.IFormLayer)
 @implementer(interfaces.IFieldWidget)
-def DataGridFieldObjectFactory(field, request):
+def DataGridFieldObjectWidget(field, request):
     """IFieldWidget factory for DataGridField."""
     return FieldWidget(field, DataGridFieldObject(request))
 
 
-# ------------[ Form to draw the line ]---------------------------------------
-
-
-class DataGridFieldObjectSubForm(AutoObjectSubForm, ObjectSubForm):
-    """Local class of subform - this is intended to all configuration
-    information to be passed all the way down to the subform.
-
-    All the parent and form nesting can be confusing, especially so
-    when you throw fieldsets (groups) into the mix.  So some notes.
-
-    When the datagrid object is part of a standard form without a
-    fieldset, these are the objects:
-
-    - self.__parent__ is a DataGridFieldObject
-
-    - self.parentForm is self.__parent__.form is the main edit/add
-      form or the view.
-
-    - self.__parent__.__parent__ is the DataGridField
-
-    - self.parentForm.__parent__ is the content item.
-
-    When the datagrid object is part of a fieldset, these are the
-    objects:
-
-    - self.__parent__ is a DataGridFieldObject
-
-    - self.parentForm is self.__parent__.form is the fieldset
-
-    - self.parentForm.__parent__ is self.parentForm.parentForm is the
-      main edit/add form or the view
-
-    - self.__parent__.__parent__ is the DataGridField
-
-    - self.parentForm.parentForm.__parent__ is the content item.
-
-    """
-
-    def updateWidgets(self):
-        rv = super().updateWidgets()
-        if hasattr(self.parentForm, "datagridUpdateWidgets"):
-            self.parentForm.datagridUpdateWidgets(
-                self, self.widgets, self.__parent__.__parent__
-            )
-        elif hasattr(self.parentForm.__parent__, "datagridUpdateWidgets"):
-            self.parentForm.__parent__.datagridUpdateWidgets(
-                self, self.widgets, self.__parent__.__parent__
-            )
-        return rv
-
-    def setupFields(self):
-        # copied from z3c.form 3.2.10
-        rv = Fields(self.__parent__.field.schema)
-
-        # own code:
-        if hasattr(self.parentForm, "datagridInitialise"):
-            self.parentForm.datagridInitialise(self, self.__parent__.__parent__)
-        elif hasattr(self.parentForm.__parent__, "datagridInitialise"):
-            self.parentForm.__parent__.datagridInitialise(
-                self, self.__parent__.__parent__
-            )
-        return rv
-
-    def get_closest_content(self):
-        """Return the closest persistent context to this form.
-        The right context of this form is the object created by:
-        z3c.form.object.registerFactoryAdapter
-        """
-        return closest_content(self.context)
-
-
-@adapter(
-    Interface,  # widget value
-    IPloneFormLayer,  # request
-    Interface,  # widget context
-    Interface,  # form
-    DataGridFieldObject,  # widget
-    Interface,  # field
-    Interface,  # field.schema
-)
-@implementer(ISubformFactory)
-class DataGridFieldSubformAdapter(SubformAdapter):
-    """Give it my local class of subform, rather than the default"""
-
-    factory = DataGridFieldObjectSubForm
+# BBB
+DataGridFieldObjectFactory = DataGridFieldObjectWidget
 
 
 @implementer(IValidator)

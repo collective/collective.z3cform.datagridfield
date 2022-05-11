@@ -27,17 +27,13 @@
               <span tal:content="column/label"
                     i18n:translate=""
               >title</span>
-              <span class="required"
-                    title="Required"
+              <span class="required" title="Required"
                     tal:condition="column/required"
-                    i18n:attributes="title title_required"
-                    i18n:domain="plone"
-              >&nbsp;</span>
-              <span class="formHelp"
-                    tal:condition="column/description"
-                    tal:content="column/description"
-              >Description</span>
+                    i18n:attributes="title title_required;"></span>
             </label>
+            <span class="form-text"
+                  tal:condition="column/description"
+                  tal:content="column/description">Description</span>
           </th>
         </tal:block>
         <th></th>

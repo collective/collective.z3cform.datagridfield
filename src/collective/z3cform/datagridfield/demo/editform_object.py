@@ -2,7 +2,7 @@
 """
     Demo of the widget
 """
-from ..datagridfield import DataGridFieldFactory
+from ..datagridfield import DataGridFieldWidget
 from ..interfaces import IDataGridField
 from z3c.form import button
 from z3c.form import field
@@ -163,7 +163,7 @@ class EditForm(form.EditForm):
     label = "Simple Form (Objects)"
 
     fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
+    fields["address"].widgetFactory = DataGridFieldWidget
 
     def getContent(self):
         return TESTDATA
@@ -192,7 +192,7 @@ class EditForm(form.EditForm):
 class EditForm2(EditForm):
     label = "Hide the Row Manipulators (Objects)"
     fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
+    fields["address"].widgetFactory = DataGridFieldWidget
 
     def updateWidgets(self):
         super().updateWidgets()
@@ -203,7 +203,7 @@ class EditForm2(EditForm):
 class EditForm3(EditForm):
     label = "Disable Auto-append (Objects)"
     fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
+    fields["address"].widgetFactory = DataGridFieldWidget
 
     def updateWidgets(self):
         super().updateWidgets()
@@ -213,7 +213,7 @@ class EditForm3(EditForm):
 class EditForm4(EditForm):
     label = "Omit a column - Column is Mandatory (Objects)"
     fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
+    fields["address"].widgetFactory = DataGridFieldWidget
 
     def updateWidgets(self):
         super().updateWidgets()
@@ -228,7 +228,7 @@ class EditForm4(EditForm):
 class EditForm4b(EditForm):
     label = "Omit a column - Column is Optional (Objects)"
     fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
+    fields["address"].widgetFactory = DataGridFieldWidget
 
     def updateWidgets(self):
         super().updateWidgets()

@@ -2,11 +2,12 @@
 """
     Demo of the widget
 """
-from ..blockdatagridfield import BlockDataGridFieldFactory
-from ..datagridfield import DataGridFieldFactory
+from ..blockdatagridfield import BlockDataGridFieldWidget
+from ..datagridfield import DataGridFieldWidget
 from ..row import DictRow
 from datetime import datetime
 from plone.autoform.directives import widget
+from plone.autoform.form import AutoExtensibleForm
 from z3c.form import button
 from z3c.form import field
 from z3c.form import form
@@ -19,25 +20,6 @@ from zope.interface import Interface
 # Uncomment, if you want to try the relationfield
 # from plone.app.vocabularies.catalog import CatalogSource
 # from z3c.relationfield.schema import RelationChoice
-
-
-try:
-    from collective.z3cform.datetimewidget import widget_datetime
-except ImportError:
-    widget_datetime = None
-
-
-if widget_datetime is not None:
-    from z3c.form.widget import FieldWidget
-
-    class DataGridFieldDatetimeWidget(widget_datetime.DatetimeWidget):
-        # Causes grey hair because of invalid value handling
-        # so we disable this for now
-        show_jquerytools_dateinput = False
-
-    def DataGridFieldDatetimeFieldWidget(field, request):
-        """IFieldWidget factory for DatetimeWidget."""
-        return FieldWidget(field, DataGridFieldDatetimeWidget(request))
 
 
 class IAddress(Interface):
@@ -65,9 +47,6 @@ class IAddress(Interface):
         max=15,
     )
 
-    # A sample datetime field
-    if widget_datetime is not None:
-        widget(dateAdded=DataGridFieldDatetimeFieldWidget)
     dateAdded = schema.Datetime(title="Date added")
 
     # A sample checkbox
@@ -87,6 +66,7 @@ class IPerson(Interface):
         value_type=DictRow(title="Address", schema=IAddress),
         required=True,
     )
+    widget(address=DataGridFieldWidget)
 
 
 TESTDATA = {
@@ -118,12 +98,9 @@ TESTDATA = {
 }
 
 
-class EditForm(form.EditForm):
+class EditForm(AutoExtensibleForm, form.EditForm):
     label = "Simple Form"
-
-    fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
-
+    schema = IPerson
     show_note = False
 
     def getContent(self):
@@ -161,6 +138,10 @@ class EditForm(form.EditForm):
         """Bypass the baseclass editform - it causes problems"""
         super().updateActions()
 
+    def datagridUpdateWidgets(self, subform, widgets, widget):
+        breakpoint()
+        pass
+
     def updateWidgets(self):
         super().updateWidgets()
         self.widgets["address"].allow_reorder = True
@@ -168,9 +149,6 @@ class EditForm(form.EditForm):
 
 class EditForm2(EditForm):
     label = "Hide the Row Manipulators"
-
-    fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
 
     def updateWidgets(self):
         super().updateWidgets()
@@ -181,9 +159,6 @@ class EditForm2(EditForm):
 class EditForm3(EditForm):
     label = "Disable Auto-append"
 
-    fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
-
     def updateWidgets(self):
         super().updateWidgets()
         self.widgets["address"].auto_append = False
@@ -191,9 +166,6 @@ class EditForm3(EditForm):
 
 class EditForm4(EditForm):
     label = "Omit a column"
-
-    fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
 
     def updateWidgets(self):
         super().updateWidgets()
@@ -254,9 +226,9 @@ class EditForm9(EditForm):
 
     # Because we modify fields in-place in update()
     # We need our own copy so that we don't damage other forms
-    fields = field.Fields(IPerson)
+    schema = IPerson
 
     def update(self):
         # Set a custom widget for a field for this form instance only
-        self.fields["address"].widgetFactory = BlockDataGridFieldFactory
+        self.fields["address"].widgetFactory = BlockDataGridFieldWidget
         super().update()

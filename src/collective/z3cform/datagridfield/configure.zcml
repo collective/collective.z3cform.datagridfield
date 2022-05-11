@@ -14,7 +14,7 @@
       file="meta.zcml"
       />
   <include package=".demo" />
-  <include file="configure-profiles.zcml" />
+  <include file="profiles.zcml" />
   <include package=".upgrades" />
 
   <browser:resourceDirectory
@@ -31,7 +31,6 @@
 
   <adapter factory=".autoform.MultipleErrorViewSnippetWithMessage" />
   <adapter factory=".datagridfield.GridDataConverter" />
-  <adapter factory=".datagridfield.DataGridFieldSubformAdapter" />
   <adapter factory=".datagridfield.DataGridValidator" />
   <adapter factory=".row.DictRowConverter" />
 

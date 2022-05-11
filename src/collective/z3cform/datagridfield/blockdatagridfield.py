@@ -46,16 +46,24 @@ class BlockDataGridFieldObject(DataGridFieldObject):
 
 @zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
 @zope.interface.implementer(interfaces.IFieldWidget)
-def BlockDataGridFieldFactory(field, request):
+def BlockDataGridFieldWidget(field, request):
     """IFieldWidget factory for BlockDataGridField."""
     return FieldWidget(field, BlockDataGridField(request))
 
 
+# BBB
+BlockDataGridFieldFactory = BlockDataGridFieldWidget
+
+
 @zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
 @zope.interface.implementer(interfaces.IFieldWidget)
-def BlockDataGridFieldObjectFactory(field, request):
+def BlockDataGridFieldObjectWidget(field, request):
     """IFieldWidget factory for DataGridField."""
 
     # Create a normal DataGridFieldObject widget
     widget = FieldWidget(field, BlockDataGridFieldObject(request))
     return widget
+
+
+# BBB
+BlockDataGridFieldObjectFactory = BlockDataGridFieldObjectWidget
