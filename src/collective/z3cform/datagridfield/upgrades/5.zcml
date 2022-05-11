@@ -7,20 +7,21 @@
       name="5"
       title="Upgrade to version 5"
       description=""
-      directory="profiles/5"
-      for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
       provides="Products.GenericSetup.interfaces.EXTENSION"
+      for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
+      directory="profiles/5"
       />
 
   <gs:upgradeSteps
+      profile="collective.z3cform.datagridfield:default"
       source="4"
       destination="5"
-      profile="collective.z3cform.datagridfield:default">
+      >
     <gs:upgradeDepends
-      title="Upgrade to version 5"
-      description=""
-      import_profile="collective.z3cform.datagridfield.upgrades:5"
-      />
+        title="Upgrade to version 5"
+        description=""
+        import_profile="collective.z3cform.datagridfield.upgrades:5"
+        />
   </gs:upgradeSteps>
 
 </configure>

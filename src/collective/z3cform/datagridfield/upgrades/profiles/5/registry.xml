@@ -1,11 +1,18 @@
 <?xml version="1.0"?>
 <registry>
 
-  <records remove="true" prefix="plone.resources/pat-datagridfield" interface="Products.CMFPlone.interfaces.IResourceRegistry" />
-  <records remove="true" prefix="plone.resources/datagridfield-bundle" interface="Products.CMFPlone.interfaces.IResourceRegistry" />
+  <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
+           prefix="plone.resources/pat-datagridfield"
+           remove="true"
+  />
+  <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
+           prefix="plone.resources/datagridfield-bundle"
+           remove="true"
+  />
 
-  <records prefix="plone.bundles/datagridfield-bundle"
-           interface="Products.CMFPlone.interfaces.IBundleRegistry">
+  <records interface="Products.CMFPlone.interfaces.IBundleRegistry"
+           prefix="plone.bundles/datagridfield-bundle"
+  >
     <value key="jscompilation">++resource++collective.z3cform.datagridfield/datagridfield.min.js</value>
     <value key="csscompilation">++resource++collective.z3cform.datagridfield/datagridfield.min.css</value>
   </records>

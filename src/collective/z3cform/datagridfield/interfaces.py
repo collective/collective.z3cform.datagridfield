@@ -19,7 +19,7 @@ class AttributeNotFoundError(ValidationError):
     def __init__(self, fieldname, schema):
         self.fieldname = fieldname
         self.schema = schema
-        self.__doc__ = u"Missing Field {0} required by schema {1}".format(
+        self.__doc__ = "Missing Field {0} required by schema {1}".format(
             fieldname, schema
         )
 

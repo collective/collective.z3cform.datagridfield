@@ -8,8 +8,8 @@ from Acquisition import aq_parent
 from plone import api
 from plone.app.z3cform.interfaces import IPloneFormLayer
 from plone.app.z3cform.utils import closest_content
-from plone.autoform.interfaces import MODES_KEY
 from plone.autoform.form import AutoObjectSubForm
+from plone.autoform.interfaces import MODES_KEY
 from plone.z3cform.interfaces import ISubformFactory
 from plone.z3cform.subform import ObjectSubForm
 from plone.z3cform.subform import SubformAdapter

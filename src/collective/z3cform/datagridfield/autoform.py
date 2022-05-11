@@ -23,4 +23,4 @@ from zope.i18nmessageid import Message
 @adapter(IMultipleErrors, None, None, None, IAutoExtensibleForm, None)
 class MultipleErrorViewSnippetWithMessage(MultipleErrorViewSnippet):
     def render(self):
-        return Message(u"There were some errors.", domain="z3c.form")
+        return Message("There were some errors.", domain="z3c.form")

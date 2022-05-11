@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <registry>
 
-  <records remove="True"
+  <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
            prefix="plone.resources/pat-datagridfield"
-           interface="Products.CMFPlone.interfaces.IResourceRegistry"
+           remove="True"
   />
-  <records remove="True"
+  <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
            prefix="plone.resources/datagridfield-bundle"
-           interface="Products.CMFPlone.interfaces.IResourceRegistry"
+           remove="True"
   />
-  <records remove="True"
+  <records interface="Products.CMFPlone.interfaces.IBundleRegistry"
            prefix="plone.bundles/datagridfield-bundle"
-           interface="Products.CMFPlone.interfaces.IBundleRegistry"
+           remove="True"
   />
 
 </registry>
