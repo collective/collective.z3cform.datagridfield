@@ -2,9 +2,10 @@
 """
     Implementation of the widget
 """
-from . import _
-from .interfaces import IDataGridField
 from Acquisition import aq_parent
+from collective.z3cform.datagridfield import _
+from collective.z3cform.datagridfield.interfaces import IDataGridFieldWidget
+from collective.z3cform.datagridfield.row import DictRow
 from plone import api
 from plone.app.z3cform.interfaces import IPloneFormLayer
 from plone.app.z3cform.utils import closest_content
@@ -50,8 +51,8 @@ except pkg_resources.DistributionNotFound:
 logger = logging.getLogger(__name__)
 
 
-@implementer(IDataGridField)
-class DataGridField(MultiWidget):
+@implementer(IDataGridFieldWidget)
+class DataGridFieldWidget(MultiWidget):
     """This grid should be applied to an schema.List item which has
     schema.Object and an interface"""
 
@@ -108,7 +109,7 @@ class DataGridField(MultiWidget):
         valueType = self.field.value_type
 
         if IObject.providedBy(valueType):
-            widget = DataGridFieldObjectWidget(valueType, self.request)
+            widget = DataGridFieldObjectWidgetFactory(valueType, self.request)
             widget.setErrors = idx not in ["TT", "AA"]
         else:
             widget = getMultiAdapter((valueType, self.request), interfaces.IFieldWidget)
@@ -204,16 +205,16 @@ class DataGridField(MultiWidget):
 
 @adapter(IField, IFormLayer)
 @implementer(interfaces.IFieldWidget)
-def DataGridFieldWidget(field, request):
-    """IFieldWidget factory for DataGridField."""
-    return FieldWidget(field, DataGridField(request))
+def DataGridFieldWidgetFactory(field, request):
+    """IFieldWidget factory for DataGridFieldWidget."""
+    return FieldWidget(field, DataGridFieldWidget(request))
 
 
 # BBB
-DataGridFieldFactory = DataGridFieldWidget
+DataGridFieldFactory = DataGridFieldWidgetFactory
 
 
-@adapter(IList, IDataGridField)
+@adapter(IList, IDataGridFieldWidget)
 class GridDataConverter(BaseDataConverter):
     """Convert between the context and the widget"""
 
@@ -228,7 +229,7 @@ class GridDataConverter(BaseDataConverter):
 PAT_XPATH = "//*[contains(concat(' ', normalize-space(@class), ' '), ' pat-')]"
 
 
-class DataGridFieldObject(ObjectWidget):
+class DataGridFieldObjectWidget(ObjectWidget):
     def isInsertEnabled(self):
         return self.__parent__.allow_insert
 
@@ -237,6 +238,11 @@ class DataGridFieldObject(ObjectWidget):
 
     def isReorderEnabled(self):
         return self.__parent__.allow_reorder
+
+    # ObjectWidget API
+
+    def getObject(self, value):
+        return value
 
     @property
     def value(self):
@@ -293,9 +299,11 @@ class DataGridFieldObject(ObjectWidget):
         # Tell the "cell"-widget the "mode" of it's column,
         # so that plone.autoform.directives.mode works on the cell.
         for column_info in aq_parent(self).columns:
-            if column_info["mode"] is None:
-                continue
-            self.widgets[column_info["name"]].mode = column_info["mode"]
+            if self.id.endswith("AA") or self.id.endswith("TT"):
+                # ignore required on auto-append and template rows
+                self.widgets[column_info["name"]].required = False
+            if column_info["mode"] is not None:
+                self.widgets[column_info["name"]].mode = column_info["mode"]
 
     def render(self):
         """See z3c.form.interfaces.IWidget."""
@@ -323,13 +331,13 @@ class DataGridFieldObject(ObjectWidget):
 
 @adapter(IField, interfaces.IFormLayer)
 @implementer(interfaces.IFieldWidget)
-def DataGridFieldObjectWidget(field, request):
-    """IFieldWidget factory for DataGridField."""
-    return FieldWidget(field, DataGridFieldObject(request))
+def DataGridFieldObjectWidgetFactory(field, request):
+    """IFieldWidget factory for DataGridFieldObjectWidget."""
+    return FieldWidget(field, DataGridFieldObjectWidget(request))
 
 
 # BBB
-DataGridFieldObjectFactory = DataGridFieldObjectWidget
+DataGridFieldObjectFactory = DataGridFieldObjectWidgetFactory
 
 
 @implementer(IValidator)
@@ -338,7 +346,7 @@ DataGridFieldObjectFactory = DataGridFieldObjectWidget
     Interface,
     Interface,  # Form
     IList,  # field
-    DataGridField,  # widgets
+    DataGridFieldWidget,  # widgets
 )
 class DataGridValidator(SimpleFieldValidator):
     """
@@ -353,8 +361,10 @@ class DataGridValidator(SimpleFieldValidator):
         Don't validate the table - however, if there is a cell
         error, make sure that the table widget shows it.
         """
-        for subform in [widget.subform for widget in self.widget.widgets]:
-            for widget in subform.widgets.values():
-                if hasattr(widget, "error") and widget.error:
-                    raise ValueError(widget.label)
+        for widget in self.widget.widgets:
+            if widget.id.endswith("AA") or widget.id.endswith("TT"):
+                # ignore auto appended and template widgets
+                continue
+            if hasattr(widget, "error") and widget.error:
+                raise ValueError(widget.label)
         return None

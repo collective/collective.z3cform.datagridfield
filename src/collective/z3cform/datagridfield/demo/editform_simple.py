@@ -2,8 +2,8 @@
 """
     Demo of the widget
 """
-from ..blockdatagridfield import BlockDataGridFieldWidget
-from ..datagridfield import DataGridFieldWidget
+from ..blockdatagridfield import BlockDataGridFieldWidgetFactory
+from ..datagridfield import DataGridFieldWidgetFactory
 from ..row import DictRow
 from datetime import datetime
 from plone.autoform.directives import widget
@@ -66,7 +66,7 @@ class IPerson(Interface):
         value_type=DictRow(title="Address", schema=IAddress),
         required=True,
     )
-    widget(address=DataGridFieldWidget)
+    widget(address=DataGridFieldWidgetFactory)
 
 
 TESTDATA = {
@@ -139,7 +139,6 @@ class EditForm(AutoExtensibleForm, form.EditForm):
         super().updateActions()
 
     def datagridUpdateWidgets(self, subform, widgets, widget):
-        breakpoint()
         pass
 
     def updateWidgets(self):
@@ -215,20 +214,14 @@ class EditForm8(EditForm):
     def updateWidgets(self):
         super().updateWidgets()
         self.widgets["address"].mode = DISPLAY_MODE
-        for row in self.widgets["address"].widgets:
-            for wdt in row.subform.widgets.values():
-                wdt.mode = DISPLAY_MODE
+        for wdt in self.widgets["address"].widgets:
+            wdt.mode = DISPLAY_MODE
+
+
+class IPersonBlocked(IPerson):
+    widget(address=BlockDataGridFieldWidgetFactory)
 
 
 class EditForm9(EditForm):
-
     label = "Block widgets as blocks instead of cells"
-
-    # Because we modify fields in-place in update()
-    # We need our own copy so that we don't damage other forms
-    schema = IPerson
-
-    def update(self):
-        # Set a custom widget for a field for this form instance only
-        self.fields["address"].widgetFactory = BlockDataGridFieldWidget
-        super().update()
+    schema = IPersonBlocked

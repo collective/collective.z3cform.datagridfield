@@ -9,7 +9,7 @@ class IDataGridFieldLayer(IPloneFormLayer):
     """Marker interface that defines a browser layer."""
 
 
-class IDataGridField(IMultiWidget):
+class IDataGridFieldWidget(IMultiWidget):
     """Grid widget."""
 
 

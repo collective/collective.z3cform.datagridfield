@@ -27,7 +27,7 @@ Make sure that the first row of data is present
 Make sure that the auto-insert row is present
 
     >>> browser.getControl(name='form.widgets.address.AA.widgets.address_type:list').value
-    ['Work']
+    ['--NOVALUE--']
     >>> browser.getControl(name='form.widgets.address.AA.widgets.line1').value
     ''
     >>> browser.getControl(name='form.widgets.address.AA.widgets.line2').value
@@ -40,7 +40,7 @@ Make sure that the auto-insert row is present
 Make sure that the template row is present
 
     >>> browser.getControl(name='form.widgets.address.TT.widgets.address_type:list').value
-    ['Work']
+    ['--NOVALUE--']
     >>> browser.getControl(name='form.widgets.address.TT.widgets.line1').value
     ''
     >>> browser.getControl(name='form.widgets.address.TT.widgets.line2').value

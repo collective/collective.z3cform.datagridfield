@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from .datagridfield import DataGridField
-from .datagridfield import DataGridFieldObject
+from .datagridfield import DataGridFieldWidget
+from .datagridfield import DataGridFieldObjectWidget
 from z3c.form import interfaces
 from z3c.form.widget import FieldWidget
 from zope.schema.interfaces import IObject
@@ -10,7 +10,7 @@ import zope.interface
 import zope.schema.interfaces
 
 
-class BlockDataGridField(DataGridField):
+class BlockDataGridFieldWidget(DataGridFieldWidget):
     """
     Render edit mode widgets in blocks (vertical) instead of cells
     (horizontal).
@@ -36,7 +36,7 @@ class BlockDataGridField(DataGridField):
         return widget
 
 
-class BlockDataGridFieldObject(DataGridFieldObject):
+class BlockDataGridFieldObjectWidget(DataGridFieldObjectWidget):
     """
     Define one row as a widget in BDGF.
 
@@ -46,24 +46,24 @@ class BlockDataGridFieldObject(DataGridFieldObject):
 
 @zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
 @zope.interface.implementer(interfaces.IFieldWidget)
-def BlockDataGridFieldWidget(field, request):
-    """IFieldWidget factory for BlockDataGridField."""
-    return FieldWidget(field, BlockDataGridField(request))
+def BlockDataGridFieldWidgetFactory(field, request):
+    """IFieldWidget factory for BlockDataGridFieldWidget."""
+    return FieldWidget(field, BlockDataGridFieldWidget(request))
 
 
 # BBB
-BlockDataGridFieldFactory = BlockDataGridFieldWidget
+BlockDataGridFieldFactory = BlockDataGridFieldWidgetFactory
 
 
 @zope.component.adapter(zope.schema.interfaces.IField, interfaces.IFormLayer)
 @zope.interface.implementer(interfaces.IFieldWidget)
-def BlockDataGridFieldObjectWidget(field, request):
-    """IFieldWidget factory for DataGridField."""
+def BlockDataGridFieldObjectWidgetFactory(field, request):
+    """IFieldWidget factory for DataGridFieldWidget."""
 
-    # Create a normal DataGridFieldObject widget
-    widget = FieldWidget(field, BlockDataGridFieldObject(request))
+    # Create a normal DataGridFieldObjectWidget widget
+    widget = FieldWidget(field, BlockDataGridFieldObjectWidget(request))
     return widget
 
 
 # BBB
-BlockDataGridFieldObjectFactory = BlockDataGridFieldObjectWidget
+BlockDataGridFieldObjectFactory = BlockDataGridFieldObjectWidgetFactory
