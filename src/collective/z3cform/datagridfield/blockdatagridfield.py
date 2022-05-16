@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from .datagridfield import DataGridFieldWidget
 from .datagridfield import DataGridFieldObjectWidget
+from .datagridfield import DataGridFieldWidget
 from z3c.form import interfaces
 from z3c.form.widget import FieldWidget
 from zope.schema.interfaces import IObject
