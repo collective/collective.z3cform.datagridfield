@@ -242,6 +242,7 @@ class DataGridFieldObjectWidget(ObjectWidget):
     # ObjectWidget API
 
     def getObject(self, value):
+        # our object is the dict value
         return value
 
     @property
@@ -249,7 +250,7 @@ class DataGridFieldObjectWidget(ObjectWidget):
         # value (get) cannot raise an exception, then we return
         # insane values
         try:
-            return self.extract()
+            value = self.extract()
         except MultipleErrors:
             value = {}
             active_names = self.fields.keys()
@@ -282,16 +283,11 @@ class DataGridFieldObjectWidget(ObjectWidget):
                         v = value.get(name, NO_VALUE)
                     else:
                         v = getattr(value, name, NO_VALUE)
+                    if v is NO_VALUE:
+                        continue
                     widget = self.widgets[name]
                     converter = interfaces.IDataConverter(widget)
-                    try:
-                        __traceback_info__ = widget, converter, v
-                        widget_value = converter.toWidgetValue(v)
-                        widget.value = widget_value
-                    except (TypeError, AttributeError):
-                        widget.value = converter.toFieldValue(v)
-                    except (FormatterValidationError, ValidationError, ValueError):
-                        pass
+                    widget.value = converter.toWidgetValue(v)
 
     def updateWidgets(self, *args, **kwargs):
         super().updateWidgets(*args, **kwargs)
@@ -304,6 +300,11 @@ class DataGridFieldObjectWidget(ObjectWidget):
                 self.widgets[column_info["name"]].required = False
             if column_info["mode"] is not None:
                 self.widgets[column_info["name"]].mode = column_info["mode"]
+
+    def extractRaw(self, setErrors=True):
+        # override ObjectWidget extractRaw
+        self.widgets.setErrors = setErrors
+        return self.widgets.extractRaw()
 
     def render(self):
         """See z3c.form.interfaces.IWidget."""
@@ -361,10 +362,12 @@ class DataGridValidator(SimpleFieldValidator):
         Don't validate the table - however, if there is a cell
         error, make sure that the table widget shows it.
         """
-        for widget in self.widget.widgets:
-            if widget.id.endswith("AA") or widget.id.endswith("TT"):
+        for row in self.widget.widgets:
+            if row.id.endswith("AA") or row.id.endswith("TT"):
                 # ignore auto appended and template widgets
                 continue
-            if hasattr(widget, "error") and widget.error:
-                raise ValueError(widget.label)
+            # check each column
+            for col in row.widgets.values():
+                if hasattr(col, "error") and col.error:
+                    raise ValueError(col.label)
         return None
