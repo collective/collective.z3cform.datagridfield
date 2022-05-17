@@ -37,7 +37,7 @@ module.exports = async (env, argv) => {
 
     if (process.env.NODE_ENV === "development") {
         config.devServer.port = "8011";
-        config.devServer.static.directory = __dirname;
+        config.devServer.static.directory = `${__dirname}/resources`;
     }
 
     return config;
