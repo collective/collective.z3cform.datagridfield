@@ -15,7 +15,7 @@
              error python: widget.error and 'error' or '';
            "
            tal:attributes="
-             class python:'datagridwidget-block-' + widget.id + ' ' + klass + ' datagridwidget-widget-' + widget.field.__name__ + ' ' + error + ' ' + ('d-none' if widget.mode == 'hidden' else '');
+             class python:'datagridwidget-block-' + widget.id + ' ' + klass + ' datagridwidget-widget-' + widget.field.__name__ + ' ' + error + ' ' + ('d-none' if widget.mode == 'hidden' else 'datagridwidget-cell');
            "
       >
         <div class="label">

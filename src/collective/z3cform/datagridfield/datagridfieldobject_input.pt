@@ -9,7 +9,7 @@
 
   <tal:block tal:repeat="widget python:view.widgets.values()">
     <td tal:attributes="
-          class python:('cell-%d' % repeat['widget'].number()) + (' d-none' if widget.mode == 'hidden' else '');
+          class python:('cell-%d' % repeat['widget'].number()) + (' d-none' if widget.mode == 'hidden' else ' datagridwidget-cell');
         ">
       <div tal:condition="widget/error"
            tal:replace="structure widget/error/render"
