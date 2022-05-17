@@ -7,57 +7,36 @@
 <div class="pat-datagridfield"
      data-auto-append="${view/auto_append}"
 >
-  <table class="datagridwidget-table-view"
+  <table class="table table-striped"
          id="${view/id_prefix}"
          data-mode="row"
   >
     <thead>
       <tr>
         <tal:block repeat="column view/columns">
-          <th class="header"
+          <th class="table-light"
               tal:define="
                 cssclass string:header cell-${repeat/column/number};
-                cssclass python: cssclass + (column['mode'] == 'hidden' and ' datagridwidget-hidden-data' or '');
+                cssclass python: cssclass + (' d-none' if column['mode'] == 'hidden' else '');
               "
               tal:attributes="
                 class cssclass;
               "
           >
-            <span tal:content="column/label"
-                  i18n:translate=""
-            >title</span>
-            <span class="required"
-                  title="Required"
-                  tal:condition="column/required"
-                  i18n:attributes="title title_required"
-                  i18n:domain="plone"
-            >&nbsp;</span>
-            <span class="formHelp"
+            <label>
+              <span tal:content="column/label"
+                    i18n:translate=""
+              >title</span>
+              <span class="required" title="Required"
+                    tal:condition="column/required"
+                    i18n:attributes="title title_required;"></span>
+            </label>
+            <span class="form-text"
                   tal:condition="column/description"
-                  tal:content="column/description"
-            >Description</span>
+                  tal:content="column/description">Description</span>
           </th>
         </tal:block>
-        <th class="header"
-            id=""
-            tal:condition="view/allow_insert"
-        >
-        </th>
-        <th class="header"
-            id=""
-            tal:condition="view/allow_delete"
-        >
-        </th>
-        <th class="header"
-            id=""
-            tal:condition="view/allow_reorder"
-        >
-        </th>
-        <th class="header"
-            id=""
-            tal:condition="view/allow_reorder"
-        >
-        </th>
+        <th></th>
       </tr>
     </thead>
     <tbody class="datagridwidget-body"
@@ -69,7 +48,7 @@
       <tal:block repeat="widget view/widgets">
         <tr tal:condition="python:view._includeRow(widget.name)"
             tal:attributes="
-              class python:'%s row-%d%s' % (widget.klass, repeat['widget'].number(), widget.mode=='hidden' and ' hidden' or '');
+              class python:'%s row-%d%s' % (widget.klass, repeat['widget'].number(), ' d-none' if widget.mode=='hidden' else '');
               data-index python:widget.name.split('.')[-1];
             "
         >

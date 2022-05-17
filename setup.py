@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     # zest.releaser needs version here for now
-    version="2.0.3.dev0",
+    version="3.0.0.dev0",
     # thanks to this bug
     # https://github.com/pypa/setuptools/issues/1136
     # we need one line in here:

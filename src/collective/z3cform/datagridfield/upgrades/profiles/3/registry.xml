@@ -2,28 +2,31 @@
 <registry>
 
   <!-- Remove old -->
-  <records remove="True"
+  <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
            prefix="plone.resources/z3cform_datagridfield_css"
-           interface="Products.CMFPlone.interfaces.IResourceRegistry"
+           remove="True"
   />
-  <records remove="True"
+  <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
            prefix="plone.resources/z3cform_datagridfield_js"
-           interface="Products.CMFPlone.interfaces.IResourceRegistry"
+           remove="True"
   />
-  <records remove="True"
+  <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
            prefix="plone.resources/resource-collective-z3cform-datagridfield"
-           interface="Products.CMFPlone.interfaces.IResourceRegistry"
+           remove="True"
   />
-  <records prefix="plone.bundles/plone-legacy"
-            interface='Products.CMFPlone.interfaces.IBundleRegistry'>
-    <value key="resources" purge="false">
+  <records interface="Products.CMFPlone.interfaces.IBundleRegistry"
+           prefix="plone.bundles/plone-legacy"
+  >
+    <value key="resources"
+           purge="false"
+    >
       <element remove="True">++resource++collective.z3cform.datagridfield/datagridfield.js</element>
     </value>
   </records>
 
   <!-- Add new -->
-  <records prefix="plone.resources/pat-datagridfield"
-           interface="Products.CMFPlone.interfaces.IResourceRegistry"
+  <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
+           prefix="plone.resources/pat-datagridfield"
   >
     <value key="js">++resource++collective.z3cform.datagridfield/datagridfield.js</value>
     <value key="css">
@@ -31,8 +34,8 @@
     </value>
   </records>
 
-  <records prefix="plone.resources/datagridfield-bundle"
-           interface="Products.CMFPlone.interfaces.IResourceRegistry"
+  <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
+           prefix="plone.resources/datagridfield-bundle"
   >
     <value key="js">++resource++collective.z3cform.datagridfield/datagridfield-bundle.js</value>
     <value key="css">
@@ -40,8 +43,8 @@
     </value>
   </records>
 
-  <records prefix="plone.bundles/datagridfield-bundle"
-           interface="Products.CMFPlone.interfaces.IBundleRegistry"
+  <records interface="Products.CMFPlone.interfaces.IBundleRegistry"
+           prefix="plone.bundles/datagridfield-bundle"
   >
     <value key="resources">
       <element>datagridfield-bundle</element>

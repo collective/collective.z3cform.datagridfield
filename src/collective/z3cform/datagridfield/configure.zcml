@@ -14,7 +14,7 @@
       file="meta.zcml"
       />
   <include package=".demo" />
-  <include file="configure-profiles.zcml" />
+  <include file="profiles.zcml" />
   <include package=".upgrades" />
 
   <browser:resourceDirectory
@@ -22,55 +22,55 @@
       directory="static"
       />
 
-  <class class=".datagridfield.DataGridField">
+  <class class=".datagridfield.DataGridFieldWidget">
     <require
         permission="zope.Public"
-        interface=".datagridfield.IDataGridField"
+        interface=".interfaces.IDataGridFieldWidget"
         />
   </class>
 
-  <adapter factory=".autoform.AutoExtensibleSubformAdapter" />
   <adapter factory=".autoform.MultipleErrorViewSnippetWithMessage" />
   <adapter factory=".datagridfield.GridDataConverter" />
-  <adapter factory=".datagridfield.DataGridFieldSubformAdapter" />
   <adapter factory=".datagridfield.DataGridValidator" />
+  <adapter factory=".row.DictRowConverter" />
+
   <adapter
       factory=".converters.DictRowSerializer"
       zcml:condition="installed transmogrify.dexterity"
       />
 
   <z3c:widgetTemplate
-      widget=".datagridfield.DataGridField"
+      widget=".datagridfield.DataGridFieldWidget"
       template="datagridfield_input.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="input"
       />
   <z3c:widgetTemplate
-      widget=".blockdatagridfield.BlockDataGridField"
+      widget=".blockdatagridfield.BlockDataGridFieldWidget"
       template="datagridfield_input_block.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="input"
       />
   <z3c:widgetTemplate
-      widget=".datagridfield.DataGridFieldObject"
+      widget=".datagridfield.DataGridFieldObjectWidget"
       template="datagridfieldobject_input.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="input"
       />
   <z3c:widgetTemplate
-      widget=".blockdatagridfield.BlockDataGridFieldObject"
+      widget=".blockdatagridfield.BlockDataGridFieldObjectWidget"
       template="datagridfieldobject_input_block.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="input"
       />
   <z3c:widgetTemplate
-      widget=".datagridfield.DataGridField"
+      widget=".datagridfield.DataGridFieldWidget"
       template="datagridfield_display.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="display"
       />
   <z3c:widgetTemplate
-      widget=".datagridfield.DataGridFieldObject"
+      widget=".datagridfield.DataGridFieldObjectWidget"
       template="datagridfieldobject_display.pt"
       layer=".interfaces.IDataGridFieldLayer"
       mode="display"

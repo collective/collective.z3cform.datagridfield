@@ -4,17 +4,18 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       tal:omit-tag=""
       i18n:domain="collective.z3cform.datagridfield"
+      tal:define="icons nocall:context/@@iconresolver"
 >
-
   <td class="datagridwidget-block-edit-cell">
-    <tal:block tal:repeat="widget view/subform/widgets/values">
+
+    <tal:block tal:repeat="widget python:view.widgets.values()">
 
       <div tal:define="
              klass python: widget.klass or '';
              error python: widget.error and 'error' or '';
            "
            tal:attributes="
-             class python:'datagridwidget-block-' + widget.id + ' ' + klass + ' datagridwidget-widget-' + widget.field.__name__ + ' ' + error + ' ' + (widget.mode == 'hidden' and 'datagridwidget-hidden-data' or 'datagridwidget-block');
+             class python:'datagridwidget-block-' + widget.id + ' ' + klass + ' datagridwidget-widget-' + widget.field.__name__ + ' ' + error + ' ' + ('d-none' if widget.mode == 'hidden' else 'datagridwidget-cell');
            "
       >
         <div class="label">
@@ -58,90 +59,62 @@
     </tal:block>
   </td>
 
-  <td class="datagridwidget-hidden-data">
-    <input name="field-empty-marker"
-           type="hidden"
-           value="1"
-           tal:attributes="
-             name string:${view/name}-empty-marker;
-           "
-    />
-  </td>
-
-  <td class="datagridwidget-manipulator insert-row"
-      tal:condition="view/isInsertEnabled"
-  >
-    <button class="plone-btn plone-btn-default plone-btn-sm dgf--row-add"
+  <td class="text-nowrap text-end">
+    <button tal:condition="view/isInsertEnabled"
+            class="btn btn-outline-dark btn-sm dgf--row-add"
             type="button"
             aria-label="Add row"
             title="Add row"
             i18n:attributes="aria-label label_datagridwidget_manipulators_addrow;
-                             title label_datagridwidget_manipulators_addrow"
-    >
-      <span class="glyphicon glyphicon-plus"
-            aria-hidden="true"
-      ></span>
+                             title label_datagridwidget_manipulators_addrow">
+      <tal:icon tal:replace="structure python:icons.tag('plus')" />
       <span class="sr-only"
             i18n:translate="label_datagridwidget_manipulators_addrow"
       >Add row</span>
     </button>
-  </td>
 
-  <td class="datagridwidget-manipulator delete-row"
-      tal:condition="view/isDeleteEnabled"
-  >
-    <button class="plone-btn plone-btn-default plone-btn-sm dgf--row-delete"
+    <button tal:condition="view/isDeleteEnabled"
+            class="btn btn-outline-dark btn-sm dgf--row-delete"
             type="button"
             aria-label="Delete row"
             title="Delete row"
             i18n:attributes="aria-label label_datagridwidget_manipulators_deleterow;
-                             title label_datagridwidget_manipulators_deleterow"
-    >
-      <span class="glyphicon glyphicon-trash"
-            aria-hidden="true"
-      ></span>
+                             title label_datagridwidget_manipulators_deleterow">
+    <tal:icon tal:replace="structure python:icons.tag('trash')" />
       <span class="sr-only"
             i18n:translate="label_datagridwidget_manipulators_deleterow"
       >Delete row</span>
     </button>
-  </td>
 
-  <td class="datagridwidget-manipulator move-up"
-      tal:condition="view/isReorderEnabled"
-  >
-    <button class="plone-btn plone-btn-default plone-btn-sm dgf--row-moveup"
+    <button tal:condition="view/isReorderEnabled"
+            class="btn btn-outline-dark btn-sm dgf--row-moveup"
             type="button"
             aria-label="Move Up"
             title="Move Up"
             i18n:attributes="aria-label label_datagridwidget_manipulators_moverowup;
-                             title label_datagridwidget_manipulators_moverowup"
-    >
-      <span class="glyphicon glyphicon-arrow-up"
-            aria-hidden="true"
-      ></span>
+                             title label_datagridwidget_manipulators_moverowup">
+      <tal:icon tal:replace="structure python:icons.tag('arrow-up')" />
       <span class="sr-only"
             i18n:translate="label_datagridwidget_manipulators_moverowup"
       >Move Up</span>
     </button>
-  </td>
 
-  <td class="datagridwidget-manipulator move-down"
-      tal:condition="view/isReorderEnabled"
-  >
-    <button class="plone-btn plone-btn-default plone-btn-sm dgf--row-movedown"
+    <button tal:condition="view/isReorderEnabled"
+            class="btn btn-outline-dark btn-sm dgf--row-movedown"
             type="button"
             aria-label="Move Down"
             title="Move Down"
             i18n:attributes="aria-label label_datagridwidget_manipulators_moverowdown;
-                             title label_datagridwidget_manipulators_moverowdown"
-    >
-      <span class="glyphicon glyphicon-arrow-down"
-            aria-hidden="true"
-      ></span>
+                             title label_datagridwidget_manipulators_moverowdown">
+      <tal:icon tal:replace="structure python:icons.tag('arrow-down')" />
       <span class="sr-only"
             i18n:translate="label_datagridwidget_manipulators_moverowdown"
       >Move Down</span>
     </button>
+
+    <input name="${view/name}-empty-marker"
+           type="hidden"
+           value="1"/>
   </td>
 
 </html>

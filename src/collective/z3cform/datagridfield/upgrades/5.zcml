@@ -4,23 +4,23 @@
     >
 
   <gs:registerProfile
-      name="2"
-      title="Upgrade to version 2"
+      name="5"
+      title="Upgrade to version 5"
       description=""
       provides="Products.GenericSetup.interfaces.EXTENSION"
       for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
-      directory="profiles/2"
+      directory="profiles/5"
       />
 
   <gs:upgradeSteps
       profile="collective.z3cform.datagridfield:default"
-      source="1"
-      destination="2"
+      source="4"
+      destination="5"
       >
     <gs:upgradeDepends
-        title="Upgrade to version 2"
+        title="Upgrade to version 5"
         description=""
-        import_profile="collective.z3cform.datagridfield.upgrades:2"
+        import_profile="collective.z3cform.datagridfield.upgrades:5"
         />
   </gs:upgradeSteps>
 

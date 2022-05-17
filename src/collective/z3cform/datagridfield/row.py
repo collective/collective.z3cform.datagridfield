@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from collective.z3cform.datagridfield.interfaces import AttributeNotFoundError
 from collective.z3cform.datagridfield.interfaces import IRow
+from z3c.form.converter import BaseDataConverter
+from z3c.form.interfaces import IFieldWidget
 from z3c.form.interfaces import NO_VALUE
+from zope.component import adapter
 from zope.interface import implementer
 from zope.schema import Field
 from zope.schema import getFields
@@ -15,16 +18,11 @@ class DictRow(Object):
     __doc__ = IRow.__doc__
     _type = dict
 
-    # Code an concept courtesy of Martin Aspeli
-
-    def __init__(self, schema, **kw):
-        super(DictRow, self).__init__(schema, **kw)
-
     def _validate(self, value):
         # XXX HACK: Can't call the super, since it'll check to
         # XXX see if we provide DictRow.
         # We're only a dict, so we can't.
-        # super(DictRow, self)._validate(value)
+        # super()._validate(value)
 
         # Validate the dict against the schema
         # Pass 1 - ensure fields are present
@@ -56,3 +54,14 @@ class DictRow(Object):
     def set(self, object, value):
         # Override Object field logic
         Field.set(self, object, value)
+
+
+@adapter(IRow, IFieldWidget)
+class DictRowConverter(BaseDataConverter):
+    # simply return the dict
+
+    def toFieldValue(self, value):
+        return value
+
+    def toWidgetValue(self, value):
+        return value

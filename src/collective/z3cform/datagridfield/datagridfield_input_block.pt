@@ -7,34 +7,13 @@
 <div class="pat-datagridfield"
      data-auto-append="${view/auto_append}"
 >
-  <table class="datagridwidget-table-view datagridwidget-table-view-block"
+  <table class="table table-striped"
          data-mode="block"
   >
     <thead>
       <tr>
-        <th class="header">
-          <!-- -->
-        </th>
-        <th class="header"
-            id=""
-            tal:condition="view/allow_insert"
-        >
-        </th>
-        <th class="header"
-            id=""
-            tal:condition="view/allow_delete"
-        >
-        </th>
-        <th class="header"
-            id=""
-            tal:condition="view/allow_reorder"
-        >
-        </th>
-        <th class="header"
-            id=""
-            tal:condition="view/allow_reorder"
-        >
-        </th>
+        <th></th>
+        <th></th>
       </tr>
     </thead>
     <tbody class="datagridwidget-body"
@@ -46,7 +25,7 @@
       <tal:block repeat="widget view/widgets">
         <tr tal:condition="python:view._includeRow(widget.name)"
             tal:attributes="
-              class python:'%s%s' % (widget.klass, widget.mode=='hidden' and ' hidden' or '');
+              class python:'%s%s' % (widget.klass, ' d-none' if widget.mode=='hidden' else '');
               data-index python:widget.name.split('.')[-1];
             "
         >

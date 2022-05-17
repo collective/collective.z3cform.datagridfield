@@ -3,15 +3,21 @@
 
   <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
            prefix="plone.resources/pat-datagridfield"
-           remove="True"
+           remove="true"
   />
   <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
            prefix="plone.resources/datagridfield-bundle"
-           remove="True"
+           remove="true"
   />
+
   <records interface="Products.CMFPlone.interfaces.IBundleRegistry"
            prefix="plone.bundles/datagridfield-bundle"
-           remove="True"
-  />
+  >
+    <value key="jscompilation">++resource++collective.z3cform.datagridfield/datagridfield.min.js</value>
+    <value key="csscompilation"
+           purge="true"
+    />
+    <value key="depends">plone</value>
+  </records>
 
 </registry>

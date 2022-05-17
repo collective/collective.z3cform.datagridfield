@@ -27,7 +27,7 @@ Make sure that the first row of data is present
 Make sure that the auto-insert row is present
 
     >>> browser.getControl(name='form.widgets.address.AA.widgets.address_type:list').value
-    ['Work']
+    ['--NOVALUE--']
     >>> browser.getControl(name='form.widgets.address.AA.widgets.line1').value
     ''
     >>> browser.getControl(name='form.widgets.address.AA.widgets.line2').value
@@ -40,7 +40,7 @@ Make sure that the auto-insert row is present
 Make sure that the template row is present
 
     >>> browser.getControl(name='form.widgets.address.TT.widgets.address_type:list').value
-    ['Work']
+    ['--NOVALUE--']
     >>> browser.getControl(name='form.widgets.address.TT.widgets.line1').value
     ''
     >>> browser.getControl(name='form.widgets.address.TT.widgets.line2').value
@@ -52,17 +52,17 @@ Make sure that the template row is present
 
 Make sure the add row button is present (x4)
 
-    >>> browser.contents.find('<td class="datagridwidget-manipulator insert-row">') != -1
+    >>> browser.contents.find('<button class="btn btn-outline-dark btn-sm dgf--row-add"') != -1
     True
 
 Make sure the delete row button is present (x4)
 
-    >>> browser.contents.find('<td class="datagridwidget-manipulator delete-row">') != -1
+    >>> browser.contents.find('<button class="btn btn-outline-dark btn-sm dgf--row-delete"') != -1
     True
 
 Make sure the description is displayed in the 'personCount' column header
 
-    >>> browser.contents.find('<span>Persons</span>\n            \n            <span class="formHelp">Enter number of persons (min 0 and max 15)</span>') != -1
+    >>> browser.contents.find('<span class="form-text">Enter number of persons (min 0 and max 15)</span>') != -1
     True
 
 

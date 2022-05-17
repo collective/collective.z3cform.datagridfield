@@ -8,6 +8,7 @@ build
 downloads/*
 eggs/*
 fake-eggs/*
+node_modules/*
 parts/*
 develop-eggs
 dist
@@ -49,3 +50,5 @@ reports
 src/plone*
 pyvenv.cfg
 share/
+.make-sentinels/
+/*-mxdev.txt

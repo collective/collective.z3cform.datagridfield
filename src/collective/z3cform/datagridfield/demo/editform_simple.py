@@ -2,11 +2,12 @@
 """
     Demo of the widget
 """
-from ..blockdatagridfield import BlockDataGridFieldFactory
-from ..datagridfield import DataGridFieldFactory
+from ..blockdatagridfield import BlockDataGridFieldWidgetFactory
+from ..datagridfield import DataGridFieldWidgetFactory
 from ..row import DictRow
 from datetime import datetime
 from plone.autoform.directives import widget
+from plone.autoform.form import AutoExtensibleForm
 from z3c.form import button
 from z3c.form import field
 from z3c.form import form
@@ -21,29 +22,10 @@ from zope.interface import Interface
 # from z3c.relationfield.schema import RelationChoice
 
 
-try:
-    from collective.z3cform.datetimewidget import widget_datetime
-except ImportError:
-    widget_datetime = None
-
-
-if widget_datetime is not None:
-    from z3c.form.widget import FieldWidget
-
-    class DataGridFieldDatetimeWidget(widget_datetime.DatetimeWidget):
-        # Causes grey hair because of invalid value handling
-        # so we disable this for now
-        show_jquerytools_dateinput = False
-
-    def DataGridFieldDatetimeFieldWidget(field, request):
-        """IFieldWidget factory for DatetimeWidget."""
-        return FieldWidget(field, DataGridFieldDatetimeWidget(request))
-
-
 class IAddress(Interface):
-    line1 = schema.TextLine(title=u"Line 1", required=True)
+    line1 = schema.TextLine(title="Line 1", required=True)
     address_type = schema.Choice(
-        title=u"Address Type", required=True, values=[u"Work", u"Home"]
+        title="Address Type", required=True, values=["Work", "Home"]
     )
     # Uncomment, if you want to try the relationfield
     #    link = RelationChoice(
@@ -51,27 +33,24 @@ class IAddress(Interface):
     #        source=CatalogSource(portal_type=['Document']),
     #        required=True
     #    )
-    line2 = schema.TextLine(title=u"Line 2", required=False)
-    city = schema.TextLine(title=u"City / Town", required=True)
-    country = schema.TextLine(title=u"Country", required=True)
-    frozenField = schema.TextLine(title=u"Don't change", readonly=True, required=True)
+    line2 = schema.TextLine(title="Line 2", required=False)
+    city = schema.TextLine(title="City / Town", required=True)
+    country = schema.TextLine(title="Country", required=True)
+    frozenField = schema.TextLine(title="Don't change", readonly=True, required=False)
 
     # A sample integer field
     personCount = schema.Int(
-        title=u"Persons",
-        description=u"Enter number of persons (min 0 and max 15)",
+        title="Persons",
+        description="Enter number of persons (min 0 and max 15)",
         required=False,
         min=0,
         max=15,
     )
 
-    # A sample datetime field
-    if widget_datetime is not None:
-        widget(dateAdded=DataGridFieldDatetimeFieldWidget)
-    dateAdded = schema.Datetime(title=u"Date added")
+    dateAdded = schema.Datetime(title="Date added")
 
     # A sample checkbox
-    billed = schema.Bool(title=u"Billed")
+    billed = schema.Bool(title="Billed")
 
 
 class IPerson(Interface):
@@ -81,12 +60,13 @@ class IPerson(Interface):
     as a dict
     """
 
-    name = schema.TextLine(title=u"Name", required=True)
+    name = schema.TextLine(title="Name", required=True)
     address = schema.List(
-        title=u"Addresses",
-        value_type=DictRow(title=u"Address", schema=IAddress),
+        title="Addresses",
+        value_type=DictRow(title="Address", schema=IAddress),
         required=True,
     )
+    widget(address=DataGridFieldWidgetFactory)
 
 
 TESTDATA = {
@@ -100,6 +80,8 @@ TESTDATA = {
             "country": "The Old Sod",
             "personCount": 2,
             "dateAdded": datetime(1981, 8, 17, 0o6, 00, 00),
+            "billed": False,
+            "frozenField": "do not change!",
         },
         {
             "address_type": "Home",
@@ -109,17 +91,16 @@ TESTDATA = {
             "country": "The Old Sod",
             "personCount": 4,
             "dateAdded": datetime(1981, 8, 17, 0o6, 00, 00),
+            "billed": True,
+            "frozenField": "do not change!",
         },
     ],
 }
 
 
-class EditForm(form.EditForm):
-    label = u"Simple Form"
-
-    fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
-
+class EditForm(AutoExtensibleForm, form.EditForm):
+    label = "Simple Form"
+    schema = IPerson
     show_note = False
 
     def getContent(self):
@@ -139,7 +120,7 @@ class EditForm(form.EditForm):
         for k, v in self.request.form.items():
             print("%s: %s" % (k, v))
 
-    @button.buttonAndHandler(u"Save", name="save")
+    @button.buttonAndHandler("Save", name="save")
     def handleSave(self, action):
 
         data, errors = self.extractData()
@@ -155,44 +136,38 @@ class EditForm(form.EditForm):
 
     def updateActions(self):
         """Bypass the baseclass editform - it causes problems"""
-        super(form.EditForm, self).updateActions()
+        super().updateActions()
+
+    def datagridUpdateWidgets(self, subform, widgets, widget):
+        pass
 
     def updateWidgets(self):
-        super(EditForm, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].allow_reorder = True
 
 
 class EditForm2(EditForm):
-    label = u"Hide the Row Manipulators"
-
-    fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
+    label = "Hide the Row Manipulators"
 
     def updateWidgets(self):
-        super(EditForm2, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].allow_insert = False
         self.widgets["address"].allow_delete = False
 
 
 class EditForm3(EditForm):
-    label = u"Disable Auto-append"
-
-    fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
+    label = "Disable Auto-append"
 
     def updateWidgets(self):
-        super(EditForm3, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].auto_append = False
 
 
 class EditForm4(EditForm):
-    label = u"Omit a column"
-
-    fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
+    label = "Omit a column"
 
     def updateWidgets(self):
-        super(EditForm4, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].columns = [
             c for c in self.widgets["address"].columns if c["name"] != "country"
         ]
@@ -202,7 +177,7 @@ class EditForm4(EditForm):
 
 
 class EditForm5(EditForm):
-    label = u"Configure Subform Widgets"
+    label = "Configure Subform Widgets"
 
     def datagridUpdateWidgets(self, subform, widgets, widget):
         widgets["line1"].size = 40
@@ -212,7 +187,7 @@ class EditForm5(EditForm):
 
 
 class EditForm6(EditForm):
-    label = u"Hide a Column"
+    label = "Hide a Column"
 
     def datagridUpdateWidgets(self, subform, widgets, widget):
         # This one hides the widgets
@@ -220,39 +195,33 @@ class EditForm6(EditForm):
 
     def updateWidgets(self):
         # This one hides the column title
-        super(EditForm6, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].columns[3]["mode"] = HIDDEN_MODE
 
 
 class EditForm7(EditForm):
-    label = u"Table is read-only, cells editable"
+    label = "Table is read-only, cells editable"
     show_note = True
 
     def updateWidgets(self):
-        super(EditForm7, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].mode = DISPLAY_MODE
 
 
 class EditForm8(EditForm):
-    label = u"Table and cells are read-only"
+    label = "Table and cells are read-only"
 
     def updateWidgets(self):
-        super(EditForm8, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].mode = DISPLAY_MODE
-        for row in self.widgets["address"].widgets:
-            for wdt in row.subform.widgets.values():
-                wdt.mode = DISPLAY_MODE
+        for wdt in self.widgets["address"].widgets:
+            wdt.mode = DISPLAY_MODE
+
+
+class IPersonBlocked(IPerson):
+    widget(address=BlockDataGridFieldWidgetFactory)
 
 
 class EditForm9(EditForm):
-
-    label = u"Block widgets as blocks instead of cells"
-
-    # Because we modify fields in-place in update()
-    # We need our own copy so that we don't damage other forms
-    fields = field.Fields(IPerson)
-
-    def update(self):
-        # Set a custom widget for a field for this form instance only
-        self.fields["address"].widgetFactory = BlockDataGridFieldFactory
-        super(EditForm9, self).update()
+    label = "Block widgets as blocks instead of cells"
+    schema = IPersonBlocked

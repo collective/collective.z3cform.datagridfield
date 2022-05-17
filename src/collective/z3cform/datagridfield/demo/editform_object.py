@@ -2,8 +2,8 @@
 """
     Demo of the widget
 """
-from ..datagridfield import DataGridFieldFactory
-from ..interfaces import IDataGridField
+from ..datagridfield import DataGridFieldObjectWidget
+from ..datagridfield import DataGridFieldWidgetFactory
 from z3c.form import button
 from z3c.form import field
 from z3c.form import form
@@ -27,12 +27,12 @@ from zope.schema.fieldproperty import FieldProperty
 
 class IAddress(Interface):
     address_type = schema.Choice(
-        title=u"Address Type", required=True, values=[u"Work", u"Home"]
+        title="Address Type", required=True, values=["Work", "Home"]
     )
-    line1 = schema.TextLine(title=u"Line 1", required=True)
-    line2 = schema.TextLine(title=u"Line 2", required=False)
-    city = schema.TextLine(title=u"City / Town", required=True)
-    country = schema.TextLine(title=u"Country", required=True)
+    line1 = schema.TextLine(title="Line 1", required=True)
+    line2 = schema.TextLine(title="Line 2", required=False)
+    city = schema.TextLine(title="City / Town", required=True)
+    country = schema.TextLine(title="Country", required=True)
 
 
 # Uncomment, if you want to try the relationfield
@@ -50,10 +50,10 @@ class AddressListField(schema.List):
 
 
 class IPerson(Interface):
-    name = schema.TextLine(title=u"Name", required=True)
+    name = schema.TextLine(title="Name", required=True)
     address = AddressListField(
-        title=u"Addresses",
-        value_type=schema.Object(title=u"Address", schema=IAddress),
+        title="Addresses",
+        value_type=schema.Object(title="Address", schema=IAddress),
         required=True,
     )
 
@@ -106,29 +106,29 @@ class Person(object):
 
 
 TESTDATA = Person(
-    name=u"MY NAME",
+    name="MY NAME",
     address=AddressList(
         [
             Address(
-                address_type=u"Work",
-                line1=u"My Office",
-                line2=u"Big Office Block",
-                city=u"Mega City",
-                country=u"The Old Sod",
+                address_type="Work",
+                line1="My Office",
+                line2="Big Office Block",
+                city="Mega City",
+                country="The Old Sod",
             ),
             Address(
-                address_type=u"Home",
-                line1=u"Home Sweet Home",
-                line2=u"Easy Street",
-                city=u"Burbs",
-                country=u"The Old Sod",
+                address_type="Home",
+                line1="Home Sweet Home",
+                line2="Easy Street",
+                city="Burbs",
+                country="The Old Sod",
             ),
         ]
     ),
 )
 
 
-@adapter(AddressListField, IDataGridField)
+@adapter(AddressListField, DataGridFieldObjectWidget)
 @implementer(IDataConverter)
 class GridDataConverter(BaseDataConverter):
     """Convert between the AddressList object and the widget.
@@ -160,15 +160,15 @@ class GridDataConverter(BaseDataConverter):
 
 
 class EditForm(form.EditForm):
-    label = u"Simple Form (Objects)"
+    label = "Simple Form (Objects)"
 
     fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
+    fields["address"].widgetFactory = DataGridFieldWidgetFactory
 
     def getContent(self):
         return TESTDATA
 
-    @button.buttonAndHandler(u"Save", name="save")
+    @button.buttonAndHandler("Save", name="save")
     def handleSave(self, action):
 
         data, errors = self.extractData()
@@ -182,41 +182,41 @@ class EditForm(form.EditForm):
 
     def updateActions(self):
         """Bypass the baseclass editform - it causes problems"""
-        super(form.EditForm, self).updateActions()
+        super().updateActions()
 
     def updateWidgets(self):
-        super(EditForm, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].allow_reorder = True
 
 
 class EditForm2(EditForm):
-    label = u"Hide the Row Manipulators (Objects)"
+    label = "Hide the Row Manipulators (Objects)"
     fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
+    fields["address"].widgetFactory = DataGridFieldWidgetFactory
 
     def updateWidgets(self):
-        super(EditForm2, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].allow_insert = False
         self.widgets["address"].allow_delete = False
 
 
 class EditForm3(EditForm):
-    label = u"Disable Auto-append (Objects)"
+    label = "Disable Auto-append (Objects)"
     fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
+    fields["address"].widgetFactory = DataGridFieldWidgetFactory
 
     def updateWidgets(self):
-        super(EditForm3, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].auto_append = False
 
 
 class EditForm4(EditForm):
-    label = u"Omit a column - Column is Mandatory (Objects)"
+    label = "Omit a column - Column is Mandatory (Objects)"
     fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
+    fields["address"].widgetFactory = DataGridFieldWidgetFactory
 
     def updateWidgets(self):
-        super(EditForm4, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].columns = [
             c for c in self.widgets["address"].columns if c["name"] != "country"
         ]
@@ -226,12 +226,12 @@ class EditForm4(EditForm):
 
 
 class EditForm4b(EditForm):
-    label = u"Omit a column - Column is Optional (Objects)"
+    label = "Omit a column - Column is Optional (Objects)"
     fields = field.Fields(IPerson)
-    fields["address"].widgetFactory = DataGridFieldFactory
+    fields["address"].widgetFactory = DataGridFieldWidgetFactory
 
     def updateWidgets(self):
-        super(EditForm4b, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].columns = [
             c for c in self.widgets["address"].columns if c["name"] != "line2"
         ]
@@ -241,7 +241,7 @@ class EditForm4b(EditForm):
 
 
 class EditForm5(EditForm):
-    label = u"Configure Subform Widgets (Objects)"
+    label = "Configure Subform Widgets (Objects)"
 
     def datagridUpdateWidgets(self, subform, widgets, widget):
         widgets["line1"].size = 40
@@ -251,7 +251,7 @@ class EditForm5(EditForm):
 
 
 class EditForm6(EditForm):
-    label = u"Hide a Column (Objects)"
+    label = "Hide a Column (Objects)"
 
     def datagridUpdateWidgets(self, subform, widgets, widget):
         # This one hides the widgets
@@ -259,23 +259,23 @@ class EditForm6(EditForm):
 
     def updateWidgets(self):
         # This one hides the column title
-        super(EditForm6, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].columns[3]["mode"] = HIDDEN_MODE
 
 
 class EditForm7(EditForm):
-    label = u"Table is read-only, cells editable (Objects)"
+    label = "Table is read-only, cells editable (Objects)"
 
     def updateWidgets(self):
-        super(EditForm7, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].mode = DISPLAY_MODE
 
 
 class EditForm8(EditForm):
-    label = u"Table and cells are read-only (Objects)"
+    label = "Table and cells are read-only (Objects)"
 
     def updateWidgets(self):
-        super(EditForm8, self).updateWidgets()
+        super().updateWidgets()
         self.widgets["address"].mode = DISPLAY_MODE
         for row in self.widgets["address"].widgets:
             for widget in row.subform.widgets.values():

@@ -81,6 +81,9 @@
       permission="zope2.View"
       layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       />
+
+  <adapter factory=".editform_object.GridDataConverter" />
+
   <browser:page
       name="demo-collective.z3cform.datagrid-object"
       for="*"

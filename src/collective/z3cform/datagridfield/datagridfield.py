@@ -2,11 +2,10 @@
 """
     Implementation of the widget
 """
-from . import _
-from .autoform import AutoExtensibleSubForm
-from .autoform import AutoExtensibleSubformAdapter
-from .interfaces import IDataGridField
 from Acquisition import aq_parent
+from collective.z3cform.datagridfield import _
+from collective.z3cform.datagridfield.interfaces import IDataGridFieldWidget
+from collective.z3cform.datagridfield.row import DictRow
 from plone import api
 from plone.app.z3cform.interfaces import IPloneFormLayer
 from plone.app.z3cform.utils import closest_content
@@ -52,8 +51,8 @@ except pkg_resources.DistributionNotFound:
 logger = logging.getLogger(__name__)
 
 
-@implementer(IDataGridField)
-class DataGridField(MultiWidget):
+@implementer(IDataGridFieldWidget)
+class DataGridFieldWidget(MultiWidget):
     """This grid should be applied to an schema.List item which has
     schema.Object and an interface"""
 
@@ -110,7 +109,7 @@ class DataGridField(MultiWidget):
         valueType = self.field.value_type
 
         if IObject.providedBy(valueType):
-            widget = DataGridFieldObjectFactory(valueType, self.request)
+            widget = DataGridFieldObjectWidgetFactory(valueType, self.request)
             widget.setErrors = idx not in ["TT", "AA"]
         else:
             widget = getMultiAdapter((valueType, self.request), interfaces.IFieldWidget)
@@ -158,7 +157,7 @@ class DataGridField(MultiWidget):
             ]
 
         # if the field has configuration data set - copy it
-        super(DataGridField, self).updateWidgets()
+        super().updateWidgets()
 
         if self.mode == INPUT_MODE:
             if self.auto_append:
@@ -203,18 +202,19 @@ class DataGridField(MultiWidget):
         else:
             return not name.endswith("AA") and not name.endswith("TT")
 
-    def portal_url(self):
-        return api.portal.get_tool("portal_url")()
-
 
 @adapter(IField, IFormLayer)
 @implementer(interfaces.IFieldWidget)
-def DataGridFieldFactory(field, request):
-    """IFieldWidget factory for DataGridField."""
-    return FieldWidget(field, DataGridField(request))
+def DataGridFieldWidgetFactory(field, request):
+    """IFieldWidget factory for DataGridFieldWidget."""
+    return FieldWidget(field, DataGridFieldWidget(request))
 
 
-@adapter(IList, IDataGridField)
+# BBB
+DataGridFieldFactory = DataGridFieldWidgetFactory
+
+
+@adapter(IList, IDataGridFieldWidget)
 class GridDataConverter(BaseDataConverter):
     """Convert between the context and the widget"""
 
@@ -229,7 +229,7 @@ class GridDataConverter(BaseDataConverter):
 PAT_XPATH = "//*[contains(concat(' ', normalize-space(@class), ' '), ' pat-')]"
 
 
-class DataGridFieldObject(ObjectWidget):
+class DataGridFieldObjectWidget(ObjectWidget):
     def isInsertEnabled(self):
         return self.__parent__.allow_insert
 
@@ -239,22 +239,25 @@ class DataGridFieldObject(ObjectWidget):
     def isReorderEnabled(self):
         return self.__parent__.allow_reorder
 
-    def portal_url(self):
-        return self.__parent__.context.portal_url()
+    # ObjectWidget API
+
+    def getObject(self, value):
+        # our object is the dict value
+        return value
 
     @property
     def value(self):
         # value (get) cannot raise an exception, then we return
         # insane values
         try:
-            return self.extract()
+            value = self.extract()
         except MultipleErrors:
             value = {}
-            active_names = self.subform.fields.keys()
+            active_names = self.fields.keys()
             for name in getFieldNames(self.field.schema):
                 if name not in active_names:
                     continue
-                widget = self.subform.widgets[name]
+                widget = self.widgets[name]
                 widget_value = widget.value
                 try:
                     converter = interfaces.IDataConverter(widget)
@@ -266,11 +269,10 @@ class DataGridFieldObject(ObjectWidget):
     @value.setter
     def value(self, value):
         self._value = value
-        self.updateWidgets()
 
         # ensure that we apply our new values to the widgets
         if value is not NO_VALUE:
-            active_names = self.subform.fields.keys()
+            active_names = self.fields.keys()
             for name in getFieldNames(self.field.schema):
                 fieldset_field = self.field.schema[name]
                 if fieldset_field.readonly:
@@ -281,28 +283,32 @@ class DataGridFieldObject(ObjectWidget):
                         v = value.get(name, NO_VALUE)
                     else:
                         v = getattr(value, name, NO_VALUE)
-                    # probably there is a more generic way to do this ...
-                    if (
-                        HAS_REL_FIELD
-                        and isinstance(fieldset_field, RelationChoice)
-                        and v == NO_VALUE
-                    ):
-                        v = ""
-                    self.applyValue(self.subform.widgets[name], v)
+                    if v is NO_VALUE:
+                        continue
+                    widget = self.widgets[name]
+                    converter = interfaces.IDataConverter(widget)
+                    widget.value = converter.toWidgetValue(v)
 
     def updateWidgets(self, *args, **kwargs):
-        super(DataGridFieldObject, self).updateWidgets(*args, **kwargs)
+        super().updateWidgets(*args, **kwargs)
 
         # Tell the "cell"-widget the "mode" of it's column,
         # so that plone.autoform.directives.mode works on the cell.
         for column_info in aq_parent(self).columns:
-            if column_info["mode"] is None:
-                continue
-            self.subform.widgets[column_info["name"]].mode = column_info["mode"]
+            if self.id.endswith("AA") or self.id.endswith("TT"):
+                # ignore required on auto-append and template rows
+                self.widgets[column_info["name"]].required = False
+            if column_info["mode"] is not None:
+                self.widgets[column_info["name"]].mode = column_info["mode"]
+
+    def extractRaw(self, setErrors=True):
+        # override ObjectWidget extractRaw
+        self.widgets.setErrors = setErrors
+        return self.widgets.extractRaw()
 
     def render(self):
         """See z3c.form.interfaces.IWidget."""
-        html = super(DataGridFieldObject, self).render()
+        html = super().render()
         if "datagridwidget-empty-row" in self.klass or "auto-append" in self.klass:
             # deactivate patterns
             fragments = lxml.html.fragments_fromstring(html)
@@ -326,172 +332,13 @@ class DataGridFieldObject(ObjectWidget):
 
 @adapter(IField, interfaces.IFormLayer)
 @implementer(interfaces.IFieldWidget)
-def DataGridFieldObjectFactory(field, request):
-    """IFieldWidget factory for DataGridField."""
-    return FieldWidget(field, DataGridFieldObject(request))
+def DataGridFieldObjectWidgetFactory(field, request):
+    """IFieldWidget factory for DataGridFieldObjectWidget."""
+    return FieldWidget(field, DataGridFieldObjectWidget(request))
 
 
-# ------------[ Form to draw the line ]---------------------------------------
-
-
-class DataGridFieldObjectSubForm(AutoExtensibleSubForm):
-    """Local class of subform - this is intended to all configuration
-    information to be passed all the way down to the subform.
-
-    All the parent and form nesting can be confusing, especially so
-    when you throw fieldsets (groups) into the mix.  So some notes.
-
-    When the datagrid object is part of a standard form without a
-    fieldset, these are the objects:
-
-    - self.__parent__ is a DataGridFieldObject
-
-    - self.parentForm is self.__parent__.form is the main edit/add
-      form or the view.
-
-    - self.__parent__.__parent__ is the DataGridField
-
-    - self.parentForm.__parent__ is the content item.
-
-    When the datagrid object is part of a fieldset, these are the
-    objects:
-
-    - self.__parent__ is a DataGridFieldObject
-
-    - self.parentForm is self.__parent__.form is the fieldset
-
-    - self.parentForm.__parent__ is self.parentForm.parentForm is the
-      main edit/add form or the view
-
-    - self.__parent__.__parent__ is the DataGridField
-
-    - self.parentForm.parentForm.__parent__ is the content item.
-
-    """
-
-    def __init__(self, context, request, parentWidget):
-        # copied from z3c.form 3.2.10
-        self.context = context
-        self.request = request
-        self.__parent__ = parentWidget
-        self.parentForm = parentWidget.form
-        self.ignoreContext = self.__parent__.ignoreContext
-        self.ignoreRequest = self.__parent__.ignoreRequest
-        if interfaces.IFormAware.providedBy(self.__parent__):
-            self.ignoreReadonly = self.parentForm.ignoreReadonly
-        self.prefix = self.__parent__.name
-
-    def _validate(self):
-        # copied from z3c.form 3.2.10
-        for widget in self.widgets.values():
-            try:
-                # convert widget value to field value
-                converter = interfaces.IDataConverter(widget)
-                value = converter.toFieldValue(widget.value)
-                # validate field value
-                getMultiAdapter(
-                    (
-                        self.context,
-                        self.request,
-                        self.parentForm,
-                        getattr(widget, "field", None),
-                        widget,
-                    ),
-                    interfaces.IValidator,
-                ).validate(value, force=True)
-            except (ValidationError, ValueError) as error:
-                # on exception, setup the widget error message
-                view = getMultiAdapter(
-                    (
-                        error,
-                        self.request,
-                        widget,
-                        widget.field,
-                        self.parentForm,
-                        self.context,
-                    ),
-                    interfaces.IErrorViewSnippet,
-                )
-                view.update()
-                widget.error = view
-
-    def update(self):
-        # copied from z3c.form 3.2.10
-        if self.__parent__.field is None:
-            raise ValueError(
-                "%r .field is None, that's a blocking point" % self.__parent__
-            )
-        # update stuff from parent to be sure
-        self.mode = self.__parent__.mode
-        self.setupFields()
-        super(DataGridFieldObjectSubForm, self).update()
-
-    def getContent(self):
-        # copied from z3c.form 3.2.10
-        return self.__parent__._value
-
-    def updateWidgets(self):
-        rv = super(DataGridFieldObjectSubForm, self).updateWidgets()
-        if hasattr(self.parentForm, "datagridUpdateWidgets"):
-            self.parentForm.datagridUpdateWidgets(
-                self, self.widgets, self.__parent__.__parent__
-            )
-        elif hasattr(self.parentForm.__parent__, "datagridUpdateWidgets"):
-            self.parentForm.__parent__.datagridUpdateWidgets(
-                self, self.widgets, self.__parent__.__parent__
-            )
-        return rv
-
-    def setupFields(self):
-        # copied from z3c.form 3.2.10
-        rv = Fields(self.__parent__.field.schema)
-
-        # own code:
-        if hasattr(self.parentForm, "datagridInitialise"):
-            self.parentForm.datagridInitialise(self, self.__parent__.__parent__)
-        elif hasattr(self.parentForm.__parent__, "datagridInitialise"):
-            self.parentForm.__parent__.datagridInitialise(
-                self, self.__parent__.__parent__
-            )
-        return rv
-
-    def get_closest_content(self):
-        """Return the closest persistent context to this form.
-        The right context of this form is the object created by:
-        z3c.form.object.registerFactoryAdapter
-        """
-        return closest_content(self.context)
-
-
-@adapter(
-    Interface,  # widget value
-    IPloneFormLayer,  # request
-    Interface,  # widget context
-    Interface,  # form
-    DataGridFieldObject,  # widget
-    Interface,  # field
-    Interface,  # field.schema
-)
-@implementer(interfaces.ISubformFactory)
-class DataGridFieldSubformAdapter(AutoExtensibleSubformAdapter):
-    """Give it my local class of subform, rather than the default"""
-
-    factory = DataGridFieldObjectSubForm
-
-    def __init__(self, context, request, widgetContext, form, widget, field, schema):
-        # copied from z3c.form 3.2.10
-        self.context = context
-        self.request = request
-        self.widgetContext = widgetContext
-        self.form = form
-        self.widget = widget
-        self.field = field
-        self.schema = schema
-
-    def __call__(self):
-        # copied from z3c.form 3.2.10
-        obj = self.factory(self.context, self.request, self.widget)
-        return obj
+# BBB
+DataGridFieldObjectFactory = DataGridFieldObjectWidgetFactory
 
 
 @implementer(IValidator)
@@ -500,7 +347,7 @@ class DataGridFieldSubformAdapter(AutoExtensibleSubformAdapter):
     Interface,
     Interface,  # Form
     IList,  # field
-    DataGridField,  # widgets
+    DataGridFieldWidget,  # widgets
 )
 class DataGridValidator(SimpleFieldValidator):
     """
@@ -515,8 +362,12 @@ class DataGridValidator(SimpleFieldValidator):
         Don't validate the table - however, if there is a cell
         error, make sure that the table widget shows it.
         """
-        for subform in [widget.subform for widget in self.widget.widgets]:
-            for widget in subform.widgets.values():
-                if hasattr(widget, "error") and widget.error:
-                    raise ValueError(widget.label)
+        for row in self.widget.widgets:
+            if row.id.endswith("AA") or row.id.endswith("TT"):
+                # ignore auto appended and template widgets
+                continue
+            # check each column
+            for col in row.widgets.values():
+                if hasattr(col, "error") and col.error:
+                    raise ValueError(col.label)
         return None

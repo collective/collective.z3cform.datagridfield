@@ -41,9 +41,9 @@ the demo
 
 I enter a value for first field
     Wait until element is visible
-    ...  id=form-widgets-address-2-widgets-line1
-    Input Text  form-widgets-address-2-widgets-line1  Chalet in the mountains
-    Input Text  form-widgets-address-2-widgets-line2  Valais
+    ...  id=form-widgets-address-AA-widgets-line1
+    Input Text  form-widgets-address-AA-widgets-line1  Chalet in the mountains
+    Input Text  form-widgets-address-AA-widgets-line2  Valais
 
 
 # --- THEN -------------------------------------------------------------------
@@ -51,9 +51,9 @@ I enter a value for first field
 two rows plus empty row are visible
     Element Should Be Visible  id=form-widgets-address-0-widgets-line1
     Element Should Be Visible  id=form-widgets-address-1-widgets-line1
-    Element Should Be Visible  id=form-widgets-address-2-widgets-line1
-    Element Should Not Be Visible  id=form-widgets-address-3-widgets-line1
+    Element Should Be Visible  id=form-widgets-address-AA-widgets-line1
+    Element Should Not Be Visible  id=form-widgets-address-TT-widgets-line1
 
 one single row is added
     Element Should Be Visible  id=form-widgets-address-3-widgets-line1
-    Element Should Not Be Visible  id=form-widgets-address-4-widgets-line1
+    Element Should Not Be Visible  id=form-widgets-address-TT-widgets-line1
