@@ -13,7 +13,7 @@
   <records interface="Products.CMFPlone.interfaces.IBundleRegistry"
            prefix="plone.bundles/datagridfield-bundle"
   >
-    <value key="jscompilation">++resource++collective.z3cform.datagridfield/datagridfield.min.js</value>
+    <value key="jscompilation">++resource++collective.z3cform.datagridfield/datagridfield-remote.min.js</value>
     <value key="csscompilation"
            purge="true"
     />
