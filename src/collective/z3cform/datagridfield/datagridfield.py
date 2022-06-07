@@ -5,10 +5,6 @@
 from Acquisition import aq_parent
 from collective.z3cform.datagridfield import _
 from collective.z3cform.datagridfield.interfaces import IDataGridFieldWidget
-from collective.z3cform.datagridfield.row import DictRow
-from plone import api
-from plone.app.z3cform.interfaces import IPloneFormLayer
-from plone.app.z3cform.utils import closest_content
 from plone.autoform.interfaces import MODES_KEY
 from z3c.form import interfaces
 from z3c.form.browser.multi import MultiWidget
@@ -16,7 +12,6 @@ from z3c.form.browser.object import ObjectWidget
 from z3c.form.converter import BaseDataConverter
 from z3c.form.converter import FormatterValidationError
 from z3c.form.error import MultipleErrors
-from z3c.form.field import Fields
 from z3c.form.interfaces import IFormLayer
 from z3c.form.interfaces import INPUT_MODE
 from z3c.form.interfaces import IValidator
@@ -37,16 +32,6 @@ from zope.schema.interfaces import ValidationError
 
 import logging
 import lxml
-import pkg_resources
-
-
-try:
-    pkg_resources.get_distribution("z3c.relationfield")
-    from z3c.relationfield.schema import RelationChoice
-
-    HAS_REL_FIELD = True
-except pkg_resources.DistributionNotFound:
-    HAS_REL_FIELD = False
 
 logger = logging.getLogger(__name__)
 
