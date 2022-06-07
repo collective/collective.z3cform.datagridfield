@@ -131,8 +131,10 @@ class DataGridFieldWidget(MultiWidget):
         widget.mode = self.mode
         widget.klass = "datagridwidget-row"
         # set widget.form (objectwidget needs this)
+        # and widget.parentForm (plone.app.widget.utils.get_widget_form)
         if interfaces.IFormAware.providedBy(self):
             widget.form = self.form
+            widget.parentForm = self.form
             alsoProvides(widget, interfaces.IFormAware)
         widget.update()
         return widget
