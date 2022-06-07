@@ -300,6 +300,10 @@ clean-pyc: ## remove Python file artifacts
 
 .PHONY: clean-make
 clean-make:  ## remove make artifact	@echo "$(OK_COLOR)Remove Plone/Zope configuration (keeps data) and sentinel files.$(NO_COLOR)"
+	rm -rf ./node_modules
+
+.PHONY: clean-npm
+clean-npm:  ## remove make artifact	@echo "$(OK_COLOR)Remove Plone/Zope configuration (keeps data) and sentinel files.$(NO_COLOR)"
 	rm -rf ${INSTALL_PREREQUSISTES} ${INSTANCE_TARGET} ${SENTINELFOLDER}
 
 .PHONY: clean-instance
@@ -308,7 +312,7 @@ clean-instance:  ## remove instance configuration (keeps data)
 	rm -f ${INSTANCE_TARGET}
 
 .PHONY: clean
-clean:  clean-venv clean-pyc clean-make clean-instance   ## clean all (except local database and pip installed packages)
+clean:  clean-venv clean-pyc clean-make clean-instance clean-npm   ## clean all (except local database and pip installed packages)
 
 ##############################################################################
 # DOCKER/CONTAINER
