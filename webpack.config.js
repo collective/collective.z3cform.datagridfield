@@ -9,13 +9,6 @@ module.exports = async (env, argv) => {
         entry: {
             "datagridfield.min": path.resolve(__dirname, "resources/datagridfield-config"),
         },
-        externals: {
-            "window": "window",
-            "$": "jquery",
-            "jquery": "jQuery",
-            "window.jquery": "jQuery",
-            "bootstrap": true,
-        },
         optimization: {
             splitChunks: {
                 cacheGroups: {
