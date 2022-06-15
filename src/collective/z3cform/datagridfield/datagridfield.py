@@ -293,6 +293,9 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
         # Tell the "cell"-widget the "mode" of it's column,
         # so that plone.autoform.directives.mode works on the cell.
         for column_info in aq_parent(self).columns:
+            if column_info["name"] not in self.widgets:
+                # skip readonly widgets
+                continue
             if self.id.endswith("AA") or self.id.endswith("TT"):
                 # ignore required on auto-append and template rows
                 self.widgets[column_info["name"]].required = False
