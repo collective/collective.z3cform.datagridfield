@@ -5,10 +5,7 @@
 from Acquisition import aq_parent
 from collective.z3cform.datagridfield import _
 from collective.z3cform.datagridfield.interfaces import IDataGridFieldWidget
-from collective.z3cform.datagridfield.row import DictRow
-from plone import api
-from plone.app.z3cform.interfaces import IPloneFormLayer
-from plone.app.z3cform.utils import closest_content
+from plone.autoform.base import AutoFields
 from plone.autoform.interfaces import MODES_KEY
 from z3c.form import interfaces
 from z3c.form.browser.multi import MultiWidget
@@ -16,7 +13,6 @@ from z3c.form.browser.object import ObjectWidget
 from z3c.form.converter import BaseDataConverter
 from z3c.form.converter import FormatterValidationError
 from z3c.form.error import MultipleErrors
-from z3c.form.field import Fields
 from z3c.form.interfaces import IFormLayer
 from z3c.form.interfaces import INPUT_MODE
 from z3c.form.interfaces import IValidator
@@ -37,16 +33,7 @@ from zope.schema.interfaces import ValidationError
 
 import logging
 import lxml
-import pkg_resources
 
-
-try:
-    pkg_resources.get_distribution("z3c.relationfield")
-    from z3c.relationfield.schema import RelationChoice
-
-    HAS_REL_FIELD = True
-except pkg_resources.DistributionNotFound:
-    HAS_REL_FIELD = False
 
 logger = logging.getLogger(__name__)
 
@@ -131,8 +118,10 @@ class DataGridFieldWidget(MultiWidget):
         widget.mode = self.mode
         widget.klass = "datagridwidget-row"
         # set widget.form (objectwidget needs this)
+        # and widget.parentForm (plone.app.widget.utils.get_widget_form)
         if interfaces.IFormAware.providedBy(self):
             widget.form = self.form
+            widget.parentForm = self.form
             alsoProvides(widget, interfaces.IFormAware)
         widget.update()
         return widget
@@ -229,7 +218,7 @@ class GridDataConverter(BaseDataConverter):
 PAT_XPATH = "//*[contains(concat(' ', normalize-space(@class), ' '), ' pat-')]"
 
 
-class DataGridFieldObjectWidget(ObjectWidget):
+class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
     def isInsertEnabled(self):
         return self.__parent__.allow_insert
 
@@ -238,6 +227,15 @@ class DataGridFieldObjectWidget(ObjectWidget):
 
     def isReorderEnabled(self):
         return self.__parent__.allow_reorder
+
+    # plone.autoform
+
+    @property
+    def schema(self):
+        return self.field.schema
+
+    def setupFields(self):
+        self.updateFieldsFromSchemata()
 
     # ObjectWidget API
 
@@ -254,7 +252,7 @@ class DataGridFieldObjectWidget(ObjectWidget):
         except MultipleErrors:
             value = {}
             active_names = self.fields.keys()
-            for name in getFieldNames(self.field.schema):
+            for name in getFieldNames(self.schema):
                 if name not in active_names:
                     continue
                 widget = self.widgets[name]
@@ -273,8 +271,8 @@ class DataGridFieldObjectWidget(ObjectWidget):
         # ensure that we apply our new values to the widgets
         if value is not NO_VALUE:
             active_names = self.fields.keys()
-            for name in getFieldNames(self.field.schema):
-                fieldset_field = self.field.schema[name]
+            for name in getFieldNames(self.schema):
+                fieldset_field = self.schema[name]
                 if fieldset_field.readonly:
                     continue
 
@@ -295,6 +293,9 @@ class DataGridFieldObjectWidget(ObjectWidget):
         # Tell the "cell"-widget the "mode" of it's column,
         # so that plone.autoform.directives.mode works on the cell.
         for column_info in aq_parent(self).columns:
+            if column_info["name"] not in self.widgets:
+                # skip readonly widgets
+                continue
             if self.id.endswith("AA") or self.id.endswith("TT"):
                 # ignore required on auto-append and template rows
                 self.widgets[column_info["name"]].required = False

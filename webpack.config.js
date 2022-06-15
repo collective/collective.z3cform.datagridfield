@@ -1,18 +1,13 @@
 process.traceDeprecation = true;
+const package_json = require("./package.json");
 const path = require("path");
 const patternslib_config = require("@patternslib/patternslib/webpack/webpack.config");
+const mf_config = require("@patternslib/patternslib/webpack/webpack.mf");
 
 module.exports = async (env, argv) => {
     let config = {
         entry: {
             "datagridfield.min": path.resolve(__dirname, "resources/datagridfield-config"),
-        },
-        externals: {
-            "window": "window",
-            "$": "jquery",
-            "jquery": "jQuery",
-            "window.jquery": "jQuery",
-            "bootstrap": true,
         },
         optimization: {
             splitChunks: {
@@ -34,6 +29,14 @@ module.exports = async (env, argv) => {
 
     config = patternslib_config(env, argv, config, ["mockup"]);
     config.output.path = path.resolve(__dirname, "src/collective/z3cform/datagridfield/static");
+
+    config.plugins.push(
+        mf_config({
+            filename: "datagridfield-remote.min.js",
+            package_json: package_json,
+            remote_entry: config.entry["datagridfield.min"],
+        })
+    );
 
     if (process.env.NODE_ENV === "development") {
         config.devServer.port = "8011";

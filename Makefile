@@ -103,7 +103,7 @@ ${SENTINEL}:
 # PYTHON, VENV, PIP
 # venv and pybin
 PYTHON?=python3
-VENV?=on
+VENV?=off
 ifeq ("${VENV}", "on")
 	VENV_FOLDER?=./venv
 	PYBIN=${VENV_FOLDER}/bin/
@@ -120,13 +120,6 @@ endif
 # installed?
 ifeq (, $(shell which $(PYTHON) ))
   $(error "PYTHON=$(PYTHON) not found in $(PATH)")
-endif
-
-# version ok?
-PYTHON_VERSION_MIN=3.7
-PYTHON_VERSION_OK=$(shell $(PYTHON) -c 'import sys; print(int(float("%d.%d"% sys.version_info[0:2]) >= float($(PYTHON_VERSION_MIN))))' )
-ifeq ($(PYTHON_VERSION_OK),0)
-  $(error "Need python $(PYTHON_VERSION) >= $(PYTHON_VERSION_MIN)")
 endif
 
 VENV_SENTINEL=${SENTINELFOLDER}venv.sentinel
@@ -300,6 +293,10 @@ clean-pyc: ## remove Python file artifacts
 
 .PHONY: clean-make
 clean-make:  ## remove make artifact	@echo "$(OK_COLOR)Remove Plone/Zope configuration (keeps data) and sentinel files.$(NO_COLOR)"
+	rm -rf ./node_modules
+
+.PHONY: clean-npm
+clean-npm:  ## remove make artifact	@echo "$(OK_COLOR)Remove Plone/Zope configuration (keeps data) and sentinel files.$(NO_COLOR)"
 	rm -rf ${INSTALL_PREREQUSISTES} ${INSTANCE_TARGET} ${SENTINELFOLDER}
 
 .PHONY: clean-instance
@@ -308,7 +305,7 @@ clean-instance:  ## remove instance configuration (keeps data)
 	rm -f ${INSTANCE_TARGET}
 
 .PHONY: clean
-clean:  clean-venv clean-pyc clean-make clean-instance   ## clean all (except local database and pip installed packages)
+clean:  clean-venv clean-pyc clean-make clean-instance clean-npm   ## clean all (except local database and pip installed packages)
 
 ##############################################################################
 # DOCKER/CONTAINER
