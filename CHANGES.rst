@@ -4,8 +4,8 @@ Changelog
 2.0.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
-  [thet]
+- Upgrade to Plone 6 only, with newest z3c.form and module federation.
+  [petschki]
 
 
 2.0.2 (2022-03-14)
