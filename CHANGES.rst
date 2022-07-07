@@ -4,7 +4,8 @@ Changelog
 3.0.0a2 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Latest mockup and `mf_config` updates.
+  [petschki]
 
 
 3.0.0a1 (2022-06-28)
