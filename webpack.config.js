@@ -1,40 +1,29 @@
 process.traceDeprecation = true;
-const package_json = require("./package.json");
+const mf_config = require("@patternslib/dev/webpack/webpack.mf");
 const path = require("path");
-const patternslib_config = require("@patternslib/patternslib/webpack/webpack.config");
-const mf_config = require("@patternslib/patternslib/webpack/webpack.mf");
+const package_json = require("./package.json");
+const package_json_mockup = require("@plone/mockup/package.json");
+const patternslib_config = require("@patternslib/dev/webpack/webpack.config.js");
 
 module.exports = async (env, argv) => {
     let config = {
         entry: {
             "datagridfield.min": path.resolve(__dirname, "resources/datagridfield-config"),
         },
-        optimization: {
-            splitChunks: {
-                cacheGroups: {
-                    tinymce: {
-                        name: "tinymce",
-                        test: /[\\/]node_modules[\\/]tinymce.*[\\/]/,
-                        chunks: "all",
-                    },
-                    select2: {
-                        name: "select2",
-                        test: /[\\/]node_modules[\\/]select2.*[\\/]/,
-                        chunks: "all",
-                    },
-                },
-            },
-        },
     };
 
-    config = patternslib_config(env, argv, config, ["mockup"]);
+    config = patternslib_config(env, argv, config, ["@plone/mockup"]);
     config.output.path = path.resolve(__dirname, "src/collective/z3cform/datagridfield/static");
 
     config.plugins.push(
         mf_config({
+            name: "datagridfield",
             filename: "datagridfield-remote.min.js",
-            package_json: package_json,
             remote_entry: config.entry["datagridfield.min"],
+            dependencies: {
+                ...package_json_mockup.dependencies,
+                ...package_json.dependencies,
+            },
         })
     );
 
