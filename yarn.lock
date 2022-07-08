@@ -1983,10 +1983,10 @@
     url-polyfill "^1.1.9"
     whatwg-fetch "^3.4.0"
 
-"@plone/mockup@^5.0.0-alpha.12":
-  version "5.0.0-alpha.12"
-  resolved "https://registry.yarnpkg.com/@plone/mockup/-/mockup-5.0.0-alpha.12.tgz#54236b634dff67740e6a7d0c56cd89992c47fc74"
-  integrity sha512-gC1fDXjhBV6ZigpKMnwKAwL4xfltcXGSRyNrISbsFuEreAocu9/P6GdSvqq5Dc/SvnB6bXC0FqOQdND6wUNFGA==
+"@plone/mockup@^5.0.0-alpha.13":
+  version "5.0.0-alpha.13"
+  resolved "https://registry.yarnpkg.com/@plone/mockup/-/mockup-5.0.0-alpha.13.tgz#7184c25ca54a9ee26804dcfcee38a32aece006e5"
+  integrity sha512-d119sLZC/pMqTIT7JZEiqe3KvAH6xDW5fJvAWyoz5q6ebm2ZXfY98tSGk1j0yrXrF8XgRow4jX62OI6qGcYlIw==
   dependencies:
     "@patternslib/pat-code-editor" "^3.0.0"
     "@patternslib/patternslib" "9.0.0-beta.0"
