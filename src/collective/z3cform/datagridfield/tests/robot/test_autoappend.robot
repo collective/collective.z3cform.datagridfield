@@ -55,5 +55,5 @@ two rows plus empty row are visible
     Element Should Not Be Visible  id=form-widgets-address-TT-widgets-line1
 
 one single row is added
-    Element Should Be Visible  id=form-widgets-address-3-widgets-line1
+    Element Should Be Visible  id=form-widgets-address-2-widgets-line1
     Element Should Not Be Visible  id=form-widgets-address-TT-widgets-line1
