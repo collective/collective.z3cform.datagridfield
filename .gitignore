@@ -52,3 +52,6 @@ pyvenv.cfg
 share/
 .make-sentinels/
 /*-mxdev.txt
+.installed.txt
+test_*
+robot_*
