@@ -9,6 +9,9 @@ Changelog
 
 - Fix data converters when the row schema is set via autoform hints.
   [petschki]
+  
+- Customizable input widget table css class.
+  [petschki]
 
 
 3.0.0a1 (2022-06-28)

@@ -48,6 +48,7 @@ class DataGridFieldWidget(MultiWidget):
     allow_reorder = False
     auto_append = True
     display_table_css_class = "datagridwidget-table-view"
+    input_table_css_class = "table table-striped"
 
     klass = "datagridfield"
 

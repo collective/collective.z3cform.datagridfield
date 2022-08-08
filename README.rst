@@ -1,5 +1,3 @@
-.. contents:: Table of Contents
-
 Introduction
 ============
 
@@ -9,18 +7,8 @@ It is a `z3c.form <https://z3cform.readthedocs.io/en/latest/>`_ implementation o
 
 This product was developed for use with Plone and Dexterity.
 
-.. image:: https://travis-ci.org/collective/collective.z3cform.datagridfield.png
-   :target: http://travis-ci.org/collective/collective.z3cform.datagridfield
-
-
-Requirements
-------------
-
-* Versions >= 1.4 are for Plone 5+, if you use Plone 4.3, use versions 1.3.x
-* For Python 3.7 at least PyYAML 4.2b1
-* z3c.forms
-* A browser with javascript support
-* jquery 1.4.3 or later
+.. image:: https://github.com/collective/collective.z3cform.datagridfield/actions/workflows/test.yml/badge.svg
+   :target: https://github.com/collective/collective.z3cform.datagridfield/actions/workflows/test.yml
 
 
 Installation
@@ -46,11 +34,10 @@ The layout of the table is defined by a second schema:
 
     from collective.z3cform.datagridfield.datagridfield import DataGridFieldFactory
     from collective.z3cform.datagridfield.row import DictRow
-    from z3c.form import field
+    from plone.autoform.directives import widget
+    from plone.autoform.form import AutoExtensibleForm
     from z3c.form import form
-    from z3c.form.form import extends
     from zope import interface
-    from zope import component
     from zope import schema
 
 
@@ -62,18 +49,23 @@ The layout of the table is defined by a second schema:
 
     class IFormSchema(interface.Interface):
         four = schema.TextLine(title=u"Four")
-        table = schema.List(title=u"Table",
-            value_type=DictRow(title=u"tablerow", schema=ITableRowSchema))
+        table = schema.List(
+            title=u"Table",
+            value_type=DictRow(
+                title=u"tablerow",
+                schema=ITableRowSchema,
+            ),
+        )
 
-    @component.adapter(IFormSchema)
-    class EditForm(form.EditForm):
+        widget(table=DataGridFieldFactory)
 
-        fields = field.Fields(IFormSchema)
+
+    class EditForm(AutoExtensibleForm, form.EditForm):
         label=u"Demo Usage of DataGridField"
+        schema = IFormSchema
 
-        fields['table'].widgetFactory = DataGridFieldFactory
 
-Configured like so:
+And configured via zcml:
 
 .. code-block:: xml
 
@@ -119,91 +111,58 @@ Configuration
 Row editor handles
 ------------------
 
-The widget can be customised via the updateWidgets method.
+Widget parameters can be passed via widget hints. Extended schema example from above:
 
 .. code-block:: python
 
-    def updateWidgets(self):
-        super(EditForm, self).updateWidgets()
-        self.widgets['table'].allow_insert = False # Enable/Disable the insert button on the right
-        self.widgets['table'].allow_delete = False # Enable/Disable the delete button on the right
-        self.widgets['table'].auto_append = False  # Enable/Disable the auto-append feature
-        self.widgets['table'].allow_reorder = False  # Enable/Disable the re-order rows feature
-        self.widgets['table'].main_table_css_class = 'my_custom_class'  # Change the class applied on the main table when the field is displayed
+    class IFormSchema(interface.Interface):
+        four = schema.TextLine(title=u"Four")
+        table = schema.List(
+            title=u"Table",
+            value_type=DictRow(
+                title=u"tablerow",
+                schema=ITableRowSchema,
+            ),
+        )
 
-The widget contains an attribute 'columns' which is manipulated to hide column
-titles.
+        widget(
+            "table",
+            DataGridFieldFactory,
+            allow_insert=False,
+            allow_delete=False,
+            allow_reorder=False,
+            auto_append=False,
+            display_table_css_class="table table-striped",
+            input_table_css_class="table table-sm",
+        )
 
-
-Block edit mode
----------------
-
-A widget class variation ``BlockDataGridField`` is provided.
-This widget renders subform widgets vertically in blocks instead of horizontally in cells.
-It makes sense when there are many subform fields and they have problem to fit on the screen once.
-
-Example:
-
-.. code-block:: python
-
-    class EditForm9(EditForm):
-        label = u'Rendering widgets as blocks instead of cells'
-
-        grok.name('demo-collective.z3cform.datagrid-block-edit')
-
-        def update(self):
-            # Set a custom widget for a field for this form instance only
-            self.fields['address'].widgetFactory = BlockDataGridFieldFactory
-            super(EditForm9, self).update()
 
 
 Manipulating the Sub-form
 -------------------------
 
-The DataGridField makes use of a subform to build each line.
-The main DataGridField contains a DataGridFieldObject for each line in the table.
-The DataGridFieldObject in turn creates the DataGridFieldObjectSubForm to store the fields.
-
-There are two callbacks to your main form:
-
-**datagridInitialise(subform, widget)**
-
-* This is called when the subform fields have been initialised,
-  but before the widgets have been created. Field based configuration could occur here.
-
-**datagridUpdateWidgets(subform, widgets, widget)**
-
-* This is called when the subform widgets have been created.
-  At this point,  you can configure the widgets, e.g. specify the size of a widget.
-
-Here is an example how one can customize per-field widgets for the data grid field:
+The `DictRow` schema can also be extended via widget hints. Extended schema examples from above:
 
 .. code-block:: python
 
-    from .widget import DGFTreeSelectFieldWidget
-    from collective.z3cform.datagridfield.datagridfield import DataGridFieldFactory
-    from collective.z3cform.datagridfield.row import DictRow
-    from Products.CMFCore.interfaces import ISiteRoot
-    from z3c.form import form
-    from zope import interface
-    from zope import schema
+    from z3c.form.browser.checkbox import CheckBoxFieldWidget
 
 
-    class ITableRowSchema(form.Schema):
+    class ITableRowSchema(interface.Interface):
 
-        form.widget(one=DGFTreeSelectFieldWidget)
-        one = schema.TextLine(title=u"Level 1")
-
-        form.widget(two=DGFTreeSelectFieldWidget)
         two = schema.TextLine(title=u"Level 2")
 
-        # Uses the default widget
-        three = schema.TextLine(title=u"Level 3")
+        address_type = schema.Choice(
+            title="Address Type",
+            required=True,
+            values=["Work", "Home"],
+        )
+        # show checkboxes instead of selectbox
+        widget(address_type=CheckBoxFieldWidget)
 
 
-    class IFormSchema(form.Schema):
+    class IFormSchema(interface.Interface):
 
-        form.widget(table=DataGridFieldFactory)
         table = schema.List(
             title=u"Nested selection tree test",
             value_type=DictRow(
@@ -211,6 +170,7 @@ Here is an example how one can customize per-field widgets for the data grid fie
                 schema=ITableRowSchema
             )
         )
+        widget(table=DataGridFieldFactory)
 
 
 Working with plone.app.registry
@@ -264,4 +224,21 @@ Demo
 ====
 
 More examples are in the demo subfolder of this package.
+
+
+Versions
+========
+
+* Version 3.x is Plone 6+ only (z3c.form >= 4)
+* Versions 1.4.x and 2.x are for Plone 5.x,
+* Versions 1.3.x is for Plone 4.3
+* For Python 3.7 at least PyYAML 4.2b1
+
+
+Requirements
+============
+
+* z3c.forms
+* A browser with javascript support
+* jquery 1.4.3 or later
 

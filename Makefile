@@ -103,7 +103,7 @@ ${SENTINEL}:
 # PYTHON, VENV, PIP
 # venv and pybin
 PYTHON?=python3
-VENV?=off
+VENV?=on
 ifeq ("${VENV}", "on")
 	VENV_FOLDER?=./venv
 	PYBIN=${VENV_FOLDER}/bin/
@@ -200,7 +200,7 @@ test: ${TEST_PREREQUISITES} ${TESTRUNNER_SENTINEL} ## run tests
 .PHONY: test-ignore-warnings
 test-ignore-warnings: ${TEST_PREREQUISITES} ${TESTRUNNER_SENTINEL}  ## run tests (hide warnins)
 	@echo "$(OK_COLOR)Run addon tests$(NO_COLOR)"
-	@PYTHONWARNINGS=ignore ${PYBIN}zope-testrunner --auto-color --auto-progress --test-path=${ADDONFOLDER}
+	@PYTHONWARNINGS=ignore ${PYBIN}zope-testrunner --auto-color --auto-progress --all --test-path=${ADDONFOLDER}
 
 ##############################################################################
 # CODE FORMATTING
