@@ -7,6 +7,9 @@ Changelog
 - Latest mockup and `mf_config` updates.
   [petschki]
 
+- Fix data converters when the row schema is set via autoform hints.
+  [petschki]
+  
 - Customizable input widget table css class.
   [petschki]
 

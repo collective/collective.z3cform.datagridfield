@@ -163,11 +163,6 @@ class DataGridFieldWidget(MultiWidget):
                 template.klass = "datagridwidget-row datagridwidget-empty-row"
                 self.widgets.append(template)
 
-    def setName(self, widget, idx):
-        """This version facilitates inserting non-numerics"""
-        widget.name = "%s.%s" % (self.name, idx)
-        widget.id = "%s-%s" % (self.id, idx)
-
     @property
     def counterMarker(self):
         # Override this to exclude template line and auto append line
@@ -272,11 +267,9 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
         # ensure that we apply our new values to the widgets
         if value is not NO_VALUE:
             active_names = self.fields.keys()
-            for name in getFieldNames(self.schema):
-                fieldset_field = self.schema[name]
+            for name, fieldset_field in self.schema.namesAndDescriptions():
                 if fieldset_field.readonly:
                     continue
-
                 if name in active_names:
                     if isinstance(value, dict):
                         v = value.get(name, NO_VALUE)
@@ -285,8 +278,11 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
                     if v is NO_VALUE:
                         continue
                     widget = self.widgets[name]
-                    converter = interfaces.IDataConverter(widget)
-                    widget.value = converter.toWidgetValue(v)
+                    try:
+                        converter = interfaces.IDataConverter(widget)
+                        widget.value = converter.toWidgetValue(v)
+                    except AttributeError:
+                        widget.value = v
 
     def updateWidgets(self, *args, **kwargs):
         super().updateWidgets(*args, **kwargs)
