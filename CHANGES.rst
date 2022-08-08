@@ -7,6 +7,9 @@ Changelog
 - Latest mockup and `mf_config` updates.
   [petschki]
 
+- Fix data converters when the row schema is set via autoform hints.
+  [petschki]
+
 
 3.0.0a1 (2022-06-28)
 --------------------
