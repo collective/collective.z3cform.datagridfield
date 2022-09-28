@@ -92,6 +92,7 @@ export default Base.extend({
                 "click",
                 function (e) {
                     e.preventDefault();
+                    e.stopPropagation();
                     this.removeFieldRow(row);
                 }.bind(this)
             );
