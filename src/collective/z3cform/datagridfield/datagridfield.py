@@ -67,14 +67,13 @@ class DataGridFieldWidget(MultiWidget):
         schema = self._field.value_type.schema
 
         fieldmodes = {}
-        if MODES_KEY:
-            try:
-                modes_tags = schema.getTaggedValue(MODES_KEY)
-            except KeyError:
-                pass
-            else:
-                for __, fieldname, mode in modes_tags:
-                    fieldmodes[fieldname] = mode
+        try:
+            modes_tags = schema.getTaggedValue(MODES_KEY)
+        except KeyError:
+            pass
+        else:
+            for __, fieldname, mode in modes_tags:
+                fieldmodes[fieldname] = mode
 
         self.columns = []
         for name, field in getFieldsInOrder(schema):
@@ -281,7 +280,7 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
                     try:
                         converter = interfaces.IDataConverter(widget)
                         widget.value = converter.toWidgetValue(v)
-                    except AttributeError:
+                    except (AttributeError, TypeError):
                         widget.value = v
 
     def updateWidgets(self, *args, **kwargs):
