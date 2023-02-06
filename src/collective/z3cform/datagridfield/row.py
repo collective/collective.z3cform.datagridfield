@@ -55,7 +55,7 @@ class DictRow(Object):
             if IChoice.providedBy(field_type):
                 # Choice must be bound before validation otherwise
                 # IContextSourceBinder is not iterable in validation
-                bound = field_type.bind(value)
+                bound = field_type.bind(self.context)
                 bound.validate(value[field_name])
             else:
                 field_type.validate(value[field_name])

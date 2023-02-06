@@ -200,7 +200,7 @@ test: ${TEST_PREREQUISITES} ${TESTRUNNER_SENTINEL} ## run tests
 .PHONY: test-ignore-warnings
 test-ignore-warnings: ${TEST_PREREQUISITES} ${TESTRUNNER_SENTINEL}  ## run tests (hide warnins)
 	@echo "$(OK_COLOR)Run addon tests$(NO_COLOR)"
-	@PYTHONWARNINGS=ignore ${PYBIN}zope-testrunner --auto-color --auto-progress --all --test-path=${ADDONFOLDER}
+	@PYTHONWARNINGS=ignore ROBOT_BROWSER=headlesschrome ${PYBIN}zope-testrunner --auto-color --auto-progress --all --test-path=${ADDONFOLDER}
 
 ##############################################################################
 # CODE FORMATTING

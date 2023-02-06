@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <registry>
   <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
            prefix="plone.resources/z3cform_datagridfield_css"
