@@ -20,6 +20,7 @@ from zope.schema import Object
 from zope.schema.interfaces import IChoice
 from zope.schema.interfaces import WrongContainedType
 from zope.security.interfaces import IPermission
+from zope.schema.interfaces import IFromUnicode
 
 
 @implementer(IRow)
@@ -58,6 +59,10 @@ class DictRow(Object):
                 bound = field_type.bind(self.context)
                 bound.validate(value[field_name])
             else:
+                if isinstance(value[field_name], str):
+                    value[field_name] = IFromUnicode(field).fromUnicode(
+                        value[field_name]
+                    )
                 field_type.validate(value[field_name])
 
     def set(self, object, value):
