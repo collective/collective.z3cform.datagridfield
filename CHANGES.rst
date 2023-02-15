@@ -4,7 +4,8 @@ Changelog
 3.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Treat the int columnts in the right way by deserializer.
+  [foxtrot-dfm1]
 
 
 3.0.0 (2022-09-28)
