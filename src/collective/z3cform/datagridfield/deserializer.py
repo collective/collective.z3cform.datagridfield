@@ -18,7 +18,6 @@ import dateutil
 @implementer(IFieldDeserializer)
 @adapter(IRow, IDexterityContent, IBrowserRequest)
 class DatagridRowDeserializer(DefaultFieldDeserializer):
-
     def __call__(self, value):
         row_data = {}
 
