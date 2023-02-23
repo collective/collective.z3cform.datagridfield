@@ -133,7 +133,6 @@ class DataGridFieldWidget(MultiWidget):
         return self.prefix.replace(".", "-")
 
     def updateWidgets(self):
-
         if self.mode == INPUT_MODE:
             # filter out any auto append or template rows
             # these are not "real" elements of the MultiWidget
