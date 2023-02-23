@@ -170,7 +170,6 @@ class EditForm(form.EditForm):
 
     @button.buttonAndHandler("Save", name="save")
     def handleSave(self, action):
-
         data, errors = self.extractData()
         if errors:
             self.status = self.formErrorsMessage
