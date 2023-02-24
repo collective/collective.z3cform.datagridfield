@@ -278,7 +278,7 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
                     widget = self.widgets[name]
                     try:
                         converter = interfaces.IDataConverter(widget)
-                        widget.value = converter.toWidgetValue(v)
+                        widget.value = converter.toFieldValue(v)
                     except (AttributeError, TypeError):
                         widget.value = v
 
