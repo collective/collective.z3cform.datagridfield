@@ -4,8 +4,8 @@ Changelog
 3.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Fix widget value type conversion issue.
+  [foxtrot-dfm1]
 
 3.0.0 (2022-09-28)
 ------------------
