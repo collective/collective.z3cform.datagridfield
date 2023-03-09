@@ -83,4 +83,9 @@
         />
   </configure>
 
+  <configure zcml:condition="installed plone.restapi">
+    <adapter factory=".deserializer.DatagridRowDeserializer" />
+    <adapter factory=".deserializer.DatagridDatetimeDeserializer" />
+  </configure>
+
 </configure>

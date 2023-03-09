@@ -4,7 +4,8 @@ Changelog
 3.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add JSON deserializer for `plone.restapi`.
+  [petschki]
 
 
 3.0.0 (2022-09-28)
@@ -15,7 +16,7 @@ Changelog
 
 - Fix data converters when the row schema is set via autoform hints.
   [petschki]
-  
+
 - Customizable input widget table css class.
   [petschki]
 
