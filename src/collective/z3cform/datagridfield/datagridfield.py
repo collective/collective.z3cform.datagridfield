@@ -197,18 +197,6 @@ def DataGridFieldWidgetFactory(field, request):
 DataGridFieldFactory = DataGridFieldWidgetFactory
 
 
-@adapter(IList, IDataGridFieldWidget)
-class GridDataConverter(BaseDataConverter):
-    """Convert between the context and the widget"""
-
-    def toWidgetValue(self, value):
-        """Simply pass the data through with no change"""
-        return value
-
-    def toFieldValue(self, value):
-        return value
-
-
 PAT_XPATH = "//*[contains(concat(' ', normalize-space(@class), ' '), ' pat-')]"
 
 
@@ -252,6 +240,8 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
                 widget = self.widgets[name]
                 widget_value = widget.value
                 try:
+                    # XXX: Since the new DictRowConverter this try/catch
+                    # should not be necessary anymore
                     converter = interfaces.IDataConverter(widget)
                     value[name] = converter.toFieldValue(widget_value)
                 except (FormatterValidationError, ValidationError, ValueError):
@@ -262,25 +252,29 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
     def value(self, value):
         self._value = value
 
+        if value is NO_VALUE:
+            return
+
         # ensure that we apply our new values to the widgets
-        if value is not NO_VALUE:
-            active_names = self.fields.keys()
-            for name, fieldset_field in self.schema.namesAndDescriptions():
-                if fieldset_field.readonly:
+        active_names = self.fields.keys()
+        for name, fieldset_field in self.schema.namesAndDescriptions():
+            if fieldset_field.readonly:
+                continue
+            if name in active_names:
+                if isinstance(value, dict):
+                    v = value.get(name, NO_VALUE)
+                else:
+                    v = getattr(value, name, NO_VALUE)
+                if v is NO_VALUE:
                     continue
-                if name in active_names:
-                    if isinstance(value, dict):
-                        v = value.get(name, NO_VALUE)
-                    else:
-                        v = getattr(value, name, NO_VALUE)
-                    if v is NO_VALUE:
-                        continue
-                    widget = self.widgets[name]
-                    try:
-                        converter = interfaces.IDataConverter(widget)
-                        widget.value = converter.toWidgetValue(v)
-                    except (AttributeError, TypeError):
-                        widget.value = v
+                widget = self.widgets[name]
+                try:
+                    # XXX: Since the new DictRowConverter this try/catch
+                    # should not be necessary anymore
+                    converter = interfaces.IDataConverter(widget)
+                    widget.value = converter.toWidgetValue(v)
+                except (AttributeError, TypeError) as msg:
+                    widget.value = v
 
     def updateWidgets(self, *args, **kwargs):
         super().updateWidgets(*args, **kwargs)
