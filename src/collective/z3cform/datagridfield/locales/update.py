@@ -5,10 +5,10 @@ import pkg_resources
 import subprocess
 
 
-domain = "collective.z3cform.datagriffield"
+domain = "collective.z3cform.datagridfield"
 os.chdir(pkg_resources.resource_filename(domain, ""))
 os.chdir("../../../")
-target_path = "src/collecitve/z3cform/datagridfield/"
+target_path = "src/collective/z3cform/datagridfield/"
 locale_path = target_path + "locales/"
 i18ndude = "./bin/i18ndude"
 
