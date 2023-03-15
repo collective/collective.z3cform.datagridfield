@@ -4,6 +4,10 @@ Changelog
 3.0.1 (unreleased)
 ------------------
 
+- Remove obsolete `GridDataConverter` and use default `z3c.form.converter.MultiConverter`.
+  This now calls the `DictRowConverter` and translates all columns to their correct widget/field value.
+  [petschki]
+
 - Add JSON deserializer for `plone.restapi`.
   [petschki]
 
