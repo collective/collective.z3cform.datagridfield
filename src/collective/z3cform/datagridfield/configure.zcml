@@ -30,7 +30,6 @@
   </class>
 
   <adapter factory=".autoform.MultipleErrorViewSnippetWithMessage" />
-  <adapter factory=".datagridfield.GridDataConverter" />
   <adapter factory=".datagridfield.DataGridValidator" />
   <adapter factory=".row.DictRowConverter" />
 
