@@ -239,13 +239,7 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
                     continue
                 widget = self.widgets[name]
                 widget_value = widget.value
-                try:
-                    # XXX: Since the new DictRowConverter this try/catch
-                    # should not be necessary anymore
-                    converter = interfaces.IDataConverter(widget)
-                    value[name] = converter.toFieldValue(widget_value)
-                except (FormatterValidationError, ValidationError, ValueError):
-                    value[name] = widget_value
+                value[name] = widget_value
         return value
 
     @value.setter
@@ -268,13 +262,7 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
                 if v is NO_VALUE:
                     continue
                 widget = self.widgets[name]
-                try:
-                    # XXX: Since the new DictRowConverter this try/catch
-                    # should not be necessary anymore
-                    converter = interfaces.IDataConverter(widget)
-                    widget.value = converter.toWidgetValue(v)
-                except (AttributeError, TypeError) as msg:
-                    widget.value = v
+                widget.value = v
 
     def updateWidgets(self, *args, **kwargs):
         super().updateWidgets(*args, **kwargs)
