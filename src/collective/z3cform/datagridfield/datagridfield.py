@@ -230,7 +230,7 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
         # value (get) cannot raise an exception, then we return
         # insane values
         try:
-            value = self.extract()
+            return self.extract()
         except MultipleErrors:
             value = {}
             active_names = self.fields.keys()
@@ -238,9 +238,8 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
                 if name not in active_names:
                     continue
                 widget = self.widgets[name]
-                widget_value = widget.value
-                value[name] = widget_value
-        return value
+                value[name] = widget.value
+            return value
 
     @value.setter
     def value(self, value):
