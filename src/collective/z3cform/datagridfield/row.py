@@ -70,26 +70,28 @@ class DictRowConverter(BaseDataConverter):
     # convert the columns to their field/widget value
 
     def toFieldValue(self, value):
+        _converted = {}
         for name, fld in self.field.schema.namesAndDescriptions():
             converter = self._getConverter(fld)
             try:
-                value[name] = converter.toFieldValue(value[name])
-            except Exception:
+                _converted[name] = converter.toFieldValue(value[name])
+            except Exception as msg:
                 # XXX: catch exception here in order to not break
                 # versions prior to this fieldValue converter
-                pass
-        return value
+                _converted[name] = value[name]
+        return _converted
 
     def toWidgetValue(self, value):
+        _converted = {}
         for name, fld in self.field.schema.namesAndDescriptions():
             converter = self._getConverter(fld)
             try:
-                value[name] = converter.toWidgetValue(value[name])
-            except Exception:
+                _converted[name] = converter.toWidgetValue(value[name])
+            except Exception as msg:
                 # XXX: catch exception here in order to not break
                 # versions prior to this widgetValue converter
-                pass
-        return value
+                _converted[name] = value[name]
+        return _converted
 
 
 @adapter(IDexterityContent)

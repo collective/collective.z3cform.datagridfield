@@ -230,7 +230,7 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
         # value (get) cannot raise an exception, then we return
         # insane values
         try:
-            value = self.extract()
+            return self.extract()
         except MultipleErrors:
             value = {}
             active_names = self.fields.keys()
@@ -238,15 +238,8 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
                 if name not in active_names:
                     continue
                 widget = self.widgets[name]
-                widget_value = widget.value
-                try:
-                    # XXX: Since the new DictRowConverter this try/catch
-                    # should not be necessary anymore
-                    converter = interfaces.IDataConverter(widget)
-                    value[name] = converter.toFieldValue(widget_value)
-                except (FormatterValidationError, ValidationError, ValueError):
-                    value[name] = widget_value
-        return value
+                value[name] = widget.value
+            return value
 
     @value.setter
     def value(self, value):
@@ -268,13 +261,7 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
                 if v is NO_VALUE:
                     continue
                 widget = self.widgets[name]
-                try:
-                    # XXX: Since the new DictRowConverter this try/catch
-                    # should not be necessary anymore
-                    converter = interfaces.IDataConverter(widget)
-                    widget.value = converter.toWidgetValue(v)
-                except (AttributeError, TypeError) as msg:
-                    widget.value = v
+                widget.value = v
 
     def updateWidgets(self, *args, **kwargs):
         super().updateWidgets(*args, **kwargs)
