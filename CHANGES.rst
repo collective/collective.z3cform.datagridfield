@@ -4,6 +4,9 @@ Changelog
 3.0.1 (unreleased)
 ------------------
 
+- fix `readonly` fields in `DictRowConverter.toFieldValue`.
+  [petschki]
+
 - Remove obsolete `GridDataConverter` and use default `z3c.form.converter.MultiConverter`.
   This now calls the `DictRowConverter` and translates all columns to their correct widget/field value.
   [petschki]
