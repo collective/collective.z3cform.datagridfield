@@ -72,6 +72,9 @@ class DictRowConverter(BaseDataConverter):
     def toFieldValue(self, value):
         _converted = {}
         for name, fld in self.field.schema.namesAndDescriptions():
+            if fld.readonly:
+                # skip readonly columns
+                continue
             converter = self._getConverter(fld)
             try:
                 _converted[name] = converter.toFieldValue(value[name])
