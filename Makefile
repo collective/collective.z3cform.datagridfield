@@ -49,7 +49,7 @@ PIP_PARAMS= --pre
 ##############################################################################
 # targets and prerequisites
 # target has to be one file, otherwise step gets executes for each file separate
-PREPARE_PREREQUISITES=${PIP_REQUIREMENTS_IN_FILE} ${CONSTRAINTS_IN} sources.ini ${ADDONBASE}setup.cfg
+PREPARE_PREREQUISITES=${PIP_REQUIREMENTS_IN_FILE} ${CONSTRAINTS_IN} mx.ini ${ADDONBASE}setup.cfg
 PREPARE_TARGET=requirements-mxdev.txt
 INSTALL_PREREQUSISTES=${PREPARE_TARGET}
 INSTALL_TARGET=.installed.txt
@@ -82,7 +82,7 @@ help: ## This help message
 ##############################################################################
 # targets and prerequisites
 # target has to be one file, otherwise step gets executes for each file separate
-PREPARE_PREREQUISITES=${PIP_REQUIREMENTS_IN_FILE} ${CONSTRAINTS_IN} sources.ini ${ADDONBASE}setup.cfg
+PREPARE_PREREQUISITES=${PIP_REQUIREMENTS_IN_FILE} ${CONSTRAINTS_IN} mx.ini ${ADDONBASE}setup.cfg
 PREPARE_TARGET=requirements-mxdev.txt
 INSTALL_PREREQUSISTES=${PREPARE_TARGET}
 INSTALL_TARGET=.installed.txt
@@ -155,7 +155,7 @@ ${PREPARE_PREREQUISITES}:
 
 ${PREPARE_TARGET}: ${MXDEV_SENTINEL} ${PREPARE_PREREQUISITES}
 	@echo "$(OK_COLOR)Prepare sources and dependencies$(NO_COLOR)"
-	@${PYBIN}mxdev -c sources.ini
+	@${PYBIN}mxdev -c mx.ini
 
 .PHONY: install
 install: ${INSTALL_TARGET} ## pip install all dependencies and scripts
