@@ -226,17 +226,21 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
         return value
 
     @property
+    @property
     def value(self):
         # value (get) cannot raise an exception, then we return
-        # insane values
-
         value = {}
         active_names = self.fields.keys()
         for name in getFieldNames(self.schema):
             if name not in active_names:
                 continue
             widget = self.widgets[name]
-            value[name] = widget.value
+            widget_value = widget.value
+            try:
+                converter = interfaces.IDataConverter(widget)
+                value[name] = converter.toFieldValue(widget_value)
+            except (FormatterValidationError, ValidationError, ValueError):
+                value[name] = widget_value
         return value
 
     @value.setter
