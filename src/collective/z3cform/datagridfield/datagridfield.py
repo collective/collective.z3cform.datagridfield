@@ -229,17 +229,15 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
     def value(self):
         # value (get) cannot raise an exception, then we return
         # insane values
-        try:
-            return self.extract()
-        except MultipleErrors:
-            value = {}
-            active_names = self.fields.keys()
-            for name in getFieldNames(self.schema):
-                if name not in active_names:
-                    continue
-                widget = self.widgets[name]
-                value[name] = widget.value
-            return value
+
+        value = {}
+        active_names = self.fields.keys()
+        for name in getFieldNames(self.schema):
+            if name not in active_names:
+                continue
+            widget = self.widgets[name]
+            value[name] = widget.value
+        return value
 
     @value.setter
     def value(self, value):
