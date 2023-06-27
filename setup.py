@@ -9,4 +9,6 @@ setup(
     # https://github.com/pypa/setuptools/issues/1136
     # we need one line in here:
     package_dir={"": "src"},
+    # some options for pyroma here
+    python_requires=">=3.8",
 )
