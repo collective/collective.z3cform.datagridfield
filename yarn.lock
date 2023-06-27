@@ -1750,7 +1750,7 @@
     colorette "^2.0.16"
     ora "^5.4.1"
 
-"@patternslib/dev@^3.3.1":
+"@patternslib/dev@^3.3.5":
   version "3.3.5"
   resolved "https://registry.yarnpkg.com/@patternslib/dev/-/dev-3.3.5.tgz#9e27ed64dde3e55381f9a50ada8f8e6283d91c6b"
   integrity sha512-58+eUPBJwtbhVHY8LBwzRNKm1n0acpHf67Xi5mzHG3/rJlk/T9/iZFvnPVpQxV2VAP66/PAQFfi5OcbDqivqow==
@@ -1793,7 +1793,7 @@
     codejar "^3.6.0"
     highlight.js "<11"
 
-"@patternslib/patternslib@*", "@patternslib/patternslib@^9.9.4":
+"@patternslib/patternslib@9.9.4", "@patternslib/patternslib@^9.9.4":
   version "9.9.4"
   resolved "https://registry.yarnpkg.com/@patternslib/patternslib/-/patternslib-9.9.4.tgz#57bfc8a53c0484e420b937d909398e53de532b49"
   integrity sha512-ZifJGsc82eYCPxulk4dP3jYqu0Ap+d9vai/JyE87dB3eDYiV24zYLo1iVJGYY71ihzzWpEAaKmrptNzKSHSFjw==
@@ -1828,7 +1828,7 @@
     spectrum-colorpicker "^1.8.0"
     tippy.js "^6.3.7"
 
-"@plone/mockup@^5.0.11":
+"@plone/mockup@5.1.1":
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/@plone/mockup/-/mockup-5.1.1.tgz#36776257384a8db074e31247590f9b98f2959e0d"
   integrity sha512-owlp/gun2lQaXioX0JaW4PI5PMSwK/iOl1dUVi336Ev9v+TiRp+ws9fySclbv9rWqQDAPQfpIYN7SpA16avkWA==
