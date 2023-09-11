@@ -8,11 +8,11 @@
         "yarn": "^1.22.19"
     },
     "dependencies": {
-        "@patternslib/patternslib": "9.9.4",
-        "@plone/mockup": "5.1.1"
+        "@patternslib/patternslib": "9.9.5",
+        "@plone/mockup": "5.1.4"
     },
     "devDependencies": {
-        "@patternslib/dev": "^3.3.5"
+        "@patternslib/dev": "^3.5.0"
     },
     "scripts": {
         "build": "NODE_ENV=production webpack --config webpack.config.js",
