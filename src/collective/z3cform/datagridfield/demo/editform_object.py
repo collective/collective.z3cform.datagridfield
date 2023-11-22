@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     Demo of the widget
 """
@@ -59,7 +58,7 @@ class IPerson(Interface):
 
 
 @implementer(IAddress)
-class Address(object):
+class Address:
     address_type = FieldProperty(IAddress["address_type"])
     line1 = FieldProperty(IAddress["line1"])
     line2 = FieldProperty(IAddress["line2"])
@@ -93,7 +92,7 @@ class AddressList(list):
 
 
 @implementer(IPerson)
-class Person(object):
+class Person:
     name = FieldProperty(IPerson["name"])
     address = FieldProperty(IPerson["address"])
 

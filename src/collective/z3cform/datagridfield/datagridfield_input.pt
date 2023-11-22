@@ -4,63 +4,66 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       tal:omit-tag=""
 >
-<div class="pat-datagridfield"
-     data-auto-append="${view/auto_append}"
->
-  <table class="${view/input_table_css_class}"
-         id="${view/id_prefix}"
-         data-mode="row"
+  <div class="pat-datagridfield"
+       data-auto-append="${view/auto_append}"
   >
-    <thead>
-      <tr>
-        <tal:block repeat="column view/columns">
-          <th class="table-light"
-              tal:define="
-                cssclass string:header cell-${repeat/column/number};
-                cssclass python: cssclass + (' d-none' if column['mode'] == 'hidden' else '');
-              "
+    <table class="${view/input_table_css_class}"
+           id="${view/id_prefix}"
+           data-mode="row"
+    >
+      <thead>
+        <tr>
+          <tal:block repeat="column view/columns">
+            <th class="table-light"
+                tal:define="
+                  cssclass string:header cell-${repeat/column/number};
+                  cssclass python: cssclass + (' d-none' if column['mode'] == 'hidden' else '');
+                "
+                tal:attributes="
+                  class cssclass;
+                "
+            >
+              <label>
+                <span tal:content="column/label"
+                      i18n:translate=""
+                >title</span>
+                <span class="required"
+                      title="Required"
+                      tal:condition="column/required"
+                      i18n:attributes="title title_required;"
+                ></span>
+              </label>
+              <span class="form-text"
+                    tal:condition="column/description"
+                    tal:content="column/description"
+              >Description</span>
+            </th>
+          </tal:block>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody class="datagridwidget-body"
+             tal:attributes="
+               data-name_prefix view/name_prefix;
+               data-id_prefix view/id_prefix;
+             "
+      >
+        <tal:block repeat="widget view/widgets">
+          <tr tal:condition="python:view._includeRow(widget.name)"
               tal:attributes="
-                class cssclass;
+                class python:'%s row-%d%s' % (widget.klass, repeat['widget'].number(), ' d-none' if widget.mode=='hidden' else '');
+                data-index python:widget.name.split('.')[-1];
               "
           >
-            <label>
-              <span tal:content="column/label"
-                    i18n:translate=""
-              >title</span>
-              <span class="required" title="Required"
-                    tal:condition="column/required"
-                    i18n:attributes="title title_required;"></span>
-            </label>
-            <span class="form-text"
-                  tal:condition="column/description"
-                  tal:content="column/description">Description</span>
-          </th>
+            <metal:block define-macro="widget-row">
+              <div tal:replace="structure widget/render"></div>
+            </metal:block>
+          </tr>
         </tal:block>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody class="datagridwidget-body"
-           tal:attributes="
-             data-name_prefix view/name_prefix;
-             data-id_prefix view/id_prefix;
-           "
-    >
-      <tal:block repeat="widget view/widgets">
-        <tr tal:condition="python:view._includeRow(widget.name)"
-            tal:attributes="
-              class python:'%s row-%d%s' % (widget.klass, repeat['widget'].number(), ' d-none' if widget.mode=='hidden' else '');
-              data-index python:widget.name.split('.')[-1];
-            "
-        >
-          <metal:block define-macro="widget-row">
-            <div tal:replace="structure widget/render"></div>
-          </metal:block>
-        </tr>
-      </tal:block>
-    </tbody>
-  </table>
-  <input type="hidden"
-         tal:replace="structure view/counterMarker"
-  />
-</div>
+      </tbody>
+    </table>
+    <input type="hidden"
+           tal:replace="structure view/counterMarker"
+    />
+  </div>
 </html>

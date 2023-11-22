@@ -25,7 +25,9 @@
         ></p>
 
         <div tal:replace="structure provider:plone.abovecontentbody"></div>
-        <p tal:condition="view/show_note">
+        <p tal:condition="view/show_note"
+           i18n:translate=""
+        >
             Here the table widget is set to DISPLAY_MODE in the
             updateWidgets method. The table cannot insert / delete or
             auto-append. However, the individual cells are still in the

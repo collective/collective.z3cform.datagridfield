@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.app.z3cform.interfaces import IPloneFormLayer
 from z3c.form.interfaces import IMultiWidget
 from zope.schema.interfaces import IObject
@@ -19,7 +18,7 @@ class AttributeNotFoundError(ValidationError):
     def __init__(self, fieldname, schema):
         self.fieldname = fieldname
         self.schema = schema
-        self.__doc__ = "Missing Field {0} required by schema {1}".format(
+        self.__doc__ = "Missing Field {} required by schema {}".format(
             fieldname, schema
         )
 

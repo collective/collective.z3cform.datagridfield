@@ -2,9 +2,11 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
+      tal:define="
+        icons nocall:context/@@iconresolver;
+      "
       tal:omit-tag=""
       i18n:domain="collective.z3cform.datagridfield"
-      tal:define="icons nocall:context/@@iconresolver"
 >
 
   <tal:block tal:repeat="widget python:view.widgets.values()">
@@ -19,53 +21,57 @@
   </tal:block>
 
   <td class="text-nowrap">
-    <button tal:condition="view/isInsertEnabled"
-            class="btn btn-outline-dark btn-sm dgf--row-add"
-            type="button"
+    <button class="btn btn-outline-dark btn-sm dgf--row-add"
             aria-label="Add row"
             title="Add row"
+            type="button"
+            tal:condition="view/isInsertEnabled"
             i18n:attributes="aria-label label_datagridwidget_manipulators_addrow;
-                             title label_datagridwidget_manipulators_addrow">
-    <tal:icon tal:replace="structure python:icons.tag('plus')" />
+                             title label_datagridwidget_manipulators_addrow"
+    >
+      <tal:icon tal:replace="structure python:icons.tag('plus')" />
       <span class="sr-only"
             i18n:translate="label_datagridwidget_manipulators_addrow"
       >Add row</span>
     </button>
 
-    <button tal:condition="view/isDeleteEnabled"
-            class="btn btn-outline-dark btn-sm dgf--row-delete"
-            type="button"
+    <button class="btn btn-outline-dark btn-sm dgf--row-delete"
             aria-label="Delete row"
             title="Delete row"
+            type="button"
+            tal:condition="view/isDeleteEnabled"
             i18n:attributes="aria-label label_datagridwidget_manipulators_deleterow;
-                             title label_datagridwidget_manipulators_deleterow">
-    <tal:icon tal:replace="structure python:icons.tag('trash')" />
+                             title label_datagridwidget_manipulators_deleterow"
+    >
+      <tal:icon tal:replace="structure python:icons.tag('trash')" />
       <span class="sr-only"
             i18n:translate="label_datagridwidget_manipulators_deleterow"
       >Delete row</span>
     </button>
 
-    <button tal:condition="view/isReorderEnabled"
-            class="btn btn-outline-dark btn-sm dgf--row-moveup"
-            type="button"
+    <button class="btn btn-outline-dark btn-sm dgf--row-moveup"
             aria-label="Move Up"
             title="Move Up"
+            type="button"
+            tal:condition="view/isReorderEnabled"
             i18n:attributes="aria-label label_datagridwidget_manipulators_moverowup;
-                             title label_datagridwidget_manipulators_moverowup">
-    <tal:icon tal:replace="structure python:icons.tag('arrow-up')" />
+                             title label_datagridwidget_manipulators_moverowup"
+    >
+      <tal:icon tal:replace="structure python:icons.tag('arrow-up')" />
       <span class="sr-only"
             i18n:translate="label_datagridwidget_manipulators_moverowup"
       >Move Up</span>
     </button>
 
-    <button tal:condition="view/isReorderEnabled"
-            class="btn btn-outline-dark btn-sm dgf--row-movedown"
-            type="button"
+    <button class="btn btn-outline-dark btn-sm dgf--row-movedown"
             aria-label="Move Down"
             title="Move Down"
+            type="button"
+            tal:condition="view/isReorderEnabled"
             i18n:attributes="aria-label label_datagridwidget_manipulators_moverowdown;
-                             title label_datagridwidget_manipulators_moverowdown">
-    <tal:icon tal:replace="structure python:icons.tag('arrow-down')" />
+                             title label_datagridwidget_manipulators_moverowdown"
+    >
+      <tal:icon tal:replace="structure python:icons.tag('arrow-down')" />
       <span class="sr-only"
             i18n:translate="label_datagridwidget_manipulators_moverowdown"
       >Move Down</span>
@@ -73,7 +79,8 @@
 
     <input name="${view/name}-empty-marker"
            type="hidden"
-           value="1" />
+           value="1"
+    />
   </td>
 
 </html>

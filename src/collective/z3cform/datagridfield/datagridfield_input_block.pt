@@ -4,40 +4,40 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       tal:omit-tag=""
 >
-<div class="pat-datagridfield"
-     data-auto-append="${view/auto_append}"
->
-  <table class="table table-striped"
-         data-mode="block"
+  <div class="pat-datagridfield"
+       data-auto-append="${view/auto_append}"
   >
-    <thead>
-      <tr>
-        <th></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody class="datagridwidget-body"
-           tal:attributes="
-             data-name_prefix view/name_prefix;
-             data-id_prefix view/id_prefix;
-           "
+    <table class="table table-striped"
+           data-mode="block"
     >
-      <tal:block repeat="widget view/widgets">
-        <tr tal:condition="python:view._includeRow(widget.name)"
-            tal:attributes="
-              class python:'%s%s' % (widget.klass, ' d-none' if widget.mode=='hidden' else '');
-              data-index python:widget.name.split('.')[-1];
-            "
-        >
-          <metal:block define-macro="widget-row">
-            <div tal:replace="structure widget/render"></div>
-          </metal:block>
+      <thead>
+        <tr>
+          <th></th>
+          <th></th>
         </tr>
-      </tal:block>
-    </tbody>
-  </table>
-  <input type="hidden"
-         tal:replace="structure view/counterMarker"
-  />
-</div>
+      </thead>
+      <tbody class="datagridwidget-body"
+             tal:attributes="
+               data-name_prefix view/name_prefix;
+               data-id_prefix view/id_prefix;
+             "
+      >
+        <tal:block repeat="widget view/widgets">
+          <tr tal:condition="python:view._includeRow(widget.name)"
+              tal:attributes="
+                class python:'%s%s' % (widget.klass, ' d-none' if widget.mode=='hidden' else '');
+                data-index python:widget.name.split('.')[-1];
+              "
+          >
+            <metal:block define-macro="widget-row">
+              <div tal:replace="structure widget/render"></div>
+            </metal:block>
+          </tr>
+        </tal:block>
+      </tbody>
+    </table>
+    <input type="hidden"
+           tal:replace="structure view/counterMarker"
+    />
+  </div>
 </html>

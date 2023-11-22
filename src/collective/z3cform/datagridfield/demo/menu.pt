@@ -1,103 +1,140 @@
 
-<table width="100%"><tr>
+<table width="100%"
+       i18n:domain="collective.z3cform.datagridfield"
+><tr>
     <td>
-      <h2>Edit a list of dicts</h2>
+      <h2 i18n:translate="">Edit a list of dicts</h2>
       <ul>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid">
+          <a href="@@demo-collective.z3cform.datagrid"
+             i18n:translate=""
+          >
             Simple Form
           </a>
         </li>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-no-manipulators">
+          <a href="@@demo-collective.z3cform.datagrid-no-manipulators"
+             i18n:translate=""
+          >
             Hide the Row Manipulators
           </a>
         </li>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-no-auto-append">
+          <a href="@@demo-collective.z3cform.datagrid-no-auto-append"
+             i18n:translate=""
+          >
             Disable Auto-append
           </a>
         </li>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-no-country">
+          <a href="@@demo-collective.z3cform.datagrid-no-country"
+             i18n:translate=""
+          >
             Omit a column
           </a>
         </li>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-column-widths">
+          <a href="@@demo-collective.z3cform.datagrid-column-widths"
+             i18n:translate=""
+          >
             Configure Subform Widgets
           </a>
         </li>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-hidden-column">
+          <a href="@@demo-collective.z3cform.datagrid-hidden-column"
+             i18n:translate=""
+          >
             Hide a Column
           </a>
         </li>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-read-only">
+          <a href="@@demo-collective.z3cform.datagrid-read-only"
+             i18n:translate=""
+          >
             Table is read-only, cells editable
           </a>
         </li>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-read-only2">
+          <a href="@@demo-collective.z3cform.datagrid-read-only2"
+             i18n:translate=""
+          >
             Table and cells are read-only
           </a>
         </li>
 
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-block-edit">Block edit mode</a>
+          <a href="@@demo-collective.z3cform.datagrid-block-edit"
+             i18n:translate=""
+          >Block edit mode</a>
         </li>
 
       </ul>
     </td>
     <td>
-      <h2>Edit a list of objects</h2>
+      <h2 i18n:translate="">Edit a list of objects</h2>
       <ul>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-object">
+          <a href="@@demo-collective.z3cform.datagrid-object"
+             i18n:translate=""
+          >
             Simple Form
           </a>
         </li>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-object-no-manipulators">
+          <a href="@@demo-collective.z3cform.datagrid-object-no-manipulators"
+             i18n:translate=""
+          >
             Hide the Row Manipulators
           </a>
         </li>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-object-no-auto-append">
+          <a href="@@demo-collective.z3cform.datagrid-object-no-auto-append"
+             i18n:translate=""
+          >
             Disable Auto-append
           </a>
         </li>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-object-no-country">
+          <a href="@@demo-collective.z3cform.datagrid-object-no-country"
+             i18n:translate=""
+          >
             Omit a column - Mandatory Field
           </a>
         </li>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-object-no-line2">
+          <a href="@@demo-collective.z3cform.datagrid-object-no-line2"
+             i18n:translate=""
+          >
             Omit a column - Optional Field</a>
         </li>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-object-column-widths">
+          <a href="@@demo-collective.z3cform.datagrid-object-column-widths"
+             i18n:translate=""
+          >
             Configure Subform Widgets
           </a>
         </li>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-object-hidden-column">
+          <a href="@@demo-collective.z3cform.datagrid-object-hidden-column"
+             i18n:translate=""
+          >
             Hide a Column
           </a>
         </li>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-object-read-only">
+          <a href="@@demo-collective.z3cform.datagrid-object-read-only"
+             i18n:translate=""
+          >
             Table is read-only, cells editable
           </a>
         </li>
         <li>
-          <a href="@@demo-collective.z3cform.datagrid-object-read-only2">
+          <a href="@@demo-collective.z3cform.datagrid-object-read-only2"
+             i18n:translate=""
+          >
             Table and cells are read-only
           </a>
         </li>
       </ul>
     </td>
   </tr></table>
-

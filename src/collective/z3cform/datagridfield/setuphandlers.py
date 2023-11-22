@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-from Products.CMFPlone.interfaces import INonInstallable
+from plone.base.interfaces import INonInstallable
 from zope.interface import implementer
 
 
 @implementer(INonInstallable)
-class HiddenProfiles(object):
+class HiddenProfiles:
     def getNonInstallableProfiles(self):
         return ["collective.z3cform.datagridfield:uninstall"]
 
