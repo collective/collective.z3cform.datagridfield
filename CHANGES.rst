@@ -98,7 +98,7 @@ Changelog
 
 - Row UI buttons optimizations
   Change row UI elements from anchor to buttons for better semantics.
-  Fix Boostrap classes, remove unused attributes, add a title to buttons.
+  Fix Bootstrap classes, remove unused attributes, add a title to buttons.
   [thet]
 
 - Change UI element classes
@@ -147,7 +147,7 @@ Changelog
 - Add es and eu translations.
   [erral]
 
-- Accesibility fixes.
+- Accessibility fixes.
   [erral]
 
 
@@ -330,7 +330,7 @@ Changelog
 - Also update hidden data rows when reindexing in row mode. This fix was previously somehow only done for block mode.
   [gaudenz]
 
-- Relax requirements for markup, don't assume inputs are direct childs of table cells. This makes useing custom
+- Relax requirements for markup, don't assume inputs are direct children of table cells. This makes using custom
   templates much easier.
   [gaudenz]
 
@@ -543,9 +543,9 @@ Changelog
 
 - Removed superfluous lines from setup.py (tks Laurence Rowe).
 
-- Removed unnessary dependency on dexterity (tks Laurence Rowe).
+- Removed unnecessary dependency on dexterity (tks Laurence Rowe).
 
-- Removed unnessary dependency on grok (tks Laurence Rowe).
+- Removed unnecessary dependency on grok (tks Laurence Rowe).
 
 
 0.4 (2011-02-06)

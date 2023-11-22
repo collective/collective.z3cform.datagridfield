@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from AccessControl.SecurityManagement import getSecurityManager
 from collective.z3cform.datagridfield.interfaces import AttributeNotFoundError
 from collective.z3cform.datagridfield.interfaces import IRow
@@ -6,7 +5,6 @@ from plone.app.dexterity.permissions import DXFieldPermissionChecker
 from plone.app.z3cform.interfaces import IFieldPermissionChecker
 from plone.autoform.interfaces import WRITE_PERMISSIONS_KEY
 from plone.dexterity.interfaces import IDexterityContent
-from plone.dexterity.utils import iterSchemata
 from plone.supermodel.utils import mergedTaggedValueDict
 from z3c.form.converter import BaseDataConverter
 from z3c.form.interfaces import IFieldWidget
@@ -78,7 +76,7 @@ class DictRowConverter(BaseDataConverter):
             converter = self._getConverter(fld)
             try:
                 _converted[name] = converter.toFieldValue(value[name])
-            except Exception as msg:
+            except Exception:
                 # XXX: catch exception here in order to not break
                 # versions prior to this fieldValue converter
                 _converted[name] = value[name]
@@ -90,7 +88,7 @@ class DictRowConverter(BaseDataConverter):
             converter = self._getConverter(fld)
             try:
                 _converted[name] = converter.toWidgetValue(value[name])
-            except Exception as msg:
+            except Exception:
                 # XXX: catch exception here in order to not break
                 # versions prior to this widgetValue converter
                 _converted[name] = value[name]
@@ -121,7 +119,7 @@ class DictRowFieldPermissionChecker(DXFieldPermissionChecker):
                     dict_row = getattr(fld, "value_type", None)
                     if (
                         not isinstance(dict_row, DictRow)
-                        or not field_name in dict_row.schema
+                        or field_name not in dict_row.schema
                     ):
                         continue
 

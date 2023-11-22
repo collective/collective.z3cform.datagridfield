@@ -26,7 +26,7 @@ class DatagridRowDeserializer(DefaultFieldDeserializer):
                 continue
 
             if IDatetime.providedBy(field):
-                # use the overriden deserializer to get the right
+                # use the overridden deserializer to get the right
                 # datamanager context
                 context = self.field
             else:

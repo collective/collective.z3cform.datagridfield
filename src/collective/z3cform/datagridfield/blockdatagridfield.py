@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from .datagridfield import DataGridFieldObjectWidget
 from .datagridfield import DataGridFieldWidget
 from z3c.form import interfaces

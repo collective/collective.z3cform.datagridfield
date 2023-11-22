@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     Demo of the widget
 """
@@ -9,7 +8,6 @@ from datetime import datetime
 from plone.autoform.directives import widget
 from plone.autoform.form import AutoExtensibleForm
 from z3c.form import button
-from z3c.form import field
 from z3c.form import form
 from z3c.form.interfaces import DISPLAY_MODE
 from z3c.form.interfaces import HIDDEN_MODE
@@ -118,7 +116,7 @@ class EditForm(AutoExtensibleForm, form.EditForm):
 
         print("Dumping out raw HTTP POST form data")
         for k, v in self.request.form.items():
-            print("%s: %s" % (k, v))
+            print(f"{k}: {v}")
 
     @button.buttonAndHandler("Save", name="save")
     def handleSave(self, action):

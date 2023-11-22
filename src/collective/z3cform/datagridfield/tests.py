@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.z3cform.datagridfield.testing import ACCEPTANCE_TESTING
 from collective.z3cform.datagridfield.testing import FUNCTIONAL_TESTING
 from plone.app.testing import ROBOT_TEST_LEVEL

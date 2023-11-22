@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     Implementation of the widget
 """
@@ -10,8 +9,6 @@ from plone.autoform.interfaces import MODES_KEY
 from z3c.form import interfaces
 from z3c.form.browser.multi import MultiWidget
 from z3c.form.browser.object import ObjectWidget
-from z3c.form.converter import BaseDataConverter
-from z3c.form.converter import FormatterValidationError
 from z3c.form.error import MultipleErrors
 from z3c.form.interfaces import IFormLayer
 from z3c.form.interfaces import INPUT_MODE
@@ -29,7 +26,6 @@ from zope.schema import getFieldsInOrder
 from zope.schema.interfaces import IField
 from zope.schema.interfaces import IList
 from zope.schema.interfaces import IObject
-from zope.schema.interfaces import ValidationError
 
 import logging
 import lxml
