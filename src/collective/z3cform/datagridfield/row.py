@@ -8,10 +8,13 @@ from plone.dexterity.interfaces import IDexterityContent
 from plone.supermodel.utils import mergedTaggedValueDict
 from z3c.form.converter import BaseDataConverter
 from z3c.form.interfaces import IFieldWidget
+from z3c.form.interfaces import IDataConverter
 from z3c.form.interfaces import NO_VALUE
 from zope.component import adapter
 from zope.component import queryUtility
+from zope.component import getMultiAdapter
 from zope.interface import implementer
+from zope.globalrequest import getRequest
 from zope.schema import Field
 from zope.schema import getFields
 from zope.schema import Object
@@ -74,6 +77,9 @@ class DictRowConverter(BaseDataConverter):
                 # skip readonly columns
                 continue
             converter = self._getConverter(fld)
+            if converter is None:
+                _converted[name] = value[name]
+                continue
             try:
                 _converted[name] = converter.toFieldValue(value[name])
             except Exception:
@@ -86,6 +92,9 @@ class DictRowConverter(BaseDataConverter):
         _converted = {}
         for name, fld in self.field.schema.namesAndDescriptions():
             converter = self._getConverter(fld)
+            if converter is None:
+                _converted[name] = value[name]
+                continue
             try:
                 _converted[name] = converter.toWidgetValue(value[name])
             except Exception:
@@ -93,6 +102,17 @@ class DictRowConverter(BaseDataConverter):
                 # versions prior to this widgetValue converter
                 _converted[name] = value[name]
         return _converted
+
+    def _getConverter(self, field):
+        if self.widget.widgets is None:
+            # we're called before updateWidgets
+            return
+        # get the correct converter for the DictRow schema field/widget
+        converter = getMultiAdapter(
+            (field, self.widget.widgets[field.__name__]),
+            IDataConverter,
+        )
+        return converter
 
 
 @adapter(IDexterityContent)
