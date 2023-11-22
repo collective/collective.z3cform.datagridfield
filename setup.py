@@ -44,8 +44,6 @@ setup(
     python_requires=">=3.8",
     install_requires=[
         "Products.GenericSetup",
-        "dateutil",
-        "lxml",
         "plone.app.dexterity",
         "plone.app.z3cform",
         "plone.autoform",

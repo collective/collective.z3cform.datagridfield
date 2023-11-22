@@ -4,7 +4,8 @@ Changelog
 3.0.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- configure with `plone/meta`.
+  [petschki]
 
 
 3.0.2 (2023-09-11)
