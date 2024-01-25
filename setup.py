@@ -6,6 +6,7 @@ version = "3.0.3.dev0"
 
 
 setup(
+    name="collective.z3cform.datagridfield",
     # zest.releaser needs version here for now
     version=version,
     description="Fields with repeatable data grid (table-like) for z3.cform",
