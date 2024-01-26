@@ -1,6 +1,7 @@
 """
     Implementation of the widget
 """
+
 from Acquisition import aq_parent
 from collective.z3cform.datagridfield import _
 from collective.z3cform.datagridfield.interfaces import IDataGridFieldWidget

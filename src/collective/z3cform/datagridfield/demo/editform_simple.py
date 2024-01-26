@@ -1,6 +1,7 @@
 """
     Demo of the widget
 """
+
 from ..blockdatagridfield import BlockDataGridFieldWidgetFactory
 from ..datagridfield import DataGridFieldWidgetFactory
 from ..row import DictRow
