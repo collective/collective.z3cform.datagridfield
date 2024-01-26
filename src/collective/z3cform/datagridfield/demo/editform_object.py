@@ -1,6 +1,7 @@
 """
     Demo of the widget
 """
+
 from ..datagridfield import DataGridFieldObjectWidget
 from ..datagridfield import DataGridFieldWidgetFactory
 from z3c.form import button
