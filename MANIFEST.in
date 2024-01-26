@@ -1,7 +1,6 @@
 include *.py
 include *.rst
 include *.txt
-include setup.cfg
 include Makefile
 include package.json
 include webpack.config.js
