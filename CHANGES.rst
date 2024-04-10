@@ -7,6 +7,10 @@ Changelog
 - configure with `plone/meta`.
   [petschki]
 
+- fix the DictRowConverter when the field schema changes fields and no value
+  for the new column field is available yet.
+  [petschki]
+
 
 3.0.2 (2023-09-11)
 ------------------
