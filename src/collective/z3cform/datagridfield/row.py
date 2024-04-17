@@ -74,24 +74,26 @@ class DictRowConverter(BaseDataConverter):
                 # skip readonly columns
                 continue
             converter = self._getConverter(fld)
+            val = value.get(name, fld.default)
             try:
-                _converted[name] = converter.toFieldValue(value[name])
+                _converted[name] = converter.toFieldValue(val)
             except Exception:
                 # XXX: catch exception here in order to not break
                 # versions prior to this fieldValue converter
-                _converted[name] = value[name]
+                _converted[name] = val
         return _converted
 
     def toWidgetValue(self, value):
         _converted = {}
         for name, fld in self.field.schema.namesAndDescriptions():
             converter = self._getConverter(fld)
+            val = value.get(name, fld.default)
             try:
-                _converted[name] = converter.toWidgetValue(value[name])
+                _converted[name] = converter.toWidgetValue(val)
             except Exception:
                 # XXX: catch exception here in order to not break
                 # versions prior to this widgetValue converter
-                _converted[name] = value[name]
+                _converted[name] = val
         return _converted
 
 
