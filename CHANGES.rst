@@ -4,6 +4,10 @@ Changelog
 3.0.3 (unreleased)
 ------------------
 
+- For the JSON deserializer, skip empty values from non-required fields.
+  This fixes a problem where empty non-required fields would break deserialization.
+  [thet]
+
 - configure with `plone/meta`.
   [petschki]
 
