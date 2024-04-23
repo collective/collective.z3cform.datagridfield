@@ -87,7 +87,7 @@ Also it can be used from a supermodel XML:
       <value_type type="collective.z3cform.datagridfield.DictRow">
         <schema>your.package.interfaces.ITableRowSchema</schema>
       </value_type>
-      <form:widget type="collective.z3cform.datagridfield.DataGridFieldFactory"/>
+      <form:widget type="collective.z3cform.datagridfield.datagridfield.DataGridFieldFactory"/>
     </field>
 
 
