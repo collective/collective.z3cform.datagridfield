@@ -18,7 +18,7 @@ import dateutil
 @implementer(IFieldDeserializer)
 @adapter(IRow, IDexterityContent, IBrowserRequest)
 class DatagridRowDeserializer(DefaultFieldDeserializer):
-    def __call__(self, value):
+    def __call__(self, row):
         row_data = {}
 
         for name, field in getFields(self.field.schema).items():
@@ -35,13 +35,18 @@ class DatagridRowDeserializer(DefaultFieldDeserializer):
             deserializer = queryMultiAdapter(
                 (field, context, self.request), IFieldDeserializer
             )
-            if deserializer is None:
-                # simply add value
-                if name in value:
-                    row_data[name] = value[name]
+
+            value = row.get(name)
+            if value is None:
+                # Skip empty values, e.g. for non-required fields
                 continue
 
-            row_data[name] = deserializer(value[name])
+            if deserializer is None:
+                # simply add the value
+                row_data[name] = value
+                continue
+
+            row_data[name] = deserializer(value)
 
         return row_data
 
