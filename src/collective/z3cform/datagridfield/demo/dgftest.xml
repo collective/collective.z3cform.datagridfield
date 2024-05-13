@@ -6,8 +6,7 @@
        i18n:domain="collective.z3cform.datagridfield"
 >
   <schema>
-    <field form:widget="collective.z3cform.datagridfield.datagridfield.DataGridFieldWidgetFactory"
-           name="table"
+    <field name="table"
            type="zope.schema.List"
     >
       <title>Tabular Field</title>
@@ -15,6 +14,10 @@
       <value_type type="collective.z3cform.datagridfield.row.DictRow">
         <schema>collective.z3cform.datagridfield.demo.interfaces.ITableRow</schema>
       </value_type>
+      <form:widget type="collective.z3cform.datagridfield.datagridfield.DataGridFieldWidgetFactory">
+        <allow_reorder>True</allow_reorder>
+        <auto_append>False</auto_append>
+      </form:widget>
     </field>
   </schema>
 </model>
