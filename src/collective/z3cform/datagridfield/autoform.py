@@ -6,6 +6,7 @@
     Adds subform support for plone.autoform.
 
 """
+
 from lxml import etree
 from plone.autoform.interfaces import IAutoExtensibleForm
 from plone.autoform.widgets import WidgetExportImportHandler
@@ -44,7 +45,13 @@ class DGFExportImportHandler(WidgetExportImportHandler):
             # translate boolean values
             for node in widgetNode.iterchildren():
                 if noNS(node.tag) == attributeName:
-                    params[attributeName] = node.text.lower() in ("y", "yes", "true", "on", "1")
+                    params[attributeName] = node.text.lower() in (
+                        "y",
+                        "yes",
+                        "true",
+                        "on",
+                        "1",
+                    )
 
         for attributeName in (
             "display_table_css_class",
