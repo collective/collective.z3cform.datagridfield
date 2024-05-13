@@ -25,7 +25,7 @@ class IDGFTest(model.Schema):
     #     allow_reorder=True,
     # )
 
-    model.load('dgftest.xml')
+    model.load("dgftest.xml")
 
 
 @implementer(IDGFTest)

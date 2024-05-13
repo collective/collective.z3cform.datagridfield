@@ -3,7 +3,13 @@
   <include package="plone.app.dexterity" />
   <adapter factory=".row.DictRowFieldPermissionChecker" />
   <!-- there are 2 genericformfieldpermissionchecker registered for the ++add++ form-->
-  <adapter factory=".row.GenericFormDictRowFieldPermissionChecker" for="z3c.form.interfaces.IForm" />
-  <adapter factory=".row.GenericFormDictRowFieldPermissionChecker" for="plone.z3cform.interfaces.IFormWrapper" />
+  <adapter
+      factory=".row.GenericFormDictRowFieldPermissionChecker"
+      for="z3c.form.interfaces.IForm"
+      />
+  <adapter
+      factory=".row.GenericFormDictRowFieldPermissionChecker"
+      for="plone.z3cform.interfaces.IFormWrapper"
+      />
 
 </configure>

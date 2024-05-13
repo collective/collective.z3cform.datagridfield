@@ -9,7 +9,6 @@ from plone.dexterity.interfaces import IDexterityContent
 from plone.supermodel.utils import mergedTaggedValueDict
 from z3c.form.converter import BaseDataConverter
 from z3c.form.interfaces import IFieldWidget
-from z3c.form.interfaces import IForm
 from z3c.form.interfaces import NO_VALUE
 from zope.component import adapter
 from zope.component import queryUtility
@@ -152,5 +151,7 @@ class DictRowFieldPermissionChecker(DXFieldPermissionChecker):
                 raise orig_exception
 
 
-class GenericFormDictRowFieldPermissionChecker(DictRowFieldPermissionChecker, GenericFormFieldPermissionChecker):
-    """ same override as above for ++add++ forms """
+class GenericFormDictRowFieldPermissionChecker(
+    DictRowFieldPermissionChecker, GenericFormFieldPermissionChecker
+):
+    """same override as above for ++add++ forms"""
