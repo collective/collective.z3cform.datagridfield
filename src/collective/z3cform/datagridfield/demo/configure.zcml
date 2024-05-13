@@ -1,6 +1,8 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
     xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     >
   <browser:page
       name="demo-collective.z3cform.datagrid-menu"
@@ -148,4 +150,19 @@
       permission="zope2.View"
       layer="collective.z3cform.datagridfield.interfaces.IDataGridFieldLayer"
       />
+
+      <genericsetup:registerProfile
+      name="demo"
+      title="Data Grid Field demo setup"
+      description=""
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profile"
+      />
+
+      <plone:behavior
+      name="datagridfield.behavior"
+      title="Datagridfield Metadata"
+      provides=".behavior.IDatagridfieldMetadata"
+      />
+
 </configure>
