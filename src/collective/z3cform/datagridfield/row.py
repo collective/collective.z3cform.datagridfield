@@ -2,6 +2,7 @@ from AccessControl.SecurityManagement import getSecurityManager
 from collective.z3cform.datagridfield.interfaces import AttributeNotFoundError
 from collective.z3cform.datagridfield.interfaces import IRow
 from plone.app.dexterity.permissions import DXFieldPermissionChecker
+from plone.app.dexterity.permissions import GenericFormFieldPermissionChecker
 from plone.app.z3cform.interfaces import IFieldPermissionChecker
 from plone.autoform.interfaces import WRITE_PERMISSIONS_KEY
 from plone.dexterity.interfaces import IDexterityContent
@@ -148,3 +149,9 @@ class DictRowFieldPermissionChecker(DXFieldPermissionChecker):
                     return checker(self.DEFAULT_PERMISSION, context)
             else:
                 raise orig_exception
+
+
+class GenericFormDictRowFieldPermissionChecker(
+    DictRowFieldPermissionChecker, GenericFormFieldPermissionChecker
+):
+    """same override as above for ++add++ forms"""

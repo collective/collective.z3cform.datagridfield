@@ -13,8 +13,13 @@ class Fixture(PloneSandboxLayer):
 
         self.loadZCML(package=collective.z3cform.datagridfield)
 
+        import collective.z3cform.datagridfield.demo
+
+        self.loadZCML(package=collective.z3cform.datagridfield.demo)
+
     def setUpPloneSite(self, portal):
         self.applyProfile(portal, "collective.z3cform.datagridfield:default")
+        self.applyProfile(portal, "collective.z3cform.datagridfield.demo:demo")
 
 
 FIXTURE = Fixture()
