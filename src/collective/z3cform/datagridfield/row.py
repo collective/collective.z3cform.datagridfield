@@ -6,6 +6,7 @@ from plone.app.dexterity.permissions import GenericFormFieldPermissionChecker
 from plone.app.z3cform.interfaces import IFieldPermissionChecker
 from plone.autoform.interfaces import WRITE_PERMISSIONS_KEY
 from plone.dexterity.interfaces import IDexterityContent
+from plone.namedfile.interfaces import INamedField
 from plone.supermodel.utils import mergedTaggedValueDict
 from z3c.form.converter import BaseDataConverter
 from z3c.form.interfaces import IFieldWidget
@@ -75,6 +76,11 @@ class DictRowConverter(BaseDataConverter):
                 # skip readonly columns
                 continue
             converter = self._getConverter(fld)
+            if INamedField.providedBy(fld):
+                # fix converter.widget.name to enable file manipulation per row
+                # see plone.formwidget.namedfile.converter.NamedDataConverter
+                converter.widget.name = f"{self.widget.name}.widgets.{name}"
+                breakpoint()
             val = value.get(name, fld.default)
             try:
                 _converted[name] = converter.toFieldValue(val)
@@ -82,6 +88,7 @@ class DictRowConverter(BaseDataConverter):
                 # XXX: catch exception here in order to not break
                 # versions prior to this fieldValue converter
                 _converted[name] = val
+        print(_converted)
         return _converted
 
     def toWidgetValue(self, value):

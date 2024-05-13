@@ -35,5 +35,6 @@ class ITableRow(Interface):
 
     image = namedfile.NamedBlobImage(
         title="Image",
+        missing_value=None,  # mandatory, otherwise namedfield converter throws error
         required=False,
     )
