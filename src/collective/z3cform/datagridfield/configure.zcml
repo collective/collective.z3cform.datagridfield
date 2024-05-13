@@ -90,6 +90,11 @@
         name="collective.z3cform.datagridfield.row.DictRow"
         component=".supermodel.DictRowHandler"
         />
+    <utility
+        provides="plone.autoform.interfaces.IWidgetExportImportHandler"
+        name="collective.z3cform.datagridfield.datagridfield.DataGridFieldWidgetFactory"
+        component=".autoform.DGFExportImportHandlerFactory"
+        />
   </configure>
 
   <configure zcml:condition="installed plone.restapi">
