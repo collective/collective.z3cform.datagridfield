@@ -7,16 +7,6 @@ Changelog
    https://github.com/plone/plone.releaser/blob/master/ADD-A-NEWS-ITEM.rst
 
 .. towncrier release notes start
-- For the JSON deserializer, skip empty values from non-required fields.
-  This fixes a problem where empty non-required fields would break deserialization.
-  [thet]
-
-- configure with `plone/meta`.
-  [petschki]
-
-- fix the DictRowConverter when the field schema changes fields and no value
-  for the new column field is available yet.
-  [petschki]
 
 
 3.0.2 (2023-09-11)
