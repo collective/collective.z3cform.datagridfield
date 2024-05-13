@@ -1,0 +1,16 @@
+<model xmlns="http://namespaces.plone.org/supermodel/schema"
+    xmlns:security="http://namespaces.plone.org/supermodel/security"
+    xmlns:form="http://namespaces.plone.org/supermodel/form"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="collective.z3cform.datagridfield">
+    <schema>
+        <field name="table"
+               type="zope.schema.List"
+               form:widget="collective.z3cform.datagridfield.datagridfield.DataGridFieldWidgetFactory">
+            <title>Tabular Field</title>
+            <description></description>
+            <value_type type="collective.z3cform.datagridfield.row.DictRow">
+                <schema>collective.z3cform.datagridfield.demo.interfaces.ITableRow</schema>
+            </value_type>
+        </field>
+    </schema>
+</model>
