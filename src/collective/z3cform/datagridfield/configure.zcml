@@ -87,7 +87,7 @@
 
   <configure zcml:condition="installed plone.supermodel">
     <utility
-        name="collective.z3cform.datagridfield.DictRow"
+        name="collective.z3cform.datagridfield.row.DictRow"
         component=".supermodel.DictRowHandler"
         />
   </configure>
