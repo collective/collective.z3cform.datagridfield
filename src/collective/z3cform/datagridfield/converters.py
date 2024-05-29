@@ -24,7 +24,7 @@ class DictRowSerializer:
     def __call__(self, value, filestore, extra=None):
         """Create a new dict with all the contents serialized"""
         rv = {}
-        for field_name, field_type in getFields(self.field.schema).items():
+        for field_name, field_type in list(getFields(self.field.schema).items()):
             rv[field_name] = self._serializer(field_type)(
                 value.get(field_name), filestore, field_name
             )

@@ -21,7 +21,7 @@ class DatagridRowDeserializer(DefaultFieldDeserializer):
     def __call__(self, row):
         row_data = {}
 
-        for name, field in getFields(self.field.schema).items():
+        for name, field in list(getFields(self.field.schema).items()):
             if field.readonly:
                 continue
 
