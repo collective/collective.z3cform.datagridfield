@@ -176,7 +176,7 @@ class EditForm(form.EditForm):
             return
 
         context = self.getContent()
-        for k, v in data.items():
+        for k, v in list(data.items()):
             setattr(context, k, v)
 
     def updateActions(self):
@@ -277,5 +277,5 @@ class EditForm8(EditForm):
         super().updateWidgets()
         self.widgets["address"].mode = DISPLAY_MODE
         for row in self.widgets["address"].widgets:
-            for widget in row.subform.widgets.values():
+            for widget in list(row.subform.widgets.values()):
                 widget.mode = DISPLAY_MODE

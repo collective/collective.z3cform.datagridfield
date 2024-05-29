@@ -116,7 +116,7 @@ class EditForm(AutoExtensibleForm, form.EditForm):
             print(entry)
 
         print("Dumping out raw HTTP POST form data")
-        for k, v in self.request.form.items():
+        for k, v in list(self.request.form.items()):
             print(f"{k}: {v}")
 
     @button.buttonAndHandler("Save", name="save")
@@ -129,7 +129,7 @@ class EditForm(AutoExtensibleForm, form.EditForm):
         self.dumpOutput(data)
 
         context = self.getContent()
-        for k, v in data.items():
+        for k, v in list(data.items()):
             context[k] = v
 
     def updateActions(self):

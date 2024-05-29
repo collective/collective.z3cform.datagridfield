@@ -37,12 +37,12 @@ class DictRow(Object):
         if value is NO_VALUE:
             return
         # Treat readonly fields
-        for field_name in getFields(self.schema).keys():
+        for field_name in list(getFields(self.schema).keys()):
             field = self.schema[field_name]
             if field.readonly:
                 value[field_name] = field.default
         errors = []
-        for field_name in getFields(self.schema).keys():
+        for field_name in list(getFields(self.schema).keys()):
             if field_name not in value:
                 errors.append(AttributeNotFoundError(field_name, self.schema))
 
@@ -50,7 +50,7 @@ class DictRow(Object):
             raise WrongContainedType(errors, self.__name__)
 
         # Pass 2 - Ensure fields are valid
-        for field_name, field_type in getFields(self.schema).items():
+        for field_name, field_type in list(getFields(self.schema).items()):
             if IChoice.providedBy(field_type):
                 # Choice must be bound before validation otherwise
                 # IContextSourceBinder is not iterable in validation

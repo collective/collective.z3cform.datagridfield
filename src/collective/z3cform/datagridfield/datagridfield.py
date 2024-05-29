@@ -230,7 +230,7 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
             return self.extract()
         except MultipleErrors:
             value = {}
-            active_names = self.fields.keys()
+            active_names = list(self.fields.keys())
             for name in getFieldNames(self.schema):
                 if name not in active_names:
                     continue
@@ -246,7 +246,7 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
             return
 
         # ensure that we apply our new values to the widgets
-        active_names = self.fields.keys()
+        active_names = list(self.fields.keys())
         for name, fieldset_field in self.schema.namesAndDescriptions():
             if fieldset_field.readonly:
                 continue
@@ -341,7 +341,7 @@ class DataGridValidator(SimpleFieldValidator):
                 # ignore auto appended and template widgets
                 continue
             # check each column
-            for col in row.widgets.values():
+            for col in list(row.widgets.values()):
                 if hasattr(col, "error") and col.error:
                     raise ValueError(col.label)
         return None
