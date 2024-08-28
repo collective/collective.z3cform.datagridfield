@@ -4,5 +4,6 @@
   <include file="3.zcml" />
   <include file="4.zcml" />
   <include file="5.zcml" />
+  <include file="6.zcml" />
 
 </configure>
