@@ -338,11 +338,12 @@ export default Base.extend({
 
         var $new_row = $(new_row);
         // enable patternslib
-        $new_row
-            .find('*[class^="dgw-disabled-pat-"]')
-            .attr("class", function (i, cls) {
-                return cls.replace(/dgw\-disabled-pat-/, "pat-");
+	$new_row.find('[class*="dgw-disabled-pat-"]').each(function() {
+            const $element = $(this);
+            $element.attr('class', function(index, className) {
+                return className.replace(/\bdgw-disabled-pat-/g, 'pat-');
             });
+        });
         return new_row;
     },
 
