@@ -1,2 +1,0 @@
-Changed the registry.xml to use "plone.base.interfaces.resources.IBundleRegistry" instead of "Products.CMFPlone.interfaces.IBundleRegistry"
-[cihanandac]

@@ -8,6 +8,37 @@ Changelog
 
 .. towncrier release notes start
 
+3.0.3 (2024-11-05)
+------------------
+
+Bug fixes:
+
+
+- fix the DictRowConverter when the field schema changes fields and no value
+  for the new column field is available yet.
+  [petschki] (#0)
+- For the JSON deserializer, skip empty values from non-required fields.
+  This fixes a problem where empty non-required fields would break deserialization.
+  [thet] (#184)
+- Fix bug in vocabulary lookup on `++add++` forms. Override `IFieldPermissionChecker`
+  the same as for `IDexterityContent`.
+  [petschki] (#187)
+- Add missing `plone.autoform` exportimport handler.
+  [petschki] (#188)
+- Changed the registry.xml to use "plone.base.interfaces.resources.IBundleRegistry" instead of "Products.CMFPlone.interfaces.IBundleRegistry"
+  [cihanandac] (#193)
+- Upgrade JS resources.
+  [petschki] (#193)
+- Fix bug when pattern class is not the first one, after adding a new row.
+  [frapell] (#198)
+
+
+Internal:
+
+
+- configure with `plone/meta`.
+  [petschki] (#0)
+
 
 3.0.2 (2023-09-11)
 ------------------

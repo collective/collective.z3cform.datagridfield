@@ -1,3 +1,0 @@
-For the JSON deserializer, skip empty values from non-required fields.
-This fixes a problem where empty non-required fields would break deserialization.
-[thet]

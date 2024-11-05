@@ -1,3 +1,0 @@
-Fix bug in vocabulary lookup on `++add++` forms. Override `IFieldPermissionChecker`
-the same as for `IDexterityContent`.
-[petschki]
