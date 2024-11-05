@@ -338,11 +338,12 @@ export default Base.extend({
 
         var $new_row = $(new_row);
         // enable patternslib
-        $new_row
-            .find('*[class^="dgw-disabled-pat-"]')
-            .attr("class", function (i, cls) {
-                return cls.replace(/dgw\-disabled-pat-/, "pat-");
+        const disabled_prefix = "dgw-disabled-pat-";
+        new_row.querySelectorAll(`[class*="${disabled_prefix}"]`).forEach(el => {
+            el.classList.forEach(cls => {
+                el.classList.replace(cls, cls.replace(disabled_prefix, "pat-"));
             });
+        });
         return new_row;
     },
 
