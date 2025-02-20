@@ -175,7 +175,15 @@ require([
                 $(all_select2[i]).select2('destroy');
           }
           //clone the row
-          var duplicatedRow = thisRow.clone();
+          var duplicatedRow = thisRow.clone(true, true);
+          // Jquery does not clone selected of options, so this is needed:
+          // https://stackoverflow.com/questions/742810/clone-isnt-cloning-select-values
+          var selects = $(thisRow).find("select");
+          $(selects).each(function (i) {
+              var select = this;
+              $(duplicatedRow).find("select").eq(i).val($(select).val());
+          });
+
           dgf.trigger("beforeaddrow", [dgf, duplicatedRow]);
 
           // If using auto-append we add the "real" row before AA
