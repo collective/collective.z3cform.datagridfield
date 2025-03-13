@@ -8,6 +8,14 @@ commit-id = "2.0.1.dev0"
 [pyproject]
 codespell_skip = "*.js,*.min.js,*.min.js.map,*.css.map,yarn.lock,robot_*,test_*"
 
+[github]
+jobs = [
+   "qa",
+   "coverage",
+   "release_ready",
+   "circular",
+]
+
 [gitignore]
 extra_lines = """
 /test_*
