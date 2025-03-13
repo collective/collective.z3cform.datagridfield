@@ -40,15 +40,9 @@ jobs:
         run: |
           make VENV=off lint
 
-      - name: Install Chromedriver
-        uses: nanasess/setup-chromedriver@v2
-
-      - name: Start Browser
+      - name: Init Browser
         run: |
-          export DISPLAY=:99
-          chromedriver --url-base=/wd/hub &
-          sudo Xvfb -ac :99 -screen 0 1920x1280x24 > /dev/null 2>&1 &
-          sleep 5  # make sure chromedriver and Xvfb is running
+          rfbrowser init chromium
 
       - name: Run tests
         run: |
