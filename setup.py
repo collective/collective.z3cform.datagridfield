@@ -61,6 +61,7 @@ setup(
             "plone.app.testing",
             "plone.app.robotframework[debug]",
             "robotsuite",
+            "robotframework-browser",
         ],
     },
     entry_points="""

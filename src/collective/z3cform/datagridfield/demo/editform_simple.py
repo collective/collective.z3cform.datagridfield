@@ -1,5 +1,5 @@
 """
-    Demo of the widget
+Demo of the widget
 """
 
 from ..blockdatagridfield import BlockDataGridFieldWidgetFactory
