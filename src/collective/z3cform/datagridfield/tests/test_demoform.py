@@ -81,5 +81,6 @@ class TestDemoDGFForm(unittest.TestCase):
         # URLs are present, then the resources won't load on anything except where
         # Plone/Zope are the root of the domain.
         self.assertTrue(
-            "\"/++resource++collective.z3cform.datagridfield" not in self.browser.contents
+            '"/++resource++collective.z3cform.datagridfield'
+            not in self.browser.contents
         )

@@ -7,7 +7,7 @@ include webpack.config.js
 include yarn.lock
 graft docs
 graft resources
-graft src
+recursive-include src *
 exclude *.cfg
 exclude *.ini
 exclude .*

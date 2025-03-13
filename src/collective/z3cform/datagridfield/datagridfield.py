@@ -1,5 +1,5 @@
 """
-    Implementation of the widget
+Implementation of the widget
 """
 
 from Acquisition import aq_parent
