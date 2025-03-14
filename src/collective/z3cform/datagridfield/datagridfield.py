@@ -29,7 +29,6 @@ from zope.schema.interfaces import IList
 from zope.schema.interfaces import IObject
 
 import logging
-import lxml
 
 
 logger = logging.getLogger(__name__)
@@ -194,9 +193,6 @@ def DataGridFieldWidgetFactory(field, request):
 DataGridFieldFactory = DataGridFieldWidgetFactory
 
 
-PAT_XPATH = "//*[contains(concat(' ', normalize-space(@class), ' '), ' pat-')]"
-
-
 class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
     def isInsertEnabled(self):
         return self.__parent__.allow_insert
@@ -266,35 +262,24 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
         # Tell the "cell"-widget the "mode" of it's column,
         # so that plone.autoform.directives.mode works on the cell.
         for column_info in aq_parent(self).columns:
-            if column_info["name"] not in self.widgets:
+            widget_name = column_info["name"]
+            if widget_name not in self.widgets:
                 # skip readonly widgets
                 continue
+            widget = self.widgets[widget_name]
             if self.id.endswith("AA") or self.id.endswith("TT"):
                 # ignore required on auto-append and template rows
-                self.widgets[column_info["name"]].required = False
+                widget.required = False
+            if self.id.endswith("TT"):
+                # disable patterns in template row
+                widget.klass = widget.klass.replace(" pat-", " dgw-disabled-pat-")
             if column_info["mode"] is not None:
-                self.widgets[column_info["name"]].mode = column_info["mode"]
+                widget.mode = column_info["mode"]
 
     def extractRaw(self, setErrors=True):
         # override ObjectWidget extractRaw
         self.widgets.setErrors = setErrors
         return self.widgets.extractRaw()
-
-    def render(self):
-        """See z3c.form.interfaces.IWidget."""
-        html = super().render()
-        if "datagridwidget-empty-row" in self.klass or "auto-append" in self.klass:
-            # deactivate patterns
-            fragments = lxml.html.fragments_fromstring(html)
-            html = ""
-            for tree in fragments:
-                for el in tree.xpath(PAT_XPATH):
-                    if ".TT." in el.attrib.get("name", ""):
-                        el.attrib["class"] = el.attrib["class"].replace(
-                            "pat-", "dgw-disabled-pat-"
-                        )
-                html += lxml.html.tostring(tree, encoding="unicode") + "\n"
-        return html
 
     def label_add_record(self):
         return _(
