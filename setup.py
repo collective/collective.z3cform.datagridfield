@@ -31,10 +31,7 @@ setup(
         "Programming Language :: Python :: 3.14",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    keywords="plone z3cform table data grid",
     author="Kevin Gill",
-    author_email="kevin@movieextras.se",
-    url="https://github.com/collective/collective.z3cform.datagridfield",
     license="GPLv2",
     include_package_data=True,
     zip_safe=False,
@@ -52,6 +49,7 @@ setup(
     ],
     extras_require={
         "test": [
+            "lxml",
             "plone.testing",
             "plone.app.testing",
             "plone.app.robotframework[debug]",
