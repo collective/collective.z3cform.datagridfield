@@ -6,8 +6,10 @@ from plone.restapi.interfaces import IFieldDeserializer
 from pytz import timezone
 from pytz import utc
 from zope.component import adapter
+from zope.component import getMultiAdapter
 from zope.component import queryMultiAdapter
 from zope.interface import implementer
+from zope.interface.interfaces import ComponentLookupError
 from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.schema import getFields
 from zope.schema.interfaces import IDatetime
@@ -25,21 +27,20 @@ class DatagridRowDeserializer(DefaultFieldDeserializer):
             if field.readonly:
                 continue
 
-            if IDatetime.providedBy(field):
-                # use the overridden deserializer to get the right
-                # datamanager context
-                context = self.field
+            try:
+                # try to lookup IRow customized deserializers
+                deserializer = getMultiAdapter(
+                    (field, self.field, self.request), IFieldDeserializer
+                )
+            except ComponentLookupError:
+                # fallback to default deseralizer
+                deserializer = queryMultiAdapter(
+                    (field, self.context, self.request), IFieldDeserializer
+                )
             else:
-                context = self.context
-
-            deserializer = queryMultiAdapter(
-                (field, context, self.request), IFieldDeserializer
-            )
+                deserializer = None
 
             value = row.get(name)
-            if value is None:
-                # Skip empty values, e.g. for non-required fields
-                continue
 
             if deserializer is None:
                 # simply add the value
