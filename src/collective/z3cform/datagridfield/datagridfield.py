@@ -13,6 +13,7 @@ from z3c.form.browser.object import ObjectWidget
 from z3c.form.error import MultipleErrors
 from z3c.form.interfaces import IFormLayer
 from z3c.form.interfaces import INPUT_MODE
+from z3c.form.interfaces import IOrderedSelectWidget
 from z3c.form.interfaces import IValidator
 from z3c.form.interfaces import NO_VALUE
 from z3c.form.validator import SimpleFieldValidator
@@ -259,6 +260,8 @@ class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
                     continue
                 widget = self.widgets[name]
                 widget.value = v
+                if IOrderedSelectWidget.providedBy(widget):
+                    widget.update()
 
     def updateWidgets(self, *args, **kwargs):
         super().updateWidgets(*args, **kwargs)
