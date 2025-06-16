@@ -67,7 +67,7 @@ one single row is added
 
 I can submit
     Click    //button[@id="form-buttons-save"]
-    # Get Element Count    //em[@class="invalid-feedback"]    ==    0
+    Get Element Count    //em[@class="invalid-feedback"]    ==    0
 
 There is a validation error
     Get Element Count    //tr[contains(@class, "row-1")]/td[contains(@class, "cell-1")]/em[@class="invalid-feedback"]    ==    1
