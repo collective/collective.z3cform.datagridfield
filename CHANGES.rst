@@ -8,6 +8,19 @@ Changelog
 
 .. towncrier release notes start
 
+3.0.4 (2025-06-19)
+------------------
+
+Bug fixes:
+
+
+- do not skip None value fields because this leads to "ConstraintNotSatified" errors in validator. @petschki
+
+  generalize lookup of customized deserializer for IRow. @petschki (#206)
+- Fix selected values display for fields with `OrderedSelectWidget`.
+  [laulaz] (#209)
+
+
 3.0.3 (2024-11-05)
 ------------------
 

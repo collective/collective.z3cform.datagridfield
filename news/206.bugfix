@@ -1,4 +1,0 @@
-do not skip None value fields because this leads to "ConstraintNotSatified" errors in validator. @petschki
-
-generalize lookup of customized deserializer for IRow. @petschki
-
