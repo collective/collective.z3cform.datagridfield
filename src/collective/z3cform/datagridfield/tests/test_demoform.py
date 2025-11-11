@@ -1,6 +1,7 @@
 from collective.z3cform.datagridfield.testing import FUNCTIONAL_TESTING
 from plone.testing.zope import Browser
 
+import lxml
 import unittest
 
 
@@ -61,8 +62,15 @@ class TestDemoDGFForm(unittest.TestCase):
             ctrl = self.browser.getControl(
                 name=f"form.widgets.address.TT.widgets.{name}"
             )
+            html = str(ctrl._elem)
+            print(html)
             self.assertEqual(ctrl.value, value)
-            self.assertEqual("required" in (ctrl._elem), required)
+            self.assertEqual("required=\"required" in html, required)
+            # "pat-xxx" classes must be replaced with "dgf-disabled-pat-xxx"
+            self.assertFalse(" pat-" in html)
+            self.assertFalse("\"pat-" in html)
+            if "pat-" in html:
+                self.assertTrue("dgf-disabled-pat-" in html)
 
     def test_buttons(self):
         # Make sure the add row button is present (x4)
