@@ -13,7 +13,6 @@ jobs = [
    "qa",
    "coverage",
    "release_ready",
-   "circular",
 ]
 
 [gitignore]
@@ -24,4 +23,5 @@ extra_lines = """
 """
 
 [tox]
+use_mxdev = true
 test_matrix = {"6.2" = ["*"]}
