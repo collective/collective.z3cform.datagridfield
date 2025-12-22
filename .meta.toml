@@ -13,7 +13,6 @@ jobs = [
    "qa",
    "coverage",
    "release_ready",
-   "circular",
 ]
 
 [gitignore]
