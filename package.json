@@ -8,8 +8,8 @@
         "yarn": "^1.22.19"
     },
     "dependencies": {
-        "@patternslib/patternslib": "^9.10.3",
-        "@plone/mockup": "^5.5.0"
+        "@patternslib/patternslib": "^9.10.4",
+        "@plone/mockup": "^5.6.1"
     },
     "devDependencies": {
         "@patternslib/dev": "^3.8.1"

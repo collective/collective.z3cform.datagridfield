@@ -1,0 +1,1 @@
+Upgrade JS dependencies. @thet
