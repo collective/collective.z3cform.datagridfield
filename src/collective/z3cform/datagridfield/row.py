@@ -1,4 +1,5 @@
 from AccessControl.SecurityManagement import getSecurityManager
+from Acquisition import aq_base
 from collective.z3cform.datagridfield.interfaces import AttributeNotFoundError
 from collective.z3cform.datagridfield.interfaces import IRow
 from plone.app.dexterity.permissions import DXFieldPermissionChecker
@@ -10,7 +11,11 @@ from plone.supermodel.utils import mergedTaggedValueDict
 from z3c.form.converter import BaseDataConverter
 from z3c.form.interfaces import IFieldWidget
 from z3c.form.interfaces import NO_VALUE
+from z3c.form.interfaces import IDataConverter
+from z3c.relationfield.interfaces import IRelation
+from z3c.relationfield.interfaces import IRelationList
 from zope.component import adapter
+from zope.component import queryMultiAdapter
 from zope.component import queryUtility
 from zope.interface import implementer
 from zope.schema import Field
@@ -19,6 +24,26 @@ from zope.schema import Object
 from zope.schema.interfaces import IChoice
 from zope.schema.interfaces import WrongContainedType
 from zope.security.interfaces import IPermission
+
+
+def _sanitize_field_value(fld, value):
+    """Strip acquisition wrappers from a converted field value.
+
+    ContentBrowserDataConverter returns acquisition-wrapped content objects
+    for RelationList/RelationChoice fields. Storing these in ZODB fails with
+    'Can't pickle objects in acquisition wrappers'. Stripping the wrapper
+    stores a plain ZODB persistent reference instead, which is picklable and
+    still usable by IUUID() in toWidgetValue.
+    """
+    if value is None:
+        return value
+    if IRelationList.providedBy(fld):
+        if not value:
+            return value
+        return type(value)(aq_base(item) for item in value if item is not None)
+    if IRelation.providedBy(fld):
+        return aq_base(value)
+    return value
 
 
 @implementer(IRow)
@@ -76,18 +101,42 @@ class DictRowConverter(BaseDataConverter):
                 continue
             converter = self._getConverter(fld)
             val = value.get(name, fld.default)
+            if val is NO_VALUE:
+                # NO_VALUE is a non-picklable sentinel from z3c.form that
+                # widgets (e.g. LinkWidget) return for empty fields. It must
+                # never be stored persistently, so map it to missing_value.
+                _converted[name] = fld.missing_value
+                continue
             try:
-                _converted[name] = converter.toFieldValue(val)
+                _converted[name] = _sanitize_field_value(
+                    fld, converter.toFieldValue(val)
+                )
             except Exception:
                 # XXX: catch exception here in order to not break
                 # versions prior to this fieldValue converter
+                logger.warning(
+                    f"Error converting value for column '{name}' in DictRow: {val!r} ({type(val)})"
+                )
                 _converted[name] = val
         return _converted
 
     def toWidgetValue(self, value):
         _converted = {}
+        # Use the actual sub-widgets if they are already set up on the row
+        # widget (e.g. LinkWidget instead of the default TextWidget).
+        # This ensures that converters for custom widgets (like
+        # LinkWidgetDataConverter) are used, which may expect/return a dict.
+        actual_widgets = getattr(self.widget, "widgets", {})
         for name, fld in self.field.schema.namesAndDescriptions():
-            converter = self._getConverter(fld)
+            sub_widget = actual_widgets.get(name) if actual_widgets else None
+            if sub_widget is not None:
+                converter = queryMultiAdapter(
+                    (fld, sub_widget), IDataConverter
+                )
+            else:
+                converter = None
+            if converter is None:
+                converter = self._getConverter(fld)
             val = value.get(name, fld.default)
             try:
                 _converted[name] = converter.toWidgetValue(val)

@@ -6,19 +6,18 @@ from ..blockdatagridfield import BlockDataGridFieldWidgetFactory
 from ..datagridfield import DataGridFieldWidgetFactory
 from ..row import DictRow
 from datetime import datetime
+from plone.app.vocabularies.catalog import CatalogSource
 from plone.autoform.directives import widget
 from plone.autoform.form import AutoExtensibleForm
+from plone.namedfile.field import NamedBlobImage
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form import button
 from z3c.form import form
 from z3c.form.interfaces import DISPLAY_MODE
 from z3c.form.interfaces import HIDDEN_MODE
+from z3c.relationfield.schema import RelationChoice
 from zope import schema
 from zope.interface import Interface
-
-
-# Uncomment, if you want to try the relationfield
-# from plone.app.vocabularies.catalog import CatalogSource
-# from z3c.relationfield.schema import RelationChoice
 
 
 class IAddress(Interface):
@@ -26,12 +25,11 @@ class IAddress(Interface):
     address_type = schema.Choice(
         title="Address Type", required=True, values=["Work", "Home"]
     )
-    # Uncomment, if you want to try the relationfield
-    #    link = RelationChoice(
-    #        title=u"Link to content",
-    #        source=CatalogSource(portal_type=['Document']),
-    #        required=True
-    #    )
+    internal_link = RelationChoice(
+        title=u"Link to content",
+        source=CatalogSource(portal_type=['Document']),
+        required=False,
+    )
     line2 = schema.TextLine(title="Line 2", required=False)
     city = schema.TextLine(title="City / Town", required=True)
     country = schema.TextLine(title="Country", required=True)
@@ -51,6 +49,18 @@ class IAddress(Interface):
     # A sample checkbox
     billed = schema.Bool(title="Billed")
 
+    profile_image = NamedBlobImage(
+        title="Image",
+        required=False,
+    )
+
+    link = schema.TextLine(
+        title="Link",
+        required=False,
+    )
+
+    widget(link="plone.app.z3cform.widgets.link.LinkFieldWidget")
+
 
 class IPerson(Interface):
     """
@@ -65,7 +75,11 @@ class IPerson(Interface):
         value_type=DictRow(title="Address", schema=IAddress),
         required=True,
     )
-    widget(address=DataGridFieldWidgetFactory)
+    widget(
+        "address",
+        DataGridFieldWidgetFactory,
+        input_table_css_class="table table-striped table-sm",
+    )
 
 
 TESTDATA = {
@@ -101,6 +115,7 @@ class EditForm(AutoExtensibleForm, form.EditForm):
     label = "Simple Form"
     schema = IPerson
     show_note = False
+    template = ViewPageTemplateFile("editform.pt")
 
     def getContent(self):
         return TESTDATA
