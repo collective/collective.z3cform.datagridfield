@@ -1,0 +1,16 @@
+Fix pickling errors when using ``LinkFieldWidget``, ``RelationList``, or
+``RelationChoice`` fields inside a ``DictRow`` schema:
+
+- ``NO_VALUE`` sentinels returned by widgets (e.g. ``LinkWidget``) for empty
+  fields are now mapped to ``missing_value`` instead of being stored
+  persistently, preventing ``_pickle.PicklingError``.
+- Acquisition-wrapped content objects returned by
+  ``ContentBrowserDataConverter`` for relation fields are now unwrapped via
+  ``aq_base()`` before storage, preventing
+  ``TypeError: Can't pickle objects in acquisition wrappers``.
+- ``DictRowConverter.toWidgetValue`` now looks up the converter for the
+  *actual* sub-widget (e.g. ``LinkWidget``) instead of always falling back to
+  the default widget, so custom converters like ``LinkWidgetDataConverter``
+  are correctly used when re-editing a saved row.
+
+@petschki
