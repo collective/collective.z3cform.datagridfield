@@ -130,9 +130,7 @@ class DictRowConverter(BaseDataConverter):
         for name, fld in self.field.schema.namesAndDescriptions():
             sub_widget = actual_widgets.get(name) if actual_widgets else None
             if sub_widget is not None:
-                converter = queryMultiAdapter(
-                    (fld, sub_widget), IDataConverter
-                )
+                converter = queryMultiAdapter((fld, sub_widget), IDataConverter)
             else:
                 converter = None
             if converter is None:

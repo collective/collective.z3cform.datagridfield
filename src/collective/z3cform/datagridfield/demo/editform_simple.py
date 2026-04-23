@@ -27,7 +27,7 @@ class IAddress(Interface):
     )
     internal_link = RelationChoice(
         title="Link to content",
-        source=CatalogSource(portal_type=['Document']),
+        source=CatalogSource(portal_type=["Document"]),
         required=False,
     )
     line2 = schema.TextLine(title="Line 2", required=False)
