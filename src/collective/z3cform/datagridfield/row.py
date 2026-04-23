@@ -9,9 +9,9 @@ from plone.autoform.interfaces import WRITE_PERMISSIONS_KEY
 from plone.dexterity.interfaces import IDexterityContent
 from plone.supermodel.utils import mergedTaggedValueDict
 from z3c.form.converter import BaseDataConverter
+from z3c.form.interfaces import IDataConverter
 from z3c.form.interfaces import IFieldWidget
 from z3c.form.interfaces import NO_VALUE
-from z3c.form.interfaces import IDataConverter
 from z3c.relationfield.interfaces import IRelation
 from z3c.relationfield.interfaces import IRelationList
 from zope.component import adapter
