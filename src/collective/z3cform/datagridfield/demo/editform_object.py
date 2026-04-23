@@ -19,7 +19,6 @@ from zope.interface import Interface
 from zope.schema import getFieldsInOrder
 from zope.schema.fieldproperty import FieldProperty
 
-
 # Uncomment, if you want to try the relationfield
 # from plone.app.vocabularies.catalog import CatalogSource
 # from z3c.relationfield.schema import RelationChoice

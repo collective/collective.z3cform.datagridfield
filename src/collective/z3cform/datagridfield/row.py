@@ -25,6 +25,10 @@ from zope.schema.interfaces import IChoice
 from zope.schema.interfaces import WrongContainedType
 from zope.security.interfaces import IPermission
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def _sanitize_field_value(fld, value):
     """Strip acquisition wrappers from a converted field value.
