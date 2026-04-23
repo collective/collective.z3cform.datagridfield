@@ -1,5 +1,6 @@
-Fix pickling errors when using ``LinkFieldWidget``, ``RelationList``, or
-``RelationChoice`` fields inside a ``DictRow`` schema:
+Fix pickling errors and data-loss issues when using ``LinkFieldWidget``,
+``RelationList``, ``RelationChoice``, or ``NamedBlobImage`` fields inside a
+``DictRow`` schema:
 
 - ``NO_VALUE`` sentinels returned by widgets (e.g. ``LinkWidget``) for empty
   fields are now mapped to ``missing_value`` instead of being stored
@@ -8,9 +9,16 @@ Fix pickling errors when using ``LinkFieldWidget``, ``RelationList``, or
   ``ContentBrowserDataConverter`` for relation fields are now unwrapped via
   ``aq_base()`` before storage, preventing
   ``TypeError: Can't pickle objects in acquisition wrappers``.
-- ``DictRowConverter.toWidgetValue`` now looks up the converter for the
-  *actual* sub-widget (e.g. ``LinkWidget``) instead of always falling back to
-  the default widget, so custom converters like ``LinkWidgetDataConverter``
-  are correctly used when re-editing a saved row.
+- ``DictRowConverter.toFieldValue`` and ``toWidgetValue`` now look up the
+  converter for the *actual* sub-widget (e.g. ``LinkWidget``,
+  ``NamedImageWidget``) instead of always falling back to the default widget.
+  This fixes ``LinkWidget`` not being pre-populated on re-edit, and fixes
+  ``NamedBlobImage`` values being erased on the second save (the widget's
+  ``nochange`` action was never detected because the default widget had no
+  name). ``NOT_CHANGED`` returned by the namedfile converter is now correctly
+  resolved to the previously stored value.
+- Implement new ``DataGridFieldConverter`` to enable complex column widget
+  converters like ``NamedDataConverter`` which depends on already uploaded
+  data when no change is made during editing.
 
 @petschki
