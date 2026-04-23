@@ -10,55 +10,12 @@
 >
   <td class="datagridwidget-block-edit-cell">
 
-    <tal:block tal:repeat="widget python:view.widgets.values()">
+    <div tal:repeat="widget python:view.widgets.values()"
+         class="datagridwidget-block-${widget/id} datagridwidget-widget-${widget/field/__name__} ${python:'d-none' if widget.mode == 'hidden' else 'datagridwidget-cell'}">
 
-      <div tal:define="
-             klass python: widget.klass or '';
-             error python: widget.error and 'error' or '';
-           "
-           tal:attributes="
-             class python:'datagridwidget-block-' + widget.id + ' ' + klass + ' datagridwidget-widget-' + widget.field.__name__ + ' ' + error + ' ' + ('d-none' if widget.mode == 'hidden' else 'datagridwidget-cell');
-           "
-      >
-        <div class="label">
-          <label tal:attributes="
-                   for widget/id;
-                 ">
-            <span tal:content="widget/label"
-                  i18n:translate=""
-            >label</span>
-            <span class="required"
-                  title="Required"
-                  tal:condition="widget/required"
-                  i18n:attributes="title title_required"
-                  i18n:domain="plone"
-            >&nbsp;</span>
+      <div tal:replace="structure widget/@@ploneform-render-widget"></div>
 
-            <span class="formHelp"
-                  tal:define="
-                    description widget/field/description;
-                  "
-                  tal:condition="python:description"
-                  tal:content="structure description"
-                  i18n:translate=""
-            >field description</span>
-          </label>
-        </div>
-
-
-
-        <div class="fieldErrorBox"
-             tal:condition="widget/error"
-        >
-          <span tal:replace="structure widget/error/render"></span>
-        </div>
-
-        <div tal:replace="structure widget/render"></div>
-
-
-      </div>
-
-    </tal:block>
+    </div>
   </td>
 
   <td class="text-nowrap text-end">
