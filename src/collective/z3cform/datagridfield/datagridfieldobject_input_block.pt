@@ -10,8 +10,9 @@
 >
   <td class="datagridwidget-block-edit-cell">
 
-    <div tal:repeat="widget python:view.widgets.values()"
-         class="datagridwidget-block-${widget/id} datagridwidget-widget-${widget/field/__name__} ${python:'d-none' if widget.mode == 'hidden' else 'datagridwidget-cell'}">
+    <div class="datagridwidget-block-${widget/id} datagridwidget-widget-${widget/field/__name__} ${python:'d-none' if widget.mode == 'hidden' else 'datagridwidget-cell'}"
+         tal:repeat="widget python:view.widgets.values()"
+    >
 
       <div tal:replace="structure widget/@@ploneform-render-widget"></div>
 
