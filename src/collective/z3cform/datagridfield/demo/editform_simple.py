@@ -26,7 +26,7 @@ class IAddress(Interface):
         title="Address Type", required=True, values=["Work", "Home"]
     )
     internal_link = RelationChoice(
-        title=u"Link to content",
+        title="Link to content",
         source=CatalogSource(portal_type=['Document']),
         required=False,
     )
