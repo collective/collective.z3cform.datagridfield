@@ -211,9 +211,7 @@ class DataGridFieldWidget(MultiWidget):
         if self.ignoreContext:
             return None
         try:
-            dm = getMultiAdapter(
-                (self.context, self.field), interfaces.IDataManager
-            )
+            dm = getMultiAdapter((self.context, self.field), interfaces.IDataManager)
             stored = dm.query()
         except Exception:
             return None
@@ -268,9 +266,7 @@ class DataGridFieldConverter(BaseDataConverter):
             row_widget = row_widgets[idx] if idx < len(row_widgets) else None
             converter = None
             if row_widget is not None:
-                converter = queryMultiAdapter(
-                    (value_type, row_widget), IDataConverter
-                )
+                converter = queryMultiAdapter((value_type, row_widget), IDataConverter)
             if converter is None:
                 converter = self._getConverter(value_type)
             result.append(converter.toWidgetValue(item))
@@ -296,9 +292,7 @@ class DataGridFieldConverter(BaseDataConverter):
             else:
                 # New row appended via the browser - no stored value.
                 row_widget = self.widget.getWidget(idx)
-            converter = queryMultiAdapter(
-                (value_type, row_widget), IDataConverter
-            )
+            converter = queryMultiAdapter((value_type, row_widget), IDataConverter)
             if converter is None:
                 converter = self._getConverter(value_type)
             converted.append(converter.toFieldValue(row_value))
