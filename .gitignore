@@ -43,6 +43,7 @@ local.cfg
 /instance/
 /.make-sentinels/
 /*-mxdev.txt
+/.mxdev_*
 /reports/
 /sources/
 /venv/

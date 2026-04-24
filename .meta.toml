@@ -6,7 +6,7 @@ template = "default"
 commit-id = "2.8.0"
 
 [pyproject]
-codespell_skip = "*.js,*.min.js,*.min.js.map,*.css.map,yarn.lock,robot_*,test_*"
+codespell_skip = "*.js,*.min.js,*.min.js.map,*.css.map,pnpm-lock.yaml,robot_*,test_*"
 
 [github]
 jobs = [
