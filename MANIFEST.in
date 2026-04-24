@@ -1,18 +1,11 @@
 include *.py
 include *.rst
 include *.txt
-include Makefile
-include package.json
-include webpack.config.js
-include yarn.lock
+exclude Makefile package.json webpack.config.js *.ini pnpm-lock.yaml *-mxdev.txt *.md .*
 graft docs
 graft resources
 recursive-include src *
-exclude *.cfg
-exclude *.ini
-exclude .*
-exclude constraints-mxdev.txt
-exclude requirements-mxdev.txt
+exclude
 global-exclude *.pyc
 global-exclude *.pyo
 recursive-exclude news *
