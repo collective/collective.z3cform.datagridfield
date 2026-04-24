@@ -10,7 +10,9 @@ from plone.autoform.interfaces import MODES_KEY
 from z3c.form import interfaces
 from z3c.form.browser.multi import MultiWidget
 from z3c.form.browser.object import ObjectWidget
+from z3c.form.converter import BaseDataConverter
 from z3c.form.error import MultipleErrors
+from z3c.form.interfaces import IDataConverter
 from z3c.form.interfaces import IFormLayer
 from z3c.form.interfaces import INPUT_MODE
 from z3c.form.interfaces import IOrderedSelectWidget
@@ -20,6 +22,7 @@ from z3c.form.validator import SimpleFieldValidator
 from z3c.form.widget import FieldWidget
 from zope.component import adapter
 from zope.component import getMultiAdapter
+from zope.component import queryMultiAdapter
 from zope.interface import alsoProvides
 from zope.interface import implementer
 from zope.interface import Interface
@@ -31,7 +34,6 @@ from zope.schema.interfaces import IObject
 
 import logging
 import lxml
-
 
 logger = logging.getLogger(__name__)
 
@@ -121,6 +123,18 @@ class DataGridFieldWidget(MultiWidget):
             widget.form = self.form
             widget.parentForm = self.form
             alsoProvides(widget, interfaces.IFormAware)
+        # Give the row widget access to the pre-POST stored row value.
+        # Needed so DictRowConverter.toFieldValue can restore values for
+        # sub-converters that return NOT_CHANGED (e.g. NamedDataConverter
+        # on action=nochange). The stored row is otherwise inaccessible
+        # during the POST extraction cycle because ObjectWidget forces
+        # its subform to ignoreContext=True.
+        stored_row = None
+        if isinstance(idx, int):
+            stored_rows = self._get_stored_rows()
+            if stored_rows is not None and 0 <= idx < len(stored_rows):
+                stored_row = stored_rows[idx]
+        widget._stored_row = stored_row
         widget.update()
         return widget
 
@@ -183,6 +197,31 @@ class DataGridFieldWidget(MultiWidget):
         else:
             return not name.endswith("AA") and not name.endswith("TT")
 
+    def _get_stored_rows(self):
+        """Return the list of rows currently stored on the context.
+
+        This is used to give row widgets access to the pre-POST stored
+        values. Required so that sub-widgets like NamedFileWidget can
+        honor the ``action=nochange`` marker by returning the previously
+        stored value for fields where the user did not upload a new file.
+
+        Returns ``None`` when no reliable stored value can be obtained
+        (e.g. during an add form with no context yet).
+        """
+        if self.ignoreContext:
+            return None
+        try:
+            dm = getMultiAdapter((self.context, self.field), interfaces.IDataManager)
+            stored = dm.query()
+        except Exception:
+            return None
+        if stored in (NO_VALUE, None):
+            return None
+        try:
+            return list(stored)
+        except TypeError:
+            return None
+
 
 @adapter(IField, IFormLayer)
 @implementer(interfaces.IFieldWidget)
@@ -193,6 +232,75 @@ def DataGridFieldWidgetFactory(field, request):
 
 # BBB
 DataGridFieldFactory = DataGridFieldWidgetFactory
+
+
+@adapter(IList, IDataGridFieldWidget)
+@implementer(IDataConverter)
+class DataGridFieldConverter(BaseDataConverter):
+    """Data converter for DataGridFieldWidget.
+
+    The built-in :class:`z3c.form.converter.MultiConverter` builds a fresh,
+    unbound row widget on every ``toFieldValue`` call (via
+    ``_getConverter(value_type)``). This prevents the per-row
+    :class:`DictRowConverter` from accessing any state that was attached to
+    the real row widgets during form ``update()`` - most notably the
+    pre-POST stored row value required to resolve ``NOT_CHANGED`` results
+    from sub-converters (e.g. ``NamedDataConverter`` on
+    ``action=nochange``).
+
+    This converter dispatches to the actual row widgets of the
+    :class:`DataGridFieldWidget` so that per-row conversion has full access
+    to the row widget and its stamped ``_stored_row`` attribute.
+    """
+
+    def toWidgetValue(self, value):
+        if value is self.field.missing_value:
+            return []
+        # Dispatch each stored row through a row-widget-aware converter
+        # when possible so that custom sub-widgets (e.g. LinkFieldWidget,
+        # NamedImageWidget) get their own registered converters.
+        result = []
+        row_widgets = list(getattr(self.widget, "widgets", []) or [])
+        value_type = self.field.value_type
+        for idx, item in enumerate(value):
+            row_widget = row_widgets[idx] if idx < len(row_widgets) else None
+            converter = None
+            if row_widget is not None:
+                converter = queryMultiAdapter((value_type, row_widget), IDataConverter)
+            if converter is None:
+                converter = self._getConverter(value_type)
+            result.append(converter.toWidgetValue(item))
+        return result
+
+    def toFieldValue(self, value):
+        if not len(value):
+            return self.field.missing_value
+
+        value_type = self.field.value_type
+        # Use the actual row widgets set up during form ``updateWidgets``.
+        # They carry the pre-POST stored row value (``_stored_row``) that
+        # sub-converters may need to resolve ``NOT_CHANGED`` markers.
+        real_rows = [
+            w
+            for w in (self.widget.widgets or [])
+            if not (w.id.endswith("AA") or w.id.endswith("TT"))
+        ]
+        converted = []
+        for idx, row_value in enumerate(value):
+            if idx < len(real_rows):
+                row_widget = real_rows[idx]
+            else:
+                # New row appended via the browser - no stored value.
+                row_widget = self.widget.getWidget(idx)
+            converter = queryMultiAdapter((value_type, row_widget), IDataConverter)
+            if converter is None:
+                converter = self._getConverter(value_type)
+            converted.append(converter.toFieldValue(row_value))
+
+        collection_type = self.field._type
+        if isinstance(collection_type, tuple):
+            collection_type = collection_type[-1]
+        return collection_type(converted)
 
 
 PAT_XPATH = "//*[contains(concat(' ', normalize-space(@class), ' '), ' pat-')]"

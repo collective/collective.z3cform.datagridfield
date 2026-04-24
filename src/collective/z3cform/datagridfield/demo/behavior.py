@@ -43,6 +43,13 @@ class ITableRow(Interface):
         required=False,
     )
 
+    link = schema.TextLine(
+        title="Link",
+        required=False,
+    )
+
+    directives.widget(link="plone.app.z3cform.widgets.link.LinkFieldWidget")
+
 
 @provider(IFormFieldProvider)
 class IDatagridfieldMetadata(model.Schema):

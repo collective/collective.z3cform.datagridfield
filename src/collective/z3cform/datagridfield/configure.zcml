@@ -41,6 +41,7 @@
 
   <adapter factory=".autoform.MultipleErrorViewSnippetWithMessage" />
   <adapter factory=".datagridfield.DataGridValidator" />
+  <adapter factory=".datagridfield.DataGridFieldConverter" />
   <adapter factory=".row.DictRowConverter" />
 
   <adapter

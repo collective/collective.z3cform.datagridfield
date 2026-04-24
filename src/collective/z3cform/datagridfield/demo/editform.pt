@@ -3,10 +3,25 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       lang="en"
-      metal:use-macro="context/main_template/macros/master"
+      metal:use-macro="context/@@main_template/macros/master"
       xml:lang="en"
       i18n:domain="example.conference"
 >
+  <style metal:fill-slot="style_slot">
+    .pat-datagridfield {
+      overflow-x: auto;
+
+      .datagridwidget-cell {
+        min-width: 150px;
+        font-size: 0.85rem;
+      }
+
+      .cell-3, .cell-10, .cell-11 {
+        min-width:350px;
+      }
+    }
+  </style>
+
   <body>
 
     <metal:main fill-slot="main">
