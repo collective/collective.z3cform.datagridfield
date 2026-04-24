@@ -3,7 +3,7 @@ Demo of the widget
 """
 
 from ..blockdatagridfield import BlockDataGridFieldWidgetFactory
-from ..datagridfield import DataGridFieldFactory, DataGridFieldWidgetFactory
+from ..datagridfield import DataGridFieldWidgetFactory
 from ..row import DictRow
 from datetime import datetime
 from plone.app.vocabularies.catalog import CatalogSource
