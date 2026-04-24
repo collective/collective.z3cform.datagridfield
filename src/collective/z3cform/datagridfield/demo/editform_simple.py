@@ -238,3 +238,26 @@ class IPersonBlocked(IPerson):
 class EditForm9(EditForm):
     label = "Block widgets as blocks instead of cells"
     schema = IPersonBlocked
+
+
+class IPersonWithHints(IPerson):
+    widget(
+        "address",
+        DataGridFieldWidgetFactory,
+        allow_insert=True,
+        allow_delete=True,
+        allow_reorder=True,
+        auto_append=False,
+        display_table_css_class="datagridwidget-table-view-setviaschemahint",
+        input_table_css_class="table table-striped setviaschemahint",
+        klass="datagridfield-setviaschemahint",
+    )
+
+
+class EditForm10(EditForm):
+    label = "Datagridwidget with attributes set via autoform directives"
+    schema = IPersonWithHints
+
+    def updateWidgets(self):
+        super().updateWidgets()
+        # bypass
