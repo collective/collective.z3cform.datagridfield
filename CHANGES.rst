@@ -8,6 +8,49 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.1 (2026-04-27)
+------------------
+
+Bug fixes:
+
+
+- Fix pickling errors and data-loss issues when using ``LinkFieldWidget``,
+  ``RelationList``, ``RelationChoice``, or ``NamedBlobImage`` fields inside a
+  ``DictRow`` schema:
+
+  - ``NO_VALUE`` sentinels returned by widgets (e.g. ``LinkWidget``) for empty
+    fields are now mapped to ``missing_value`` instead of being stored
+    persistently, preventing ``_pickle.PicklingError``.
+  - Acquisition-wrapped content objects returned by
+    ``ContentBrowserDataConverter`` for relation fields are now unwrapped via
+    ``aq_base()`` before storage, preventing
+    ``TypeError: Can't pickle objects in acquisition wrappers``.
+  - ``DictRowConverter.toFieldValue`` and ``toWidgetValue`` now look up the
+    converter for the *actual* sub-widget (e.g. ``LinkWidget``,
+    ``NamedImageWidget``) instead of always falling back to the default widget.
+    This fixes ``LinkWidget`` not being pre-populated on re-edit, and fixes
+    ``NamedBlobImage`` values being erased on the second save (the widget's
+    ``nochange`` action was never detected because the default widget had no
+    name). ``NOT_CHANGED`` returned by the namedfile converter is now correctly
+    resolved to the previously stored value.
+  - Implement new ``DataGridFieldConverter`` to enable complex column widget
+    converters like ``NamedDataConverter`` which depends on already uploaded
+    data when no change is made during editing.
+
+  @petschki
+
+
+Internal:
+
+
+- Add a new demo form with autoform widget hints to demonstrate how to override
+  widget attributes in a schema.
+  @petschki
+- Switch from yarn to pnpm.
+  @petschki
+- Upgrade JS dependencies. @thet
+
+
 4.0.0 (2026-04-09)
 ------------------
 
