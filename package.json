@@ -9,7 +9,7 @@
     },
     "dependencies": {
         "@patternslib/patternslib": "9.10.5",
-        "@plone/mockup": "^5.6.1"
+        "@plone/mockup": "^5.6.4"
     },
     "devDependencies": {
         "@patternslib/dev": "^4.0.0"
