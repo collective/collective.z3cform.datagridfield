@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.2 (2026-05-18)
+------------------
+
+Bug fixes:
+
+
+- Update latest `mockup==5.6.4`.  @petschki
+
+
 4.0.1 (2026-04-27)
 ------------------
 
