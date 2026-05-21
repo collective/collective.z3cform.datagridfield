@@ -32,7 +32,6 @@ from zope.schema.interfaces import IObject
 import logging
 import lxml
 
-
 logger = logging.getLogger(__name__)
 
 

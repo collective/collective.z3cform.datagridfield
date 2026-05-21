@@ -1,7 +1,6 @@
 import os
 import subprocess
 
-
 domain = "collective.z3cform.datagridfield"
 os.chdir("../../../")
 target_path = "src/collective/z3cform/datagridfield/"

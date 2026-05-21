@@ -17,7 +17,6 @@ from z3c.form.interfaces import IMultipleErrors
 from zope.component import adapter
 from zope.i18nmessageid import Message
 
-
 # XXX: The following controversial and may have side effects.
 # Its only purpose is to hide redundant error messages. Every
 # error within a subform seem to be rendered both for
