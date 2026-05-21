@@ -1,7 +1,6 @@
 from setuptools import find_packages
 from setuptools import setup
 
-
 version = "3.0.5.dev0"
 
 
@@ -21,15 +20,15 @@ setup(
         "Environment :: Web Environment",
         "Framework :: Plone",
         "Framework :: Plone :: Addon",
-        "Framework :: Plone :: 6.0",
+        "Framework :: Plone :: 6.1",
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
         "Operating System :: OS Independent",
         "Programming Language :: JavaScript",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     keywords="plone z3cform table data grid",
@@ -42,7 +41,7 @@ setup(
     namespace_packages=["collective", "collective.z3cform"],
     include_package_data=True,
     zip_safe=False,
-    python_requires=">=3.8",
+    python_requires=">=3.10, <3.14",
     install_requires=[
         "Products.GenericSetup",
         "plone.app.dexterity",
