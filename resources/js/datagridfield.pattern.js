@@ -1,6 +1,5 @@
 // Layout Mosaic pattern.
 import "regenerator-runtime/runtime"; // needed for ``await`` support
-import $ from "jquery";
 import Base from "@patternslib/patternslib/src/core/base";
 import Registry from "@patternslib/patternslib/src/core/registry";
 import logging from "@patternslib/patternslib/src/core/logging";
@@ -286,31 +285,29 @@ export default Base.extend({
 
         // Create a new row
         var newtr = this.createNewRow();
-        var $newtr = $(newtr);
 
         /* Put new row to DOM tree after our current row.  Do this before
             * reindexing to ensure that any Javascript we insert that depends on
             * DOM element IDs (such as plone.formwidget.autocomplete) will
             * pick up this row before any IDs get changed.  At this point,
             * we techinically have duplicate TT IDs in our document
-            * (one for this new row, one for the hidden row), but jQuery
-            * selectors will pick up elements in this new row first.
+            * (one for this new row, one for the hidden row).
             */
 
-        this.$el.trigger("beforeaddrow", [this.$el, $newtr]);
+        this.el.dispatchEvent(new CustomEvent("beforeaddrow", { bubbles: true, detail: [this.el, newtr] }));
 
         if (before) {
-            $newtr.insertBefore(ref_row);
+            ref_row.before(newtr);
         } else {
-            $newtr.insertAfter(ref_row);
+            ref_row.after(newtr);
         }
 
         this.initRowUI(newtr);
-        Registry.scan($newtr);
+        Registry.scan(newtr);
 
         this.initAutoAppendHandler();
 
-        this.$el.trigger("afteraddrow", [this.$el, $newtr]);
+        this.el.dispatchEvent(new CustomEvent("afteraddrow", { bubbles: true, detail: [this.el, newtr] }));
 
         return newtr;
     },
@@ -336,7 +333,6 @@ export default Base.extend({
         delete new_row.dataset.index; // fresh row.
         new_row.classList.remove("datagridwidget-empty-row");
 
-        var $new_row = $(new_row);
         // enable patternslib
         const disabled_prefix = "dgw-disabled-pat-";
         new_row.querySelectorAll(`[class*="${disabled_prefix}"]`).forEach(el => {
@@ -349,7 +345,7 @@ export default Base.extend({
 
     removeFieldRow: function (row) {
         /* Remove the row in which the given node is found */
-        $(row).remove();
+        row.remove();
 
         if (!this.ensureMinimumRows()) {
             // If ensureMinimumRows returned true, it already did the update.
@@ -373,7 +369,7 @@ export default Base.extend({
 
     moveRowToTop: function (row) {
         var rows = this.getRows();
-        $(row).insertBefore(rows[0]);
+        rows[0].before(row);
         this.updateOrderIndex();
         this.initAutoAppendHandler();
     },
@@ -383,12 +379,12 @@ export default Base.extend({
 
         // make sure we insert the directly above any auto appended rows
         var insert_after = 0;
-        $(rows).each(function (i, _row) {
+        Array.from(rows).forEach(function (_row, i) {
             if (["AA", "TT"].indexOf(_row.dataset.index) === -1) {
                 insert_after = i;
             }
         });
-        $(row).insertAfter(rows[insert_after]);
+        rows[insert_after].after(row);
         this.updateOrderIndex();
         this.initAutoAppendHandler();
     },
@@ -401,7 +397,7 @@ export default Base.extend({
 
         // We can't use nextSibling because of blank text nodes in some browsers
         // Need to find the index of the row
-        $(rows).each(function (i, _row) {
+        Array.from(rows).forEach(function (_row, i) {
             if (row === _row) {
                 idx = i;
             }
@@ -439,12 +435,12 @@ export default Base.extend({
                 this.shiftRow(row, nextRow);
             }
         }
-        this.$el.trigger("aftermoverow", [this.$el, row]);
+        this.el.dispatchEvent(new CustomEvent("aftermoverow", { bubbles: true, detail: [this.el, row] }));
     },
 
     shiftRow: function (bottom, top) {
         /* Put node top before node bottom */
-        $(top).insertBefore(bottom);
+        bottom.before(top);
     },
 
     reindexRow: function (row, new_index) {
