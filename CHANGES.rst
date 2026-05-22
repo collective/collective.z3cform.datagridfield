@@ -8,6 +8,21 @@ Changelog
 
 .. towncrier release notes start
 
+3.0.5 (2026-05-22)
+------------------
+
+Bug fixes:
+
+
+- Remove jQuery from `pat-datagridfield`.  @petschki
+
+
+Internal:
+
+
+- Update dependencies.  @petschki
+
+
 3.0.4 (2025-06-19)
 ------------------
 
