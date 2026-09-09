@@ -303,6 +303,8 @@ class DataGridFieldConverter(BaseDataConverter):
 
 
 class DataGridFieldObjectWidget(AutoFields, ObjectWidget):
+    def isInsertEnabled(self):
+        return self.__parent__.allow_insert
 
     def isDeleteEnabled(self):
         return self.__parent__.allow_delete
