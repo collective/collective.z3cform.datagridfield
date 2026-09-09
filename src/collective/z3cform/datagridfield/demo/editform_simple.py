@@ -47,7 +47,7 @@ class IAddress(Interface):
     dateAdded = schema.Datetime(title="Date added")
 
     # A sample checkbox
-    billed = schema.Bool(title="Billed")
+    billed = schema.Bool(title="Billed", required=False)
 
     profile_image = NamedBlobImage(
         title="Image",
