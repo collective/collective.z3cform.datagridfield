@@ -8,6 +8,24 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.3 (2026-09-09)
+------------------
+
+Bug fixes:
+
+
+- remove lxml dependency.  @petschki (#205_1)
+- Update testsetup and refactor tests.
+  [petschki] (#205)
+
+
+Documentation:
+
+
+- Fix README: correct supermodel ``DictRow`` type, JavaScript event documentation, CI badge, version and requirements sections.
+  [petschki]
+
+
 4.0.2 (2026-05-18)
 ------------------
 
