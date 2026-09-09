@@ -1,0 +1,20 @@
+# pnpm settings (pnpm >= 10 no longer reads .npmrc for these)
+shamefullyHoist: true
+publicHoistPattern:
+  - '*'
+
+# @plone/mockup pulls in git-based sub dependencies (e.g. slick-carousel)
+blockExoticSubdeps: false
+
+overrides:
+  '@patternslib/patternslib': 9.10.5
+
+# install scripts (pnpm >= 10 blocks them unless approved):
+# only mockup needs its postinstall (select2 patch), the others ship
+# prebuilt binaries or are no-ops here.
+allowBuilds:
+  '@plone/mockup': true
+  '@parcel/watcher': false
+  '@patternslib/dev': false
+  unrs-resolver: false
+  yarn: false
