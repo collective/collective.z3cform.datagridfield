@@ -1,7 +1,6 @@
 from collective.z3cform.datagridfield.testing import FUNCTIONAL_TESTING
 from plone.testing.zope import Browser
 
-import lxml
 import unittest
 
 

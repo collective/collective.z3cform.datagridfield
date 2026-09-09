@@ -49,7 +49,6 @@ setup(
     ],
     extras_require={
         "test": [
-            "lxml",
             "plone.testing",
             "plone.app.testing",
             "plone.app.robotframework[debug]",
