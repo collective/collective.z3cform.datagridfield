@@ -3,18 +3,24 @@ Introduction
 
 Provides a field with a datagrid (table), where each row is a sub form.
 
-It is a `z3c.form <https://z3cform.readthedocs.io/en/latest/>`_ implementation of the `Products.DataGridField <http://plone.org/products/datagridfield>`_ .
+It is a `z3c.form <https://z3cform.readthedocs.io/en/latest/>`_ implementation of the `Products.DataGridField <https://github.com/collective/Products.DataGridField>`_.
 
 This product was developed for use with Plone and Dexterity.
 
-.. image:: https://github.com/collective/collective.z3cform.datagridfield/actions/workflows/test.yml/badge.svg
-   :target: https://github.com/collective/collective.z3cform.datagridfield/actions/workflows/test.yml
+.. image:: https://github.com/collective/collective.z3cform.datagridfield/actions/workflows/test-matrix.yml/badge.svg
+   :target: https://github.com/collective/collective.z3cform.datagridfield/actions/workflows/test-matrix.yml
 
 
 Installation
 ============
 
-Add collective.z3cform.datagridfield to your buildout eggs:
+Install it with pip:
+
+.. code-block:: shell
+
+    pip install collective.z3cform.datagridfield
+
+Or add it to your buildout eggs:
 
 .. code-block:: ini
 
@@ -42,17 +48,17 @@ The layout of the table is defined by a second schema:
 
 
     class ITableRowSchema(interface.Interface):
-        one = schema.TextLine(title=u"One")
-        two = schema.TextLine(title=u"Two")
-        three = schema.TextLine(title=u"Three")
+        one = schema.TextLine(title="One")
+        two = schema.TextLine(title="Two")
+        three = schema.TextLine(title="Three")
 
 
     class IFormSchema(interface.Interface):
-        four = schema.TextLine(title=u"Four")
+        four = schema.TextLine(title="Four")
         table = schema.List(
-            title=u"Table",
+            title="Table",
             value_type=DictRow(
-                title=u"tablerow",
+                title="tablerow",
                 schema=ITableRowSchema,
             ),
         )
@@ -61,7 +67,7 @@ The layout of the table is defined by a second schema:
 
 
     class EditForm(AutoExtensibleForm, form.EditForm):
-        label=u"Demo Usage of DataGridField"
+        label="Demo Usage of DataGridField"
         schema = IFormSchema
 
 
@@ -77,6 +83,12 @@ And configured via zcml:
         />
 
 
+Besides ``DataGridFieldFactory`` there is ``BlockDataGridFieldFactory``
+(``collective.z3cform.datagridfield.blockdatagridfield``), which renders every
+cell as a block below each other instead of a table row.
+Both are aliases for ``DataGridFieldWidgetFactory`` and
+``BlockDataGridFieldWidgetFactory``.
+
 Also it can be used from a supermodel XML:
 
 .. code-block:: xml
@@ -84,7 +96,7 @@ Also it can be used from a supermodel XML:
     <field name="table" type="zope.schema.List">
       <description/>
       <title>Table</title>
-      <value_type type="collective.z3cform.datagridfield.DictRow">
+      <value_type type="collective.z3cform.datagridfield.row.DictRow">
         <schema>your.package.interfaces.ITableRowSchema</schema>
       </value_type>
       <form:widget type="collective.z3cform.datagridfield.datagridfield.DataGridFieldFactory"/>
@@ -116,11 +128,11 @@ Widget parameters can be passed via widget hints. Extended schema example from a
 .. code-block:: python
 
     class IFormSchema(interface.Interface):
-        four = schema.TextLine(title=u"Four")
+        four = schema.TextLine(title="Four")
         table = schema.List(
-            title=u"Table",
+            title="Table",
             value_type=DictRow(
-                title=u"tablerow",
+                title="tablerow",
                 schema=ITableRowSchema,
             ),
         )
@@ -150,7 +162,7 @@ The `DictRow` schema can also be extended via widget hints. Extended schema exam
 
     class ITableRowSchema(interface.Interface):
 
-        two = schema.TextLine(title=u"Level 2")
+        two = schema.TextLine(title="Level 2")
 
         address_type = schema.Choice(
             title="Address Type",
@@ -164,9 +176,9 @@ The `DictRow` schema can also be extended via widget hints. Extended schema exam
     class IFormSchema(interface.Interface):
 
         table = schema.List(
-            title=u"Nested selection tree test",
+            title="Nested selection tree test",
             value_type=DictRow(
-                title=u"tablerow",
+                title="tablerow",
                 schema=ITableRowSchema
             )
         )
@@ -188,36 +200,37 @@ class:
 JavaScript events
 -----------------
 
-``collective.z3cform.datagridfield`` fires jQuery events,
-so that you can hook them in your own Javascript for DataGridField
-behavior customization.
+``collective.z3cform.datagridfield`` fires events on the widget element
+``div.pat-datagridfield``, so that you can hook them in your own JavaScript
+for DataGridField behavior customization.
 
-The following events are currently fired against ``table.datagridwidget-table-view``
+Native DOM events (dispatched via ``dispatchEvent``, no extra arguments):
 
-* ``beforeaddrow`` [datagridfield, newRow]
+* ``afterdatagridfieldinit`` - the DataGridField has been initialized.
+  This is the only event that bubbles.
 
-* ``afteraddrow`` [datagridfield, newRow]
+* ``beforeaddrowauto`` / ``afteraddrowauto`` - before/after a row is
+  auto-appended while editing the last row.
 
-* ``beforeaddrowauto`` [datagridfield, newRow]
+jQuery events (triggered via ``$el.trigger``, with arguments):
 
-* ``afteraddrowauto`` [datagridfield, newRow]
+* ``beforeaddrow`` / ``afteraddrow`` [$datagridfield, $newRow]
 
-* ``aftermoverow`` [datagridfield]
-
-* ``afterdatagridfieldinit`` - All DGFs on the page have been initialized
+* ``aftermoverow`` [$datagridfield, row]
 
 Example usage:
 
 .. code-block:: javascript
 
-    var handleDGFInsert = function(event, dgf, row) {
-        row = $(row);
-        console.log("Got new row:");
-        console.log(row);
-    };
+    // native DOM event
+    document.addEventListener("afterdatagridfieldinit", function (event) {
+        console.log("DataGridField initialized:", event.target);
+    });
 
-    // Bind all DGF handlers on the page
-    $(document).on('beforeaddrow beforeaddrowauto', '.datagridwidget-table-view', handleDGFInsert);
+    // jQuery events
+    $(document).on("beforeaddrow afteraddrow", ".pat-datagridfield", function (event, $dgf, $row) {
+        console.log("Got new row:", $row);
+    });
 
 
 Demo
@@ -229,16 +242,15 @@ More examples are in the demo subfolder of this package.
 Versions
 ========
 
-* Version 3.x is Plone 6+ only (z3c.form >= 4)
-* Versions 1.4.x and 2.x are for Plone 5.x,
-* Versions 1.3.x is for Plone 4.3
-* For Python 3.7 at least PyYAML 4.2b1
+* Version 4.x is for Plone 6.2 and Python 3.10+ (PEP 420 namespace package)
+* Version 3.x is for Plone 6.0 and 6.1 (z3c.form >= 4)
+* Versions 1.4.x and 2.x are for Plone 5.x
+* Version 1.3.x is for Plone 4.3
 
 
 Requirements
 ============
 
-* z3c.forms
-* A browser with javascript support
-* jquery 1.4.3 or later
+* z3c.form
+* A browser with JavaScript support
 
