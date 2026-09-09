@@ -62,7 +62,6 @@ class TestDemoDGFForm(unittest.TestCase):
                 name=f"form.widgets.address.TT.widgets.{name}"
             )
             html = str(ctrl._elem)
-            print(html)
             self.assertEqual(ctrl.value, value)
             self.assertEqual("required=\"required" in html, required)
             # "pat-xxx" classes must be replaced with "dgf-disabled-pat-xxx"
