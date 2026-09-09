@@ -8,14 +8,11 @@
         "yarn": "^1.22.19"
     },
     "dependencies": {
-        "@patternslib/patternslib": "9.10.5",
-        "@plone/mockup": "^5.6.4"
+        "@patternslib/patternslib": "^9.10.7",
+        "@plone/mockup": "^5.6.9"
     },
     "devDependencies": {
-        "@patternslib/dev": "^4.0.0"
-    },
-    "resolutions": {
-        "@patternslib/patternslib": "9.10.5"
+        "@patternslib/dev": "^4.0.2"
     },
     "scripts": {
         "build": "NODE_ENV=production webpack --config webpack.config.js",
@@ -34,5 +31,5 @@
         "type": "git",
         "url": "https://github.com/collective/collective.z3cform.datagridfield.git"
     },
-    "packageManager": "pnpm@10.33.2+sha512.a90faf6feeab71ad6c6e57f94e0fe1a12f5dcc22cd754db40ae9593eb6a3e0b6b12e3540218bb37ae083404b1f2ce6db2a4121e979829b4aff94b99f49da1cf8"
+    "packageManager": "pnpm@12.3.4+sha512.961aa41fb077da3a04a441d9f8e15ebc0c96da8ef710b2eb67bf9ee7cb0610eabd48f1fd85f51cffe73846785fa0f87c56a3a872a1d893f8446741b5cce45457"
 }
